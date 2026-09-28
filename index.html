@@ -1,0 +1,2473 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#111111">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<title>Crime Life — Simulation de vie criminelle</title>
+<style>
+:root{
+  --bg:#111;--bg2:#161618;--card:#1e1e21;--card2:#27272b;--line:#2e2e34;
+  --tx:#ececec;--mut:#9a9aa3;--red:#ff2d55;--red2:#c2002f;--green:#32ff7e;
+  --gold:#ffd23f;--purple:#b45cff;--cyan:#00e5ff;--orange:#ff9f1c;
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;height:100%;background:var(--bg);color:var(--tx);
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;overscroll-behavior:none}
+body{overflow:hidden}
+button{font:inherit;color:inherit}
+#app{height:100vh;height:100dvh;max-width:560px;margin:0 auto;display:flex;flex-direction:column;position:relative;background:var(--bg);
+  border-left:1px solid #1b1b1d;border-right:1px solid #1b1b1d}
+
+/* ---------- HUD ---------- */
+#hud{flex:none;padding:calc(8px + env(safe-area-inset-top)) 12px 8px;background:linear-gradient(180deg,#1c0a10,#131316);
+  border-bottom:1px solid #3a1420;box-shadow:0 2px 18px rgba(255,45,85,.10)}
+.hud-top{display:flex;align-items:center;gap:10px}
+.avatar{width:42px;height:42px;flex:none;border-radius:50%;background:#222;display:grid;place-items:center;font-size:24px;
+  border:2px solid var(--red);box-shadow:0 0 10px rgba(255,45,85,.55)}
+.who{flex:1;min-width:0}
+.who .name{font-weight:800;font-size:16px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.who .sub{font-size:12px;color:var(--mut);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.loc{text-align:right;font-size:13px;font-weight:700;white-space:nowrap}
+.loc small{display:block;color:var(--mut);font-weight:400;font-size:11px}
+.gear{background:none;border:0;font-size:18px;padding:4px 2px 4px 6px;cursor:pointer;opacity:.85}
+.hud-money{display:grid;grid-template-columns:1fr 1fr auto;gap:6px;margin-top:8px}
+.chip{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:5px 8px;display:flex;flex-direction:column;line-height:1.2;min-width:0}
+.chip b{font-size:14px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.chip small{color:var(--mut);font-size:9.5px;text-transform:uppercase;letter-spacing:.5px}
+.chip.cash b{color:var(--green)} .chip.bank b{color:var(--cyan)} .chip.ap b{color:var(--gold)}
+.bars{display:grid;grid-template-columns:1fr 1fr;gap:5px 12px;margin-top:8px}
+.bar{font-size:11px}
+.bar .bl{display:flex;justify-content:space-between;color:var(--mut);margin-bottom:2px}
+.bar .bl b{color:var(--tx)}
+.bt{height:6px;background:#2a2a2f;border-radius:4px;overflow:hidden}
+.bf{height:100%;border-radius:4px;transition:width .4s}
+.hp .bf{background:linear-gradient(90deg,#16c25a,#32ff7e)}
+.rs .bf{background:linear-gradient(90deg,#d99a00,#ffd23f)}
+.ad .bf{background:linear-gradient(90deg,#7a2cff,#c77dff)}
+.ht .bf{background:linear-gradient(90deg,#2d6bff,#ff2d55)}
+.jailband{margin-top:8px;background:repeating-linear-gradient(45deg,#2a1a00,#2a1a00 8px,#1c1200 8px,#1c1200 16px);
+  border:1px solid var(--orange);color:var(--orange);text-align:center;border-radius:8px;padding:4px;font-size:12px;font-weight:800}
+
+/* ---------- MAIN / LOG ---------- */
+main{flex:1;position:relative;overflow:hidden;min-height:0}
+#log{position:absolute;inset:0;overflow-y:auto;padding:8px 12px 46px;-webkit-overflow-scrolling:touch}
+.log-age{display:table;margin:14px auto 6px;font-size:11px;font-weight:800;letter-spacing:.8px;text-transform:uppercase;
+  color:var(--red);background:rgba(255,45,85,.08);border:1px solid rgba(255,45,85,.35);border-radius:20px;padding:3px 12px}
+.log-e{display:flex;gap:8px;padding:8px 10px;margin:5px 0;background:var(--card);border-radius:10px;font-size:14px;line-height:1.38;border-left:3px solid #3a3a40}
+.log-e.good{border-left-color:var(--green)} .log-e.bad{border-left-color:var(--red)}
+.log-e.money{border-left-color:var(--gold)} .log-e.drug{border-left-color:var(--purple)}
+.log-e.info{border-left-color:var(--cyan)} .log-e.death{border-left-color:#fff;background:#2a0d14}
+.le-i{flex:none;width:22px;text-align:center}
+.empty-log{color:var(--mut);text-align:center;margin-top:40px}
+
+/* ---------- PANEL ---------- */
+#panel{position:absolute;inset:0;background:var(--bg);display:flex;flex-direction:column;transform:translateY(103%);transition:transform .24s ease;z-index:5}
+#panel.open{transform:none}
+.p-head{display:flex;align-items:center;gap:8px;padding:9px 12px;border-bottom:1px solid var(--line);background:#141417}
+.p-head h2{flex:1;margin:0;font-size:17px;text-align:center;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.p-head button{width:36px;height:36px;flex:none;border-radius:10px;border:1px solid var(--line);background:var(--card);font-size:18px;cursor:pointer}
+.p-head button.hide{visibility:hidden}
+.p-body{flex:1;overflow-y:auto;padding:6px 12px 52px;-webkit-overflow-scrolling:touch}
+.sec{font-size:11.5px;text-transform:uppercase;letter-spacing:1px;color:var(--red);margin:16px 2px 6px;font-weight:800}
+.row{display:flex;align-items:center;gap:10px;width:100%;text-align:left;background:var(--card);border:1px solid var(--line);
+  border-radius:12px;padding:10px 12px;margin:6px 0;cursor:pointer;min-height:54px}
+button.row:active{background:var(--card2);transform:scale(.99)}
+.row[disabled]{opacity:.42;cursor:not-allowed}
+.row.static{cursor:default}
+.row.owned{border-color:rgba(50,255,126,.35)}
+.row.hl{border-color:rgba(255,45,85,.6);box-shadow:inset 0 0 0 1px rgba(255,45,85,.25)}
+.r-ic{font-size:22px;width:30px;text-align:center;flex:none}
+.r-tx{flex:1;min-width:0}
+.r-tx b{display:block;font-size:15px;font-weight:650}
+.r-tx small{display:block;color:var(--mut);font-size:12px;margin-top:2px;line-height:1.35}
+.r-rt{font-size:13px;font-weight:700;text-align:right;flex:none;max-width:42%}
+.card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:12px;margin:8px 0;font-size:14px;line-height:1.45}
+.card.accent{border-color:rgba(255,45,85,.45);background:linear-gradient(180deg,#221418,#1b1b1e)}
+.big{font-size:20px;font-weight:800}
+.kv{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px}
+.kv div{background:#17171a;border-radius:8px;padding:8px;min-width:0}
+.kv small{display:block;color:var(--mut);font-size:11px}
+.kv b{font-size:15px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;display:block}
+.note{color:var(--mut);font-size:12.5px;margin:8px 2px;line-height:1.4}
+.g{color:var(--green)} .r{color:var(--red)} .y{color:var(--gold)} .p{color:var(--purple)} .c{color:var(--cyan)} .m{color:var(--mut)}
+.mini{height:6px;background:#2a2a2f;border-radius:4px;overflow:hidden;margin-top:6px}
+.mini i{display:block;height:100%;background:linear-gradient(90deg,var(--red2),var(--red));border-radius:4px}
+.mini.gr i{background:linear-gradient(90deg,#16c25a,#32ff7e)}
+
+/* ---------- NAV ---------- */
+#tabs{flex:none;display:grid;grid-template-columns:1fr 1fr 90px 1fr 1fr;align-items:end;background:#0c0c0e;border-top:1px solid #3a1420;
+  padding:6px 4px calc(6px + env(safe-area-inset-bottom));position:relative;z-index:10}
+.tab{background:none;border:0;display:flex;flex-direction:column;align-items:center;gap:2px;font-size:10.5px;color:var(--mut);padding:4px 0;cursor:pointer}
+.tab .ti{font-size:21px;line-height:1.1}
+.tab.on{color:var(--red)} .tab.on .ti{filter:drop-shadow(0 0 6px var(--red))}
+.age-btn{justify-self:center;width:78px;height:78px;border-radius:50%;border:3px solid #ff6b86;
+  background:radial-gradient(circle at 30% 28%,#ff5577,#c2002f 70%);color:#fff;font-weight:900;margin-top:-34px;cursor:pointer;
+  box-shadow:0 0 16px rgba(255,45,85,.75),0 0 42px rgba(255,45,85,.35);display:flex;flex-direction:column;align-items:center;justify-content:center;line-height:1.05;
+  animation:pulse 2.4s infinite}
+.age-btn small{font-size:9.5px;text-transform:uppercase;letter-spacing:.6px;opacity:.95}
+.age-btn b{font-size:15px;white-space:nowrap}
+.age-btn:active{transform:scale(.93)}
+.age-btn[disabled]{filter:grayscale(1);opacity:.45;animation:none}
+@keyframes pulse{0%,100%{box-shadow:0 0 16px rgba(255,45,85,.75),0 0 42px rgba(255,45,85,.3)}50%{box-shadow:0 0 24px rgba(255,45,85,.95),0 0 60px rgba(255,45,85,.45)}}
+
+/* ---------- MODAL ---------- */
+#modal-root{position:fixed;inset:0;z-index:50;display:none}
+#modal-root.show{display:block}
+.overlay{position:absolute;inset:0;background:rgba(0,0,0,.74);display:flex;align-items:center;justify-content:center;padding:14px;
+  -webkit-backdrop-filter:blur(3px);backdrop-filter:blur(3px)}
+.modal{width:100%;max-width:420px;max-height:90vh;max-height:90dvh;overflow-y:auto;background:#1a1a1d;border:1px solid #45202b;border-radius:18px;
+  padding:18px 16px 14px;box-shadow:0 0 30px rgba(255,45,85,.22);animation:pop .18s ease}
+@keyframes pop{from{transform:scale(.93);opacity:0}to{transform:none;opacity:1}}
+.modal.good{border-color:rgba(50,255,126,.5);box-shadow:0 0 30px rgba(50,255,126,.14)}
+.modal.bad{border-color:rgba(255,45,85,.75);box-shadow:0 0 34px rgba(255,45,85,.3)}
+.modal.drug{border-color:rgba(180,92,255,.6);box-shadow:0 0 30px rgba(180,92,255,.22)}
+.m-icon{font-size:46px;text-align:center;line-height:1.1}
+.modal h3{text-align:center;margin:6px 0 8px;font-size:19px}
+.m-text{color:#d8d8dc;font-size:14.5px;line-height:1.5;text-align:center}
+.m-choices{display:flex;flex-direction:column;gap:8px;margin-top:14px}
+.mbtn{background:var(--card2);border:1px solid #3b3b42;border-radius:12px;padding:11px 12px;font-size:15px;font-weight:650;cursor:pointer;text-align:center}
+.mbtn small{display:block;font-weight:400;font-size:12px;color:var(--mut);margin-top:2px}
+.mbtn:active{transform:scale(.98)}
+.mbtn.primary{background:linear-gradient(180deg,#ff2d55,#c2002f);border-color:#ff6b86;color:#fff;box-shadow:0 0 12px rgba(255,45,85,.4)}
+.mbtn.primary small{color:#ffd6de}
+.mbtn.danger{border-color:var(--red);color:#ff8aa0}
+.mbtn.ghost{background:transparent;color:var(--mut);border-color:#2c2c31}
+.mbtn[disabled]{opacity:.38;cursor:not-allowed}
+.qty{margin-top:12px}
+.qty-row{display:flex;gap:8px;align-items:center}
+.qty-row input{flex:1;min-width:0;background:#111;border:1px solid #3b3b42;border-radius:10px;color:#fff;font-size:18px;font-weight:700;padding:8px;text-align:center}
+.qb{width:44px;height:44px;border-radius:10px;border:1px solid #3b3b42;background:var(--card2);font-size:22px;cursor:pointer}
+.qty-unit{text-align:center;color:var(--mut);font-size:12px;margin:4px 0}
+.qty input[type=range]{width:100%;accent-color:var(--red);margin:6px 0}
+.qty-pre{display:grid;grid-template-columns:repeat(4,1fr);gap:6px}
+.qty-pre button{background:#141417;border:1px solid #3b3b42;border-radius:8px;padding:7px 0;font-size:12px;font-weight:700;cursor:pointer}
+.qty-info{margin-top:10px;text-align:center;font-size:14px;line-height:1.5;background:#141417;border-radius:10px;padding:8px}
+.form label{display:block;font-size:12px;color:var(--mut);margin:12px 0 5px;text-transform:uppercase;letter-spacing:.6px;text-align:left}
+.form input[type=text]{width:100%;background:#111;border:1px solid #3b3b42;border-radius:10px;color:#fff;font-size:16px;padding:10px}
+.picks{display:flex;flex-wrap:wrap;gap:6px}
+.pick{background:#141417;border:1px solid #3b3b42;border-radius:10px;padding:7px 9px;font-size:14px;cursor:pointer}
+.pick.av{font-size:22px;padding:4px 8px}
+.pick.sel{border-color:var(--red);background:rgba(255,45,85,.15);box-shadow:0 0 8px rgba(255,45,85,.35)}
+.logo{display:block;font-size:30px;font-weight:900;letter-spacing:3px;text-align:center;color:#fff;text-shadow:0 0 12px var(--red),0 0 28px var(--red)}
+.disclaimer{font-size:11px;color:var(--mut);text-align:center;margin-top:10px}
+.sumgrid{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:10px;text-align:left}
+.sumgrid div{background:#141417;border-radius:8px;padding:7px;font-size:12px;color:var(--mut)}
+.sumgrid b{display:block;color:#fff;font-size:14px}
+
+/* ---------- TOAST ---------- */
+#toast{position:fixed;left:50%;top:calc(10px + env(safe-area-inset-top));transform:translate(-50%,-160%);background:#26262b;border:1px solid var(--red);
+  padding:10px 14px;border-radius:12px;font-size:14px;z-index:60;transition:transform .25s;max-width:92vw;text-align:center;box-shadow:0 4px 22px rgba(0,0,0,.6)}
+#toast.show{transform:translate(-50%,0)}
+
+@media (max-width:360px){
+  .chip b{font-size:12.5px} .who .name{font-size:15px} .log-e{font-size:13px} .r-tx b{font-size:14px}
+  #tabs{grid-template-columns:1fr 1fr 80px 1fr 1fr} .age-btn{width:70px;height:70px}
+}
+@media (min-width:561px){ body{background:#0a0a0a} }
+</style>
+</head>
+<body>
+<div id="app">
+  <header id="hud"></header>
+  <main>
+    <div id="log"></div>
+    <section id="panel">
+      <div class="p-head">
+        <button id="p-back" aria-label="Retour">‹</button>
+        <h2 id="p-title"></h2>
+        <button id="p-close" aria-label="Fermer">✕</button>
+      </div>
+      <div class="p-body" id="p-body"></div>
+    </section>
+  </main>
+  <nav id="tabs">
+    <button class="tab" data-tab="activities"><span class="ti">🎯</span>Activités</button>
+    <button class="tab" data-tab="trafic"><span class="ti">💊</span>Trafic</button>
+    <button class="age-btn" id="age-btn" aria-label="Vieillir de 1 mois"><small>Vieillir</small><b>+1 mois</b></button>
+    <button class="tab" data-tab="mafia"><span class="ti">🕴️</span>Mafia</button>
+    <button class="tab" data-tab="assets"><span class="ti">💎</span>Patrimoine</button>
+  </nav>
+</div>
+<div id="modal-root"></div>
+<div id="toast"></div>
+
+<script>
+'use strict';
+/* =====================================================================
+   CRIME LIFE — simulation de vie criminelle (œuvre de fiction)
+   Modules : U (utilitaires) · DATA · PlayerData · MarketData · Inventory
+             Actions · GoFast · Crew · Shop · Monthly · Events · UI · V (vues) · Game
+   ===================================================================== */
+
+const $ = (s) => document.querySelector(s);
+let S = null; // état de la partie (sauvegardé dans localStorage)
+
+/* =========================== UTILITAIRES =========================== */
+const U = {
+  rand: (a, b) => a + Math.random() * (b - a),
+  ri: (a, b) => Math.floor(a + Math.random() * (b - a + 1)),
+  chance: (p) => Math.random() * 100 < p,
+  clamp: (v, a, b) => Math.max(a, Math.min(b, v)),
+  pick: (arr) => arr[Math.floor(Math.random() * arr.length)],
+  shuffle(arr) { const a = arr.slice(); for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; },
+  uid: () => Math.random().toString(36).slice(2, 10),
+  num: (n) => Math.round(n).toLocaleString('fr-FR'),
+  money(n) {
+    const neg = n < 0; n = Math.abs(Math.round(n));
+    let s;
+    if (n >= 1e9) s = (n / 1e9).toLocaleString('fr-FR', { maximumFractionDigits: 2 }) + ' Md€';
+    else if (n >= 1e6) s = (n / 1e6).toLocaleString('fr-FR', { maximumFractionDigits: 2 }) + ' M€';
+    else s = n.toLocaleString('fr-FR') + ' €';
+    return (neg ? '−' : '') + s;
+  },
+  unitPrice: (n) => (n < 100 ? n.toLocaleString('fr-FR', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + ' €' : U.money(n)),
+  age(m) { const y = Math.floor(m / 12), r = m % 12; return `${y} ans${r ? ` ${r} mois` : ''}`; },
+  dur(m) { if (m < 12) return `${m} mois`; const y = Math.floor(m / 12), r = m % 12; return `${y} an${y > 1 ? 's' : ''}${r ? ` et ${r} mois` : ''}`; },
+  esc: (s) => String(s).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c])),
+  de: (s) => (/^[aeiouyhéèêàâîïôûAEIOUYHÉÈÊÀÂÎÏÔÛ]/.test(s) ? 'd\'' + s : 'de ' + s),
+  pct: (p) => `<span class="${p >= 60 ? 'g' : p >= 30 ? 'y' : 'r'}">${Math.round(p * 10) / 10}%</span>`,
+  risk: (p) => `<span class="${p <= 10 ? 'g' : p <= 30 ? 'y' : 'r'}">${Math.round(p * 10) / 10}%</span>`,
+  q: (q) => `<span class="${q >= 70 ? 'g' : q >= 40 ? 'y' : 'r'}">Q${q}</span>`,
+  // quantité max telle que costFn(q) <= budget (recherche dichotomique)
+  maxQty(costFn, budget, limit) {
+    let lo = 0, hi = Math.max(0, Math.floor(limit));
+    while (lo < hi) { const mid = Math.ceil((lo + hi) / 2); if (costFn(mid) <= budget) lo = mid; else hi = mid - 1; }
+    return lo;
+  },
+};
+
+function log(e, t, c = '') {
+  if (!S || (!S.alive && c !== 'death')) return;
+  S.log.push({ m: S.ageMonths, e, t, c });
+  S.logSeq = (S.logSeq || 0) + 1;
+  if (S.log.length > 260) S.log.splice(0, S.log.length - 260);
+}
+
+/* =============================== DATA =============================== */
+const DRUGS = {
+  oxy:   { name: 'Oxycodone', cat: 'med', icon: '💊', unit: 'cp', brands: ['Percocet 10 mg', 'OxyContin 80 mg'], base: 25, demand: 60, depth: 4000, bulk: 0.2, add: 7, od: 1.4, opioid: true, fx: { health: 4 }, txt: 'Une chaleur cotonneuse t\'enveloppe, la douleur disparaît.' },
+  lean:  { name: 'Sirop codéiné / Prométhazine', cat: 'med', icon: '🟣', unit: 'flacon', brands: ['Actavis', 'Euphon', 'Maka'], base: 120, demand: 10, depth: 400, bulk: 3, add: 5, od: 1.0, opioid: true, fx: { health: 1, respect: 1 }, txt: 'Double cup en main, le temps ralentit…' },
+  benzo: { name: 'Benzodiazépines', cat: 'med', icon: '💠', unit: 'cp', brands: ['Xanax (Alprazolam)', 'Rivotril'], base: 8, demand: 120, depth: 8000, bulk: 0.2, add: 5, od: 0.6, benzo: true, fx: { crime: 6 }, txt: 'Plus rien ne t\'atteint. Sang-froid total.' },
+  rita:  { name: 'Méthylphénidate', cat: 'med', icon: '⚪', unit: 'cp', brands: ['Ritaline', 'Concerta'], base: 10, demand: 70, depth: 6000, bulk: 0.2, add: 3, od: 0.3, stim: true, fx: { ap: 1 }, txt: 'Concentration maximale, tu enchaînes les tâches.' },
+  coke:  { name: 'Cocaïne (poudre)', cat: 'dure', icon: '❄️', unit: 'g', brands: ['Écaille de poisson', 'Plaquette 90 %', 'Colombienne'], base: 70, demand: 40, depth: 4000, bulk: 1, add: 4, od: 0.8, stim: true, fx: { ap: 1, crime: 8, respect: 1, health: -2 }, txt: 'Tu te sens invincible, le roi du monde.' },
+  crack: { name: 'Crack', cat: 'dure', icon: '🪨', unit: 'caillou', brands: ['Galette', 'Cailloux'], base: 20, demand: 70, depth: 4000, bulk: 0.3, add: 9, od: 1.5, stim: true, fx: { ap: 1, crime: 12, health: -5 }, txt: 'Un flash violent… puis l\'envie immédiate d\'y retourner.' },
+  heroB: { name: 'Héroïne (brown sugar)', cat: 'dure', icon: '🟤', unit: 'g', brands: ['Brown sugar', 'Brune afghane'], base: 40, demand: 30, depth: 2500, bulk: 1, add: 10, od: 2.2, opioid: true, fx: { health: 3 }, txt: 'Tu pars loin, très loin…' },
+  heroW: { name: 'Héroïne (blanche)', cat: 'dure', icon: '🤍', unit: 'g', brands: ['Blanche n°4', 'Chiva'], base: 80, demand: 20, depth: 1800, bulk: 1, add: 11, od: 2.8, opioid: true, fx: { health: 3 }, txt: 'Une vague tiède te submerge. Plus rien n\'existe.' },
+  weed:  { name: 'Cannabis (herbe)', cat: 'douce', icon: '🌿', unit: 'g', brands: ['Amnesia', 'Gelato', 'OG Kush', 'Purple Haze'], base: 10, demand: 160, depth: 25000, bulk: 1, add: 1, od: 0, fx: { health: 2 }, txt: 'Tu te poses, le stress redescend.' },
+  hash:  { name: 'Résine filtrée', cat: 'douce', icon: '🟫', unit: 'g', brands: ['Jaune mousseux', 'Filtré 120 µ', 'Charas'], base: 7, demand: 220, depth: 35000, bulk: 1, add: 1, od: 0, fx: { health: 1 }, txt: 'Un gros spliff sur le toit du bâtiment.' },
+  mdma:  { name: 'MDMA / Ecstasy', cat: 'dure', icon: '💗', unit: 'cp', brands: ['Tesla', 'Punisher', 'Blue Dolphin', 'Skull'], base: 10, demand: 90, depth: 10000, bulk: 0.3, add: 3, od: 0.6, fx: { respect: 2, health: -1 }, txt: 'Tu aimes tout le monde, la soirée est magique.' },
+  keta:  { name: 'Kétamine', cat: 'dure', icon: '🐴', unit: 'g', brands: ['Cristaux', 'Poudre fine'], base: 30, demand: 30, depth: 2500, bulk: 1, add: 4, od: 1.0, fx: { health: -1 }, txt: 'Le sol se dérobe, tu flottes hors de ton corps.' },
+  meth:  { name: 'Méthamphétamine', cat: 'dure', icon: '🧊', unit: 'g', brands: ['Crystal', 'Ice bleue'], base: 60, demand: 20, depth: 2500, bulk: 1, add: 9, od: 1.2, stim: true, fx: { ap: 2, crime: 10, health: -5 }, txt: 'Tu ne dors plus. Tu n\'as plus besoin de dormir.' },
+};
+const CATS = { med: '💊 Médicaments détournés', dure: '💀 Drogues dures', douce: '🌿 Drogues douces' };
+const DOSES = [
+  { label: 'Petite dose', units: 1, mult: 0.5 },
+  { label: 'Dose normale', units: 2, mult: 1 },
+  { label: 'Grosse dose', units: 4, mult: 2.5 },
+];
+
+const CITIES = {
+  marseille: { name: 'Marseille', country: 'France', flag: '🇫🇷', region: 'eu', police: 1.0, customs: 1.0, names: 'fr', cops: 'BAC',
+    mult: { hash: 0.85, meth: 1.6, oxy: 1.3, lean: 1.2 }, spec: { hash: 10 },
+    routes: ['Marbella → Marseille', 'Algésiras → Marseille', 'Barcelone → Marseille'], gfCargo: ['hash', 'hash', 'weed', 'coke'],
+    intro: 'Tu as grandi dans une cité des quartiers nord de Marseille. À 18 ans, un grand du quartier te propose de tenir le guet sur un point de deal.' },
+  paris: { name: 'Paris', country: 'France', flag: '🇫🇷', region: 'eu', police: 1.2, customs: 1.1, names: 'fr', cops: 'BAC',
+    mult: { coke: 1.1, crack: 0.9, meth: 1.6, oxy: 1.3, lean: 1.3, keta: 1.1 }, spec: {},
+    routes: ['Madrid → Paris', 'Anvers → Paris', 'Perpignan → Paris'], gfCargo: ['hash', 'coke', 'coke', 'weed'],
+    intro: 'Tu as grandi dans une tour de Seine-Saint-Denis, aux portes de Paris. À 18 ans, les grands du hall te proposent de faire le guetteur.' },
+  amsterdam: { name: 'Amsterdam', country: 'Pays-Bas', flag: '🇳🇱', region: 'eu', police: 0.75, customs: 0.9, names: 'nl', cops: 'Politie',
+    mult: { weed: 0.45, hash: 0.55, mdma: 0.35, keta: 0.5, coke: 0.75, meth: 1.4, lean: 1.3 }, spec: { weed: 20, mdma: 20, hash: 10, keta: 10 },
+    routes: ['Rotterdam → Anvers', 'Amsterdam → Cologne', 'Rotterdam → Lille'], gfCargo: ['mdma', 'coke', 'weed', 'keta'],
+    intro: 'Tu as grandi à Amsterdam-Noord, entre les coffee shops et les docks. À 18 ans, un dealer du coin te propose de surveiller sa rue.' },
+  medellin: { name: 'Medellín', country: 'Colombie', flag: '🇨🇴', region: 'am', police: 0.8, customs: 1.4, names: 'latam', cops: 'Policía Nacional',
+    mult: { coke: 0.2, crack: 0.3, weed: 0.4, heroW: 0.8, oxy: 1.4, lean: 1.5, benzo: 1.3, mdma: 1.5, meth: 1.3 }, spec: { coke: 25, crack: 10 },
+    routes: ['Medellín → Turbo (côte)', 'Cali → Buenaventura', 'Medellín → Carthagène'], gfCargo: ['coke', 'coke', 'weed'],
+    intro: 'Tu as grandi dans une comuna accrochée aux collines de Medellín. À 18 ans, un patrón du barrio te propose de faire le « campanero », le guetteur.' },
+  culiacan: { name: 'Culiacán', country: 'Mexique', flag: '🇲🇽', region: 'am', police: 0.6, customs: 1.2, names: 'latam', cops: 'Federales',
+    mult: { meth: 0.2, heroB: 0.3, heroW: 0.4, weed: 0.35, coke: 0.45, mdma: 1.3, lean: 1.3 }, spec: { meth: 25, heroB: 15, heroW: 10 },
+    routes: ['Culiacán → Tijuana', 'Sinaloa → Nogales', 'Culiacán → Mexicali'], gfCargo: ['meth', 'heroB', 'coke', 'weed'],
+    intro: 'Tu as grandi à Culiacán, au cœur du Sinaloa. À 18 ans, un « halcón » du quartier te propose de devenir guetteur pour la plaza.' },
+  miami: { name: 'Miami', country: 'USA', flag: '🇺🇸', region: 'am', police: 1.35, customs: 1.3, names: 'us', cops: 'DEA',
+    mult: { coke: 1.3, crack: 1.2, oxy: 1.8, lean: 1.7, benzo: 1.5, meth: 1.2, heroW: 1.3, weed: 1.2, hash: 1.8, rita: 1.4 }, spec: {},
+    routes: ['Miami → Atlanta (I-95)', 'Houston → Miami (I-10)', 'Miami → New York'], gfCargo: ['coke', 'heroW', 'meth', 'weed'],
+    intro: 'Tu as grandi à Liberty City, Miami. À 18 ans, un OG du block te propose de faire le lookout pour son corner.' },
+};
+
+const RANKS = [
+  { name: 'Guetteur', icon: '👀', respect: 0, earned: 0, terr: 0, crew: 0, perks: ['Salaire de guet : 350 €/mois', 'Vente au détail & achat en gros'] },
+  { name: 'Dealeur', icon: '💊', respect: 15, earned: 3000, terr: 0, crew: 2, perks: ['2 sous-fifres', 'Importations', 'Serre & cuisine à crack'] },
+  { name: 'Lieutenant', icon: '🔫', respect: 35, earned: 50000, terr: 0, crew: 6, perks: ['6 sous-fifres', 'Guerres de territoire', 'Labos MDMA, méth, presse', 'Braquage de bijouterie'] },
+  { name: 'Boss local', icon: '👑', respect: 60, earned: 400000, terr: 1, crew: 15, perks: ['15 sous-fifres', 'Labos cocaïne & héroïne', 'Avion privé', 'Fourgons blindés'] },
+  { name: 'Parrain', icon: '🦅', respect: 85, earned: 5000000, terr: 4, crew: 40, perks: ['40 sous-fifres', 'Peines de prison −30 %', 'Légende du milieu'] },
+];
+
+const THEFTS = [
+  { id: 'arrache', name: 'Vol à l\'arraché', icon: '👜', ap: 1, base: 75, min: 40, max: 400, heat: 3, jail: [1, 4] },
+  { id: 'cambriolage', name: 'Cambrioler un appartement', icon: '🏠', ap: 1, base: 58, min: 400, max: 4500, heat: 5, jail: [4, 12] },
+  { id: 'voiture', name: 'Voler une voiture (pour un receleur)', icon: '🚗', ap: 1, base: 55, min: 1500, max: 9000, heat: 6, jail: [6, 18] },
+  { id: 'epicerie', name: 'Braquer une épicerie de nuit', icon: '🏪', ap: 1, base: 48, min: 800, max: 5000, heat: 10, jail: [12, 30], armed: true, dmg: 20 },
+  { id: 'bijouterie', name: 'Braquer une bijouterie', icon: '💎', ap: 2, base: 32, min: 25000, max: 120000, heat: 22, jail: [36, 84], armed: true, dmg: 35, rank: 2 },
+  { id: 'fourgon', name: 'Attaquer un fourgon blindé', icon: '🚚', ap: 2, base: 20, min: 250000, max: 900000, heat: 40, jail: [96, 180], armed: true, dmg: 55, rank: 3, crew: 3 },
+];
+const ASSAULTS = [
+  { id: 'passant', name: 'Agresser un passant', icon: '🚶', ap: 1, enemy: [10, 40], cash: [20, 300], respect: 1, heat: 4, dmg: [5, 15], jail: [3, 10] },
+  { id: 'dealer', name: 'Racketter un petit dealer', icon: '🧢', ap: 1, enemy: [25, 60], cash: [200, 1500], respect: 3, heat: 3, dmg: [8, 25], jail: [4, 12], loot: true },
+  { id: 'balance', name: 'Corriger une balance', icon: '🐀', ap: 1, enemy: [15, 45], cash: [0, 0], respect: 4, heat: -12, dmg: [5, 15], jail: [6, 18] },
+  { id: 'caid', name: 'Défier un caïd rival', icon: '😈', ap: 1, enemy: [55, 115], cash: [1000, 8000], respect: 8, heat: 8, dmg: [20, 50], jail: [12, 36], lethal: true },
+];
+const REHABS = [
+  { id: 'na', name: 'Réunion Narcotiques Anonymes', icon: '🤝', cost: 0, ap: 1, success: 100, red: [4, 8], desc: 'Gratuit · petit effet' },
+  { id: 'home', name: 'Sevrage seul à la maison', icon: '🛏️', cost: 0, ap: 2, success: 35, red: [20, 30], failHp: 12, desc: 'Gratuit · douloureux, souvent un échec' },
+  { id: 'csapa', name: 'Centre de soins public', icon: '🏥', cost: 1500, ap: 2, success: 70, red: [30, 45], desc: 'Encadrement médical' },
+  { id: 'suisse', name: 'Clinique privée en Suisse', icon: '🇨🇭', cost: 45000, ap: 3, success: 95, red: [70, 90], hp: 10, desc: 'Le luxe, la discrétion, l\'efficacité' },
+];
+const HEALS = [
+  { id: 'sport', name: 'Salle de sport', icon: '🏋️', cost: 40, ap: 1, hp: [3, 6], respect: 0.5, desc: 'Entretenir la machine' },
+  { id: 'pharma', name: 'Automédication (pharmacie)', icon: '💊', cost: 60, ap: 1, hp: [3, 8], desc: 'Pansements, antidouleurs' },
+  { id: 'rue', name: 'Médecin de rue (discret)', icon: '🩺', cost: 900, ap: 1, hp: [15, 25], fail: 15, desc: 'Ne pose pas de questions' },
+  { id: 'hopital', name: 'Hôpital public', icon: '🏥', cost: 250, ap: 1, hp: [30, 45], report: true, desc: 'Efficace, mais signale les blessures par balle' },
+  { id: 'clinique', name: 'Clinique privée VIP', icon: '✨', cost: 9000, ap: 1, hp: [55, 75], desc: 'Chambre privée, zéro question' },
+];
+const SURGERIES = [
+  { id: 'cheveux', name: 'Greffe de cheveux (Istanbul)', icon: '💇', cost: 3500, respect: 1, once: true, fail: 10 },
+  { id: 'dents', name: 'Facettes dentaires', icon: '🦷', cost: 6000, respect: 2, once: true, fail: 5 },
+  { id: 'nez', name: 'Rhinoplastie', icon: '👃', cost: 9000, respect: 3, once: true, fail: 12 },
+  { id: 'abdos', name: 'Lipo & sculpture des abdos', icon: '💪', cost: 15000, respect: 3, once: true, fail: 10 },
+  { id: 'empreintes', name: 'Brûler ses empreintes digitales', icon: '🔥', cost: 15000, heat: -20, hp: 10, fail: 15 },
+  { id: 'visage', name: 'Nouveau visage (chirurgie clandestine)', icon: '🎭', cost: 120000, heat: -50, record: 2, hp: 15, fail: 18 },
+];
+
+const SHOP = {
+  clothes: { label: 'Vêtements & Style', icon: '👕', items: [
+    { id: 'zara', name: 'Zara — ensemble basique', icon: '👔', price: 180, respect: 1 },
+    { id: 'tech', name: 'Nike Tech Fleece', icon: '🧥', price: 260, respect: 2 },
+    { id: 'lacoste', name: 'Survêtement Lacoste', icon: '🐊', price: 350, respect: 2 },
+    { id: 'stone', name: 'Stone Island — veste', icon: '🧭', price: 950, respect: 3 },
+    { id: 'acne', name: 'Acne Studios — total look', icon: '🖤', price: 1900, respect: 4 },
+    { id: 'moncler', name: 'Moncler — doudoune', icon: '🧊', price: 2600, respect: 5 },
+    { id: 'balmain', name: 'Balmain — jean & veste', icon: '⚜️', price: 4800, respect: 6 },
+    { id: 'margiela', name: 'Maison Margiela — Tabi & manteau', icon: '🥼', price: 6500, respect: 7 },
+    { id: 'chrome', name: 'Chrome Hearts — hoodie & bagues', icon: '✝️', price: 14000, respect: 9 },
+  ] },
+  jewelry: { label: 'Bijoux & Montres', icon: '⌚', items: [
+    { id: 'argent', name: 'Chaîne en argent', icon: '⛓️', price: 300, respect: 1 },
+    { id: 'gourmette', name: 'Gourmette en or 18 carats', icon: '📿', price: 3500, respect: 3 },
+    { id: 'grillz', name: 'Grillz en or', icon: '😁', price: 5000, respect: 3 },
+    { id: 'chaine', name: 'Chaîne en or massif', icon: '🟡', price: 12000, respect: 5 },
+    { id: 'rolex', name: 'Rolex Submariner', icon: '⌚', price: 14000, respect: 6 },
+    { id: 'cuban', name: 'Cuban link sertie de diamants', icon: '💎', price: 65000, respect: 9 },
+    { id: 'royal', name: 'Audemars Piguet Royal Oak sertie', icon: '⌚', price: 95000, respect: 11 },
+    { id: 'rm', name: 'Richard Mille RM 011', icon: '⏱️', price: 260000, respect: 15 },
+    { id: 'pendentif', name: 'Pendentif diamants sur mesure', icon: '💠', price: 450000, respect: 18 },
+  ] },
+  vehicles: { label: 'Véhicules', icon: '🚗', items: [
+    { id: 'clio', name: 'Clio 2 d\'occasion', icon: '🚗', price: 2500, respect: 0, speed: 35, disc: 85 },
+    { id: 'tmax', name: 'Scooter T-Max d\'occasion', icon: '🛵', price: 4500, respect: 1, speed: 55, disc: 60 },
+    { id: 'golf', name: 'Golf 7 GTI', icon: '🚙', price: 28000, respect: 2, speed: 66, disc: 65 },
+    { id: 'rs3', name: 'Audi RS3', icon: '🏎️', price: 58000, respect: 4, speed: 80, disc: 50 },
+    { id: 'm5', name: 'BMW M5 Competition', icon: '🏎️', price: 120000, respect: 6, speed: 88, disc: 45 },
+    { id: 'g63', name: 'Mercedes G63 AMG', icon: '🚙', price: 190000, respect: 9, speed: 62, disc: 20 },
+    { id: 'urus', name: 'Lamborghini Urus', icon: '🏎️', price: 260000, respect: 12, speed: 90, disc: 12 },
+    { id: 'sf90', name: 'Ferrari SF90', icon: '🏎️', price: 480000, respect: 15, speed: 97, disc: 6 },
+    { id: 'chiron', name: 'Bugatti Chiron', icon: '🚀', price: 3000000, respect: 22, speed: 99, disc: 3 },
+  ] },
+  properties: { label: 'Immobilier', icon: '🏠', items: [
+    { id: 'cave', name: 'Cave louée dans la cité', icon: '🚪', price: 2500, respect: 0, cap: 150, sec: 3, upkeep: 60, stash: true },
+    { id: 'studio', name: 'Studio en cité', icon: '🏚️', price: 30000, respect: 1, cap: 200, sec: 5, upkeep: 250 },
+    { id: 'box', name: 'Box / planque sécurisée', icon: '📦', price: 45000, respect: 0, cap: 1500, sec: 25, upkeep: 200, stash: true },
+    { id: 'appart', name: 'Appartement discret', icon: '🏢', price: 110000, respect: 2, cap: 400, sec: 15, upkeep: 700 },
+    { id: 'entrepot', name: 'Entrepôt industriel', icon: '🏭', price: 280000, respect: 1, cap: 20000, sec: 20, upkeep: 1800, stash: true },
+    { id: 'loft', name: 'Loft en centre-ville', icon: '🌆', price: 420000, respect: 5, cap: 600, sec: 25, upkeep: 2200 },
+    { id: 'villa', name: 'Villa sécurisée', icon: '🏡', price: 1600000, respect: 10, cap: 3000, sec: 55, upkeep: 9000 },
+    { id: 'hacienda', name: 'Hacienda fortifiée', icon: '🏰', price: 6500000, respect: 16, cap: 15000, sec: 85, upkeep: 30000 },
+  ] },
+  weapons: { label: 'Armurerie', icon: '🔫', cashOnly: true, items: [
+    { id: 'couteau', name: 'Couteau papillon', icon: '🔪', price: 80, power: 6 },
+    { id: 'glock', name: 'Glock 17 (9 mm)', icon: '🔫', price: 1500, power: 20 },
+    { id: 'revolver', name: 'Revolver .357 Magnum', icon: '🔫', price: 2200, power: 24 },
+    { id: 'uzi', name: 'Uzi (pistolet-mitrailleur)', icon: '🔫', price: 4500, power: 32 },
+    { id: 'pompe', name: 'Fusil à pompe', icon: '💥', price: 3800, power: 36 },
+    { id: 'ak', name: 'AK-47 (Kalachnikov)', icon: '🪖', price: 7500, power: 50 },
+    { id: 'gilet', name: 'Gilet pare-balles', icon: '🦺', price: 2500, armor: 40 },
+    { id: 'gilet4', name: 'Gilet lourd niveau IV', icon: '🛡️', price: 9000, armor: 70 },
+  ] },
+};
+const RESALE = { clothes: 0.3, jewelry: 0.6, vehicles: 0.6, properties: 0.85, weapons: 0.4 };
+
+const LABS = {
+  serre:  { name: 'Serre indoor (cannabis)', icon: '🌱', drug: 'weed', price: 15000, out: 350, q: [55, 85], upkeep: 900, rank: 1, risk: 1.5 },
+  crack:  { name: 'Cuisine à crack', icon: '🍳', drug: 'crack', price: 25000, out: 400, q: [40, 70], upkeep: 1000, rank: 1, risk: 2.5, input: { drug: 'coke', qty: 120 } },
+  presse: { name: 'Presse à comprimés (faux Oxy)', icon: '⚙️', drug: 'oxy', price: 70000, out: 1600, q: [35, 70], upkeep: 5000, rank: 2, risk: 2 },
+  mdma:   { name: 'Labo MDMA', icon: '🍬', drug: 'mdma', price: 90000, out: 2500, q: [50, 85], upkeep: 7000, rank: 2, risk: 2 },
+  meth:   { name: 'Labo de méthamphétamine', icon: '🧪', drug: 'meth', price: 160000, out: 900, q: [60, 95], upkeep: 12000, rank: 2, risk: 3, boom: 3 },
+  hero:   { name: 'Labo d\'héroïne', icon: '🌺', drug: 'heroW', price: 320000, out: 1800, q: [65, 92], upkeep: 30000, rank: 3, risk: 2.5 },
+  coke:   { name: 'Labo de cocaïne (jungle)', icon: '🌴', drug: 'coke', price: 450000, out: 3000, q: [70, 95], upkeep: 45000, rank: 3, risk: 2.5 },
+};
+const LAB_MULT = [1, 1.6, 2.3];
+
+const BUSINESSES = {
+  laverie:    { name: 'Laverie automatique', icon: '🧺', price: 35000, cap: 6000, income: 400, respect: 0 },
+  barber:     { name: 'Barber shop', icon: '💈', price: 45000, cap: 8000, income: 500, respect: 1 },
+  snack:      { name: 'Snack / Kebab', icon: '🥙', price: 60000, cap: 10000, income: 700, respect: 1 },
+  lavage:     { name: 'Station de lavage auto', icon: '🚿', price: 95000, cap: 18000, income: 1100, respect: 1 },
+  chicha:     { name: 'Bar à chicha', icon: '💨', price: 160000, cap: 32000, income: 1800, respect: 2 },
+  club:       { name: 'Boîte de nuit', icon: '🪩', price: 480000, cap: 95000, income: 5000, respect: 5 },
+  concession: { name: 'Concession auto de luxe', icon: '🚘', price: 1300000, cap: 260000, income: 12000, respect: 5 },
+  casino:     { name: 'Casino clandestin', icon: '🎰', price: 3200000, cap: 650000, income: 30000, respect: 8 },
+};
+const LAUNDER_FEE = 0.15;
+
+const IMPORT_METHODS = [
+  { id: 'mule', name: 'Mule (passeur)', icon: '🧳', max: 1500, fixed: 2500, pct: 0.05, risk: 16, months: 1, rank: 1 },
+  { id: 'camion', name: 'Camion à double fond', icon: '🚚', max: 15000, fixed: 9000, pct: 0.10, risk: 11, months: 1, rank: 1, sameRegion: true },
+  { id: 'container', name: 'Conteneur maritime', icon: '🚢', max: 200000, fixed: 30000, pct: 0.08, risk: 9, months: 2, rank: 2 },
+  { id: 'avion', name: 'Avion privé', icon: '🛩️', max: 6000, fixed: 70000, pct: 0.03, risk: 4, months: 1, rank: 3 },
+];
+
+const LOANS = [
+  { id: 'caid', lender: 'Momo (caïd du quartier)', amount: 2000, rate: 0.10, months: 6, respect: 0 },
+  { id: 'usurier', lender: 'Vlad (usurier)', amount: 15000, rate: 0.12, months: 6, respect: 20 },
+  { id: 'milieu', lender: 'Maître Varenne (banquier du milieu)', amount: 100000, rate: 0.08, months: 8, respect: 45 },
+  { id: 'cartel', lender: 'Don Esteban (cartel)', amount: 750000, rate: 0.06, months: 10, respect: 70 },
+];
+
+const RIVAL_NAMES = ['Les Tigres du 13', 'La Mafia des Docks', 'Le Clan Moreau', 'Los Serpientes', 'Le Gang des Balkans', 'La Familia Roja', 'Les Fantômes du Nord', 'Le Cartel del Pacífico', 'Les Loups de l\'Est'];
+const NAMES = {
+  fr: { first: ['Yanis', 'Mehdi', 'Kevin', 'Moussa', 'Sofiane', 'Dylan', 'Bilal', 'Enzo', 'Rayan', 'Karim', 'Mamadou', 'Jordan', 'Nabil', 'Théo', 'Walid', 'Inès', 'Sarah', 'Nadia', 'Jessica', 'Yasmina'],
+        last: ['Benali', 'Moreau', 'Diallo', 'Haddad', 'Lefèvre', 'Traoré', 'Mansouri', 'Garcia', 'Petit', 'Bouzid'] },
+  nl: { first: ['Daan', 'Jayden', 'Mohammed', 'Sem', 'Levi', 'Noah', 'Anouk', 'Fleur', 'Rachid', 'Bram'], last: ['de Vries', 'Jansen', 'Bakker', 'Visser', 'El Amrani', 'Smit', 'Mulder', 'Bos'] },
+  latam: { first: ['Carlos', 'Juan', 'Miguel', 'Jhon', 'Andrés', 'Luis', 'Jesús', 'Valentina', 'Camila', 'Diego'], last: ['Restrepo', 'Gómez', 'Castaño', 'Mejía', 'Ramírez', 'Rojas', 'Herrera', 'Salazar'] },
+  us: { first: ['Tyrone', 'Marcus', 'Jayden', 'Carlos', 'DeShawn', 'Tony', 'Mike', 'Keisha', 'Jasmine', 'Andre'], last: ['Johnson', 'Williams', 'Rodriguez', 'Brown', 'Jackson', 'Davis', 'Martinez', 'Wright'] },
+};
+const NICKS = ['Le Rat', 'Pitbull', 'Petit Prince', 'La Fouine', 'Tonton', 'Le Muet', 'Balafre', 'Ninja', 'Le Comptable', 'Bébé', 'Requin', 'Fantôme', 'Zombie', 'Pharaon', 'Speedy', 'Taz', 'Mowgli', 'Caillou', 'Le Sage', 'Vipère', 'Grizzly', 'Sniper', 'Mamba', 'Casper'];
+const TRAITS = {
+  discret:   { name: 'Discret', icon: '🤫', desc: 'Risque d\'arrestation réduit' },
+  violent:   { name: 'Violent', icon: '🥊', desc: 'Redoutable en guerre, instable' },
+  bavard:    { name: 'Bavard', icon: '🗣️', desc: 'Risque de balancer ×2' },
+  ambitieux: { name: 'Ambitieux', icon: '📈', desc: 'Progresse vite, peut trahir' },
+  fidele:    { name: 'Fidèle', icon: '🐕', desc: 'Loyauté stable' },
+  bosseur:   { name: 'Bosseur', icon: '💼', desc: '+25 % de ventes' },
+};
+const SOLDIER_PAY = 1200;
+const AVATARS = ['🧑🏽', '👨🏻', '👨🏾', '👩🏽', '👩🏻', '👩🏿', '🧔🏻', '🧑🏿'];
+
+/* ============================ PLAYER DATA ============================ */
+const PlayerData = {
+  blank(name = 'Inconnu', avatar = '🧑🏽', city = 'marseille') {
+    return {
+      v: 1, name, avatar, city, ageMonths: 216, cash: 250, bank: 0,
+      health: 88, respect: 5, addiction: 0, heat: 0, ap: 4,
+      rank: 0, earned: 0, record: 0, jail: 0, wounded: false, territories: 0,
+      launderTarget: null, deposit: 0, unpaid: 0,
+      stock: {}, owned: { clothes: [], jewelry: [], vehicles: [], properties: [], weapons: [] },
+      crew: [], candidates: [], labs: [], businesses: [], imports: [], gofasts: [], debts: [], buffs: [], used: {}, surgeries: [],
+      rivals: [], market: null,
+      stats: { crimes: 0, arrests: 0, jailMonths: 0, kills: 0, doses: 0, ods: 0, maxWorth: 0, sold: 0, bought: 0, wars: 0 },
+      log: [], logSeq: 0, alive: true, death: null,
+    };
+  },
+  mod(stat, d) { S[stat] = U.clamp((S[stat] || 0) + d, 0, 100); },
+  hurt(n, cause) {
+    if (n <= 0 || !S.alive) return;
+    S.health = Math.max(0, S.health - n);
+    if (S.health <= 0) Game.die(cause);
+  },
+  heal(n) { S.health = Math.min(100, S.health + n); },
+  earn(n) { n = Math.round(n); S.cash += n; S.earned += n; },
+  can(n, bank = true) { return S.cash + (bank ? S.bank : 0) >= n; },
+  pay(n, bank = true) {
+    if (!this.can(n, bank)) return false;
+    const c = Math.min(S.cash, n); S.cash -= c; S.bank -= (n - c); return true;
+  },
+  // Charges légales : prélevées sur la banque puis le liquide. Renvoie l'impayé.
+  charge(n) {
+    const b = Math.min(S.bank, n); S.bank -= b; let rest = n - b;
+    const c = Math.min(S.cash, rest); S.cash -= c; rest -= c; return rest;
+  },
+  items(cat) { return S.owned[cat].map((id) => SHOP[cat].items.find((i) => i.id === id)).filter(Boolean); },
+  possessionRespect() {
+    let r = 0;
+    for (const cat in SHOP) for (const it of this.items(cat)) r += it.respect || 0;
+    for (const b of S.businesses) r += BUSINESSES[b.type].respect || 0;
+    return Math.min(40, r);
+  },
+  respect() { return U.clamp(Math.round(S.respect + this.possessionRespect()), 0, 100); },
+  firepower() {
+    const ws = this.items('weapons').filter((w) => w.power).map((w) => w.power).sort((a, b) => b - a);
+    if (!ws.length) return 0;
+    return Math.round(ws[0] + ws.slice(1).reduce((a, b) => a + b * 0.15, 0));
+  },
+  armor() { return Math.max(0, ...this.items('weapons').map((w) => w.armor || 0)); },
+  capacity() { return 50 + this.items('properties').reduce((a, p) => a + p.cap, 0); },
+  security() { return Math.max(0, ...this.items('properties').map((p) => p.sec)); },
+  home() { const ps = this.items('properties').filter((p) => !p.stash).sort((a, b) => b.price - a.price); return ps[0] || { name: 'Chambre chez ta mère', icon: '🛏️' }; },
+  crimeBuff() { return S.buffs.filter((b) => b.type === 'crime').reduce((a, b) => a + b.value, 0); },
+  buff(type, value, months) {
+    const ex = S.buffs.find((b) => b.type === type);
+    if (ex) { ex.value = Math.max(ex.value, value); ex.months = Math.max(ex.months, months); } else S.buffs.push({ type, value, months });
+  },
+  apMax() { return S.jail ? 3 : 4; },
+  useAP(n) {
+    if (S.ap < n) { UI.toast(`⚡ Plus assez d'énergie (${n} requise). Vieillis d'un mois !`); return false; }
+    S.ap -= n; return true;
+  },
+  soldiers() { return S.crew.filter((c) => c.role === 'soldier'); },
+  dealers() { return S.crew.filter((c) => c.role === 'dealer'); },
+  combatPower() { return S.health * 0.35 + this.firepower() * 0.7 + this.armor() * 0.25 + this.respect() * 0.2 + this.crimeBuff(); },
+  warPower() {
+    return Math.round(20 + this.firepower() * 1.2 + this.armor() * 0.3
+      + this.soldiers().reduce((a, c) => a + c.skill * (c.trait === 'violent' ? 1.35 : 0.9), 0)
+      + this.dealers().reduce((a, c) => a + c.skill * 0.2, 0) + this.respect() * 0.4 + this.crimeBuff());
+  },
+  netWorth() {
+    let w = S.cash + S.bank + Inventory.value();
+    for (const cat in SHOP) for (const it of this.items(cat)) w += it.price * RESALE[cat];
+    for (const b of S.businesses) w += BUSINESSES[b.type].price * 0.6;
+    for (const l of S.labs) w += LABS[l.type].price * 0.5;
+    w -= S.debts.reduce((a, d) => a + d.amount, 0);
+    return Math.round(w);
+  },
+  debt() { return S.debts.reduce((a, d) => a + d.amount, 0); },
+  addDebt(lender, amount, rate, months) { S.debts.push({ id: U.uid(), lender, amount: Math.round(amount), rate, due: S.ageMonths + months, overdue: 0 }); },
+};
+
+/* ============================ MARKET DATA ============================ */
+const MarketData = {
+  init() {
+    const m = { trend: {}, qual: {}, brand: {}, sold: {} };
+    for (const c in CITIES) {
+      m.trend[c] = {}; m.qual[c] = {}; m.brand[c] = {};
+      for (const d in DRUGS) {
+        m.trend[c][d] = U.rand(0.85, 1.15);
+        m.qual[c][d] = this.rollQ(c, d);
+        m.brand[c][d] = U.ri(0, DRUGS[d].brands.length - 1);
+      }
+    }
+    return m;
+  },
+  rollQ(c, d) { const sp = (CITIES[c].spec || {})[d] || 0; return U.clamp(Math.round(U.rand(20, 72) + sp + U.rand(-5, 12)), 1, 100); },
+  cityMult(c, d) { return (CITIES[c].mult || {})[d] || 1; },
+  qf: (q) => 0.5 + q / 100,
+  brand(c, d) { return DRUGS[d].brands[S.market.brand[c][d]] || DRUGS[d].brands[0]; },
+  retail(c, d, q) { return DRUGS[d].base * this.cityMult(c, d) * S.market.trend[c][d] * this.qf(q); },
+  buyUnit(c, d) { return DRUGS[d].base * 0.42 * this.cityMult(c, d) * S.market.trend[c][d] * this.qf(S.market.qual[c][d]); },
+  sellUnit(c, d, q) { return this.retail(c, d, q) * 0.5; },
+  // Les gros volumes font bouger le prix (impact moyen sur la transaction)
+  buyCost(c, d, n) { return n * this.buyUnit(c, d) * (1 + 0.125 * n / DRUGS[d].depth); },
+  sellValue(c, d, q, n) { return n * this.sellUnit(c, d, q) * Math.max(0.4, 1 - 0.125 * n / DRUGS[d].depth); },
+  impact(c, d, n, dir) { const t = S.market.trend[c]; t[d] = U.clamp(t[d] * (1 + dir * 0.25 * n / DRUGS[d].depth), 0.3, 3); },
+  shock(c, d, mult) { S.market.trend[c][d] = U.clamp(S.market.trend[c][d] * mult, 0.3, 3); },
+  demand(d) { return DRUGS[d].demand * (1 + PlayerData.respect() / 100) * (1 + 0.15 * S.territories); },
+  demandLeft(d) { return Math.max(0, Math.floor(this.demand(d) - (S.market.sold[S.city + ':' + d] || 0))); },
+  trendIcon(c, d) { const t = S.market.trend[c][d]; return t > 1.25 ? '📈' : t < 0.8 ? '📉' : ''; },
+  monthly() {
+    for (const c in CITIES) for (const d in DRUGS) {
+      let t = S.market.trend[c][d];
+      t += (1 - t) * 0.25 + U.rand(-0.12, 0.12);
+      S.market.trend[c][d] = U.clamp(t, 0.3, 3);
+      if (U.chance(50)) S.market.qual[c][d] = this.rollQ(c, d);
+      if (U.chance(30)) S.market.brand[c][d] = U.ri(0, DRUGS[d].brands.length - 1);
+    }
+    S.market.sold = {};
+  },
+};
+
+/* ============================== INVENTORY ============================== */
+const Inventory = {
+  qty: (d) => (S.stock[d] ? S.stock[d].qty : 0),
+  q: (d) => (S.stock[d] ? S.stock[d].q : 0),
+  list: () => Object.keys(S.stock).filter((d) => S.stock[d].qty > 0),
+  add(d, n, q) {
+    n = Math.floor(n); if (n <= 0) return;
+    const s = S.stock[d] || { qty: 0, q };
+    s.q = Math.round((s.q * s.qty + q * n) / (s.qty + n));
+    s.qty += n; S.stock[d] = s;
+  },
+  remove(d, n) {
+    const s = S.stock[d]; if (!s) return 0;
+    const r = Math.min(Math.floor(n), s.qty); s.qty -= r;
+    if (s.qty <= 0) delete S.stock[d];
+    return r;
+  },
+  bulk() { return Math.round(this.list().reduce((a, d) => a + S.stock[d].qty * DRUGS[d].bulk, 0)); },
+  value() { return Math.round(this.list().reduce((a, d) => a + S.stock[d].qty * MarketData.sellUnit(S.city, d, S.stock[d].q), 0)); },
+  streetValue(d, n) { return n * MarketData.retail(S.city, d, this.q(d)); },
+  // saisie d'une fraction du stock, renvoie la valeur de rue saisie
+  seize(frac) {
+    let v = 0;
+    for (const d of this.list()) { const n = Math.floor(S.stock[d].qty * frac); v += this.streetValue(d, n); this.remove(d, n); }
+    return Math.round(v);
+  },
+};
+
+/* ============================== ACTIONS ============================== */
+const Actions = {
+  drugMonths: (value) => Math.round(U.clamp(2 + value / 2500, 2, 240)),
+  cashHeat: (p) => (p < 8000 ? 0 : Math.min(35, Math.round(2 + p / 30000))),
+
+  /* ----- Justice ----- */
+  arrest({ charge, months }) {
+    if (!S.alive || S.jail > 0) return;
+    S.stats.arrests++;
+    let base = months + S.record * 3 + (PlayerData.firepower() > 0 ? 4 : 0);
+    if (S.rank >= 4) base *= 0.7;
+    base = Math.max(1, Math.round(base));
+    const c1 = 3000 + base * 400, c2 = 20000 + base * 1500, c3 = 10000 + base * 2500;
+    UI.modal({ icon: '🚔', title: 'Arrestation !', cls: 'bad',
+      text: `Motif : <b>${charge}</b>.<br>Le procureur requiert <b>${U.dur(base)}</b> de prison ferme.<br>Qui assure ta défense ?`,
+      choices: [
+        { label: '⚖️ Avocat commis d\'office', sub: 'Gratuit · peu motivé', fn: () => this.verdict(base, [0.75, 1.1], 8) },
+        { label: '💼 Avocat pénaliste', sub: `${U.money(c1)} · peine réduite`, dis: !PlayerData.can(c1), fn: () => { PlayerData.pay(c1); this.verdict(base, [0.4, 0.75], 25); } },
+        { label: '🎩 Ténor du barreau', sub: `${U.money(c2)} · le meilleur du pays`, dis: !PlayerData.can(c2), fn: () => { PlayerData.pay(c2); this.verdict(base, [0.15, 0.5], 45); } },
+        { label: '🤝 Corrompre le juge', sub: `${U.money(c3)} · respect 45 requis · risqué`, dis: !PlayerData.can(c3) || PlayerData.respect() < 45,
+          fn: () => {
+            PlayerData.pay(c3);
+            if (U.chance(65)) this.verdict(0, [0, 0], 100, 'Le juge a été « convaincu ». Dossier classé sans suite.');
+            else { PlayerData.mod('heat', 15); this.verdict(Math.round(base * 1.3) + 6, [1, 1], 0, 'Tentative de corruption découverte ! La peine est alourdie.'); }
+          } },
+      ] });
+  },
+  verdict(base, mult, acq, note = '') {
+    if (base <= 0 || U.chance(acq)) {
+      PlayerData.mod('heat', -10);
+      log('🎉', `<b>Relaxe !</b> ${note || 'Faute de preuves, le tribunal t\'acquitte.'}`, 'good');
+      UI.result('🎉', 'Relaxe !', note || 'Faute de preuves suffisantes, le tribunal prononce la relaxe. Tu ressors libre du palais de justice.', 'good');
+      return;
+    }
+    const m = Math.max(1, Math.round(base * U.rand(mult[0], mult[1])));
+    S.jail = m; S.record++;
+    PlayerData.mod('heat', -30);
+    S.crew.forEach((c) => { c.loyalty = U.clamp(c.loyalty - 5, 0, 100); });
+    log('⛓️', `Condamnation : <b>${U.dur(m)}</b> de prison ferme.`, 'bad');
+    UI.result('⛓️', 'Condamnation', `${note ? note + '<br>' : ''}Le juge te condamne à <b>${U.dur(m)}</b> de prison ferme. Ton organisation devra tourner sans toi.`, 'bad');
+  },
+
+  /* ----- Crimes ----- */
+  stealChance(t) {
+    const fp = PlayerData.firepower();
+    return Math.round(U.clamp(t.base + PlayerData.crimeBuff() + (t.armed ? fp * 0.4 : fp * 0.1) + PlayerData.respect() * 0.08
+      - S.heat * 0.15 + (t.crew ? PlayerData.soldiers().length * 3 : 0), 5, 95));
+  },
+  steal(id) {
+    const t = THEFTS.find((x) => x.id === id);
+    if (t.rank && S.rank < t.rank) return UI.toast(`🔒 Grade requis : ${RANKS[t.rank].name}`);
+    if (t.crew && PlayerData.soldiers().length < t.crew) return UI.toast(`🔒 Il te faut ${t.crew} soldats dans ton équipe.`);
+    if (!PlayerData.useAP(t.ap)) return;
+    const p = this.stealChance(t);
+    S.stats.crimes++;
+    if (U.chance(p)) {
+      const gain = U.ri(t.min, t.max);
+      PlayerData.earn(gain); PlayerData.mod('heat', t.heat); PlayerData.mod('respect', t.ap + (t.armed ? 1.5 : 0.5));
+      log('💰', `${t.name} : réussi ! Butin de <b>${U.money(gain)}</b>.`, 'money');
+      UI.result(t.icon, 'Coup réussi !', `Tu repars avec <b class="g">${U.money(gain)}</b>.<br><small class="m">+${t.heat} 🚨</small>`, 'good');
+      return;
+    }
+    PlayerData.mod('heat', t.heat * 1.5);
+    if (t.armed && U.chance(40)) {
+      const dmg = Math.round(U.ri(t.dmg * 0.5, t.dmg) * (1 - PlayerData.armor() / 150));
+      S.wounded = true;
+      log('🩸', `Échange de tirs pendant ${t.name.toLowerCase()} : tu prends une balle (−${dmg} ❤️).`, 'bad');
+      PlayerData.hurt(dmg, `Abattu pendant ${t.name.toLowerCase()}`);
+      if (!S.alive) return;
+    }
+    if (U.chance(t.armed ? 55 : 45)) {
+      log('🚔', `${t.name} : échec, la police te met la main dessus.`, 'bad');
+      this.arrest({ charge: t.name, months: U.ri(t.jail[0], t.jail[1]) });
+    } else {
+      log('🏃', `${t.name} : échec, tu t'enfuis de justesse.`, 'bad');
+      UI.result('🏃', 'Raté !', 'Le coup a foiré, mais tu as réussi à prendre la fuite.', 'bad');
+    }
+  },
+  fightChance(a) {
+    // estimation par simulation rapide
+    let w = 0; const my = PlayerData.combatPower();
+    for (let i = 0; i < 300; i++) if (my + U.rand(0, 40) >= U.ri(a.enemy[0], a.enemy[1]) + U.rand(0, 30)) w++;
+    return Math.round(w / 3);
+  },
+  assault(id) {
+    const a = ASSAULTS.find((x) => x.id === id);
+    if (!PlayerData.useAP(a.ap)) return;
+    S.stats.crimes++;
+    const win = PlayerData.combatPower() + U.rand(0, 40) >= U.ri(a.enemy[0], a.enemy[1]) + U.rand(0, 30);
+    if (win) {
+      const cash = U.ri(a.cash[0], a.cash[1]);
+      if (cash) PlayerData.earn(cash);
+      PlayerData.mod('respect', a.respect); PlayerData.mod('heat', a.heat);
+      let extra = '';
+      if (a.loot) {
+        const d = U.pick(['weed', 'hash', 'coke', 'crack', 'benzo', 'mdma']); const n = U.ri(5, 30);
+        Inventory.add(d, n, U.ri(25, 65)); extra = ` + ${n} ${DRUGS[d].unit} ${U.de(DRUGS[d].name)}`;
+      }
+      if (a.id === 'caid' && U.chance(30)) S.stats.kills++;
+      const txt = a.id === 'balance' ? 'La balance a compris le message et retire sa déposition.' : `Victoire ! ${cash ? `Tu récupères ${U.money(cash)}` : ''}${extra}.`;
+      log('👊', `${a.name} : ${txt} (+${a.respect} 👑)`, 'good');
+      UI.result(a.icon, 'Victoire', `${txt}<br><small class="m">+${a.respect} respect · ${a.heat >= 0 ? '+' : ''}${a.heat} 🚨</small>`, 'good');
+    } else {
+      const dmg = Math.round(U.ri(a.dmg[0], a.dmg[1]) * (1 - PlayerData.armor() / 150));
+      PlayerData.mod('respect', -2);
+      if (a.lethal) S.wounded = true;
+      log('🤕', `${a.name} : tu t'es fait défoncer (−${dmg} ❤️).`, 'bad');
+      PlayerData.hurt(dmg, a.lethal ? 'Abattu par un caïd rival' : 'Tué dans une bagarre de rue');
+      if (!S.alive) return;
+      UI.result('🤕', 'Défaite', `Ton adversaire était plus fort. <b>−${dmg} ❤️</b>, −2 respect.`, 'bad');
+    }
+    if (S.alive && U.chance(12 * CITIES[S.city].police)) {
+      log('🚓', 'Des témoins ont appelé la police…', 'bad');
+      this.arrest({ charge: 'Violences volontaires', months: U.ri(a.jail[0], a.jail[1]) });
+    }
+  },
+  lowProfile() {
+    if (!PlayerData.useAP(1)) return;
+    const h = U.ri(6, 12);
+    PlayerData.mod('heat', -h); PlayerData.mod('respect', -0.5);
+    log('🌳', `Tu te mets au vert quelques semaines : −${h} 🚨.`, 'info');
+    UI.toast(`🌳 −${h} pression policière`);
+  },
+
+  /* ----- Drogues : consommation ----- */
+  fxText(D) {
+    const f = D.fx, t = [];
+    if (f.ap) t.push(`+${f.ap} ⚡ énergie`);
+    if (f.crime) t.push(`+${f.crime} % réussite des crimes`);
+    if (f.respect) t.push(`+${f.respect} respect`);
+    if (f.health > 0) t.push(`+${f.health} santé (antidouleur)`);
+    if (f.health < 0) t.push(`${f.health} santé`);
+    if (D.opioid) t.push('⚠️ opioïde');
+    if (D.benzo) t.push('⚠️ benzodiazépine');
+    return t.join(' · ') || 'Aucun effet notable';
+  },
+  odRisk(d, mult, q) {
+    const D = DRUGS[d]; if (!D.od) return 0;
+    const used = Object.keys(S.used);
+    const opi = used.some((k) => DRUGS[k].opioid), benz = used.some((k) => DRUGS[k].benzo), stim = used.some((k) => DRUGS[k].stim);
+    let combo = 1;
+    if ((D.opioid && benz) || (D.benzo && opi)) combo = 3;
+    else if ((D.opioid && stim) || (D.stim && opi)) combo = 2;
+    const times = used.reduce((a, k) => a + S.used[k], 0);
+    const r = D.od * mult * (0.5 + q / 100) * combo * (1 + times * 0.4) * (S.health < 30 ? 1.6 : 1) * (1 - S.addiction / 300);
+    return Math.round(U.clamp(r, 0, 95) * 10) / 10;
+  },
+  consumeMenu(d) {
+    const D = DRUGS[d], q = Inventory.q(d);
+    const used = Object.keys(S.used);
+    const combo = (D.opioid && used.some((k) => DRUGS[k].benzo)) || (D.benzo && used.some((k) => DRUGS[k].opioid));
+    UI.modal({ icon: D.icon, title: D.name, cls: 'drug',
+      text: `Stock : ${U.num(Inventory.qty(d))} ${D.unit} · ${U.q(q)}<br>${this.fxText(D)}<br>Addictivité : ${'●'.repeat(Math.ceil(D.add / 2))}${combo ? '<br><b class="r">⚠️ Mélange opioïdes + benzos ce mois-ci : risque d\'overdose ×3 !</b>' : ''}`,
+      choices: DOSES.map((ds, i) => ({ label: `${ds.label} (${ds.units} ${D.unit})`, sub: `Risque d'overdose ~${this.odRisk(d, ds.mult, q)} %`, dis: Inventory.qty(d) < ds.units, cls: i === 2 ? 'danger' : '', fn: () => this.consume(d, i) }))
+        .concat([{ label: 'Annuler', cls: 'ghost' }]) });
+  },
+  consume(d, di, free = false) {
+    const D = DRUGS[d], ds = DOSES[di];
+    if (!free && Inventory.qty(d) < ds.units) return UI.toast('Pas assez de produit.');
+    const q = free ? U.ri(40, 80) : Inventory.q(d);
+    const risk = this.odRisk(d, ds.mult, q);
+    if (!free) Inventory.remove(d, ds.units);
+    const first = !S.used[d];
+    S.used[d] = (S.used[d] || 0) + 1;
+    S.stats.doses++;
+    const addGain = D.add * ds.mult * (0.7 + q / 150);
+    PlayerData.mod('addiction', addGain);
+    if (U.chance(risk)) return this.overdose(d, ds.mult);
+    const tol = U.clamp(1 - S.addiction / 200, 0.4, 1);
+    const fx = [], E = D.fx;
+    if (E.health > 0) { const h = E.health * ds.mult * tol; PlayerData.heal(h); fx.push(`+${Math.round(h)} ❤️`); }
+    if (E.health < 0) { const h = -E.health * ds.mult; fx.push(`−${Math.round(h)} ❤️`); PlayerData.hurt(h, `Arrêt cardiaque (${D.name})`); if (!S.alive) return; }
+    if (E.ap && first) { S.ap += E.ap; fx.push(`+${E.ap} ⚡`); }
+    if (E.crime) { const v = Math.round(E.crime * tol * (ds.mult >= 1 ? 1.3 : 1)); PlayerData.buff('crime', v, 1); fx.push(`+${v} % réussite crimes`); }
+    if (E.respect && first) { PlayerData.mod('respect', E.respect); fx.push(`+${E.respect} 👑`); }
+    fx.push(`+${Math.round(addGain)} 💉 addiction`);
+    log(D.icon, `Tu consommes ${ds.units} ${D.unit} ${U.de(D.name)} (Q${q}). ${D.txt}`, 'drug');
+    UI.result(D.icon, D.name, `${D.txt}<br><br><b>${fx.join(' · ')}</b>`, 'drug');
+  },
+  overdose(d, mult) {
+    S.stats.ods++;
+    const D = DRUGS[d];
+    const deathP = 15 + (100 - S.health) / 3 + (mult >= 2.5 ? 15 : 0) + (S.addiction > 70 ? 10 : 0);
+    if (U.chance(deathP)) return Game.die(`Overdose (${D.name})`);
+    const dmg = U.ri(25, 45);
+    const bill = Math.min(S.cash, 2500); S.cash -= bill;
+    PlayerData.mod('heat', 5); PlayerData.mod('addiction', 4);
+    log('🚑', `<b>OVERDOSE</b> ${U.de(D.name)} ! Réveil aux urgences après un massage cardiaque (−${dmg} ❤️, −${U.money(bill)}).`, 'bad');
+    PlayerData.hurt(dmg, `Overdose (${D.name})`);
+    if (S.alive) UI.result('🚑', 'Overdose !', `Ton cœur s'est arrêté quelques secondes. Les urgentistes t'ont ramené à la vie.<br><b>−${dmg} ❤️ · −${U.money(bill)}</b>`, 'bad');
+  },
+
+  /* ----- Santé ----- */
+  rehab(id) {
+    const r = REHABS.find((x) => x.id === id);
+    if (S.addiction <= 0) return UI.toast('Tu n\'as aucune addiction.');
+    if (!PlayerData.can(r.cost)) return UI.toast('Pas assez d\'argent.');
+    if (!PlayerData.useAP(r.ap)) return;
+    PlayerData.pay(r.cost);
+    if (U.chance(r.success)) {
+      const red = U.ri(r.red[0], r.red[1]);
+      PlayerData.mod('addiction', -red); if (r.hp) PlayerData.heal(r.hp);
+      log(r.icon, `${r.name} : réussite ! Addiction −${red}.`, 'good');
+      UI.result(r.icon, 'Sevrage réussi', `Tu tiens bon. <b>Addiction −${red}</b>.`, 'good');
+    } else {
+      PlayerData.mod('addiction', -5);
+      log(r.icon, `${r.name} : rechute… (addiction −5${r.failHp ? `, −${r.failHp} ❤️` : ''})`, 'bad');
+      if (r.failHp) PlayerData.hurt(r.failHp, 'Sevrage brutal');
+      if (S.alive) UI.result('🌀', 'Rechute', 'Le manque a été plus fort que toi. Tu as replongé.', 'bad');
+    }
+  },
+  heal(id) {
+    const h = HEALS.find((x) => x.id === id);
+    if (!PlayerData.can(h.cost)) return UI.toast('Pas assez d\'argent.');
+    if (!PlayerData.useAP(h.ap)) return;
+    PlayerData.pay(h.cost);
+    if (h.fail && U.chance(h.fail)) {
+      PlayerData.hurt(5, 'Infection après des soins clandestins');
+      log('🦠', `${h.name} : infection après les soins (−5 ❤️).`, 'bad');
+      if (S.alive) UI.result('🦠', 'Complications', 'Le matériel n\'était pas très stérile… Infection.', 'bad');
+      return;
+    }
+    const n = U.ri(h.hp[0], h.hp[1]);
+    PlayerData.heal(n); if (h.respect) PlayerData.mod('respect', h.respect);
+    let extra = '';
+    if (h.report && S.wounded && U.chance(50)) { PlayerData.mod('heat', 18); extra = ' Le médecin a signalé ta blessure par balle à la police (+18 🚨).'; }
+    if (h.id !== 'sport' && h.id !== 'pharma') S.wounded = false;
+    log(h.icon, `${h.name} : +${n} ❤️.${extra}`, extra ? 'bad' : 'good');
+    UI.toast(`${h.icon} +${n} santé`);
+    if (extra) UI.result('👮', 'Signalement', extra, 'bad');
+  },
+  surgery(id) {
+    const s = SURGERIES.find((x) => x.id === id);
+    if (s.once && S.surgeries.includes(id)) return UI.toast('Déjà fait.');
+    if (!PlayerData.can(s.cost)) return UI.toast('Pas assez d\'argent.');
+    UI.confirm(s.icon, s.name, `Coût : <b>${U.money(s.cost)}</b> · 1 ⚡<br>Risque de complications : ${U.risk(s.fail)}`, '🔪 Passer sur le billard', () => {
+      if (!PlayerData.useAP(1)) return;
+      PlayerData.pay(s.cost);
+      if (U.chance(s.fail)) {
+        const dmg = U.ri(10, 30);
+        log('🩸', `${s.name} : opération ratée ! (−${dmg} ❤️)`, 'bad');
+        PlayerData.hurt(dmg, `Complications chirurgicales (${s.name})`);
+        if (s.respect) PlayerData.mod('respect', -2);
+        if (S.alive) UI.result('🩸', 'Opération ratée', `Le chirurgien a raté son coup. −${dmg} ❤️.`, 'bad');
+        return;
+      }
+      if (s.once) S.surgeries.push(id);
+      const fx = [];
+      if (s.respect) { PlayerData.mod('respect', s.respect); fx.push(`+${s.respect} 👑`); }
+      if (s.heat) { PlayerData.mod('heat', s.heat); fx.push(`${s.heat} 🚨`); }
+      if (s.record) { S.record = Math.max(0, S.record - s.record); fx.push('casier « oublié »'); }
+      if (s.hp) { PlayerData.hurt(s.hp, 'Complications chirurgicales'); fx.push(`−${s.hp} ❤️ (convalescence)`); }
+      if (!S.alive) return;
+      log(s.icon, `${s.name} : réussie. ${fx.join(', ')}.`, 'good');
+      UI.result(s.icon, 'Opération réussie', fx.join(' · '), 'good');
+    });
+  },
+
+  /* ----- Prison ----- */
+  prison(id) {
+    if (id === 'muscu') {
+      if (!PlayerData.useAP(1)) return;
+      PlayerData.heal(3); PlayerData.mod('respect', 1);
+      log('💪', 'Pompes, tractions, dips : +3 ❤️, +1 👑.', 'good'); UI.toast('💪 +3 santé · +1 respect');
+    } else if (id === 'bagarre') {
+      if (!PlayerData.useAP(1)) return;
+      if (PlayerData.combatPower() + U.rand(0, 40) > U.rand(25, 75)) {
+        PlayerData.mod('respect', 4); log('👊', 'Bagarre dans la cour : tu imposes ta loi. +4 👑', 'good');
+        UI.result('👊', 'Respect gagné', 'Tout le bâtiment a vu ce que tu vaux.', 'good');
+      } else {
+        const d = U.ri(8, 20); log('🤕', `Bagarre dans la cour : tu te fais planter avec une brosse à dents taillée (−${d} ❤️).`, 'bad');
+        PlayerData.hurt(d, 'Poignardé en détention');
+        if (S.alive) UI.result('🤕', 'Défaite', `−${d} ❤️`, 'bad');
+      }
+    } else if (id === 'trafic') {
+      if (!PlayerData.useAP(1)) return;
+      if (U.chance(75)) { const g = U.ri(200, 1500); PlayerData.earn(g); log('📦', `Trafic en détention (téléphones, shit) : +${U.money(g)}.`, 'money'); UI.toast(`📦 +${U.money(g)}`); }
+      else { const m = U.ri(2, 6); S.jail += m; log('🚨', `Fouille de cellule : ton trafic est découvert, +${m} mois de peine.`, 'bad'); UI.result('🚨', 'Fouille !', `Les surveillants ont trouvé ta marchandise. +${m} mois.`, 'bad'); }
+    } else if (id === 'maton') {
+      const cost = 3000 * (S.rank + 1);
+      if (!PlayerData.can(cost)) return UI.toast(`Il te faut ${U.money(cost)}.`);
+      if (!PlayerData.useAP(1)) return;
+      PlayerData.pay(cost);
+      if (U.chance(70)) { const r = Math.max(1, Math.round(S.jail * 0.25)); S.jail = Math.max(0, S.jail - r); log('💶', `Un surveillant corrompu « égare » des rapports : −${r} mois de peine.`, 'good'); UI.result('💶', 'Remise de peine', `−${U.dur(r)} de prison.`, 'good'); if (S.jail === 0) this.release(); }
+      else { S.jail += 6; log('🚨', 'Tentative de corruption signalée : +6 mois.', 'bad'); UI.result('🚨', 'Balancé', 'Le surveillant était intègre. +6 mois.', 'bad'); }
+    } else if (id === 'evasion') {
+      if (!PlayerData.useAP(2)) return;
+      const p = U.clamp(10 + PlayerData.respect() / 8 + PlayerData.soldiers().length * 2, 5, 40);
+      if (U.chance(p)) {
+        S.jail = 0; PlayerData.mod('heat', 60); PlayerData.mod('respect', 10);
+        log('🪢', '<b>ÉVASION RÉUSSIE !</b> Tu fais la une des journaux. (+60 🚨, +10 👑)', 'good');
+        UI.result('🪢', 'Évasion !', 'Draps noués, complice à l\'extérieur… Tu es dehors. Toutes les polices te cherchent.', 'good');
+      } else {
+        S.jail += 12; const d = U.ri(5, 20);
+        log('🚨', `Évasion ratée : +12 mois et un passage à tabac (−${d} ❤️).`, 'bad');
+        PlayerData.hurt(d, 'Abattu lors d\'une tentative d\'évasion');
+        if (S.alive) UI.result('🚨', 'Évasion ratée', '+12 mois de peine, direction le mitard.', 'bad');
+      }
+    }
+  },
+  release() { log('🔓', '<b>Libération !</b> Tu retrouves l\'air libre.', 'good'); },
+
+  /* ----- Marché ----- */
+  buy(d) {
+    if (S.jail) return;
+    const D = DRUGS[d], c = S.city, q = S.market.qual[c][d];
+    const room = Math.floor((PlayerData.capacity() - Inventory.bulk()) / D.bulk);
+    if (room < 1) return UI.toast('📦 Planque pleine ! Achète un logement plus grand (Patrimoine).');
+    const max = U.maxQty((n) => MarketData.buyCost(c, d, n), S.cash, room);
+    if (max < 1) return UI.toast('💵 Pas assez de liquide. Retire de l\'argent à la banque.');
+    UI.qty({ icon: D.icon, title: `Acheter — ${D.name}`, text: `${MarketData.brand(c, d)} · ${U.q(q)}<br>Prix de gros : <b>${U.unitPrice(MarketData.buyUnit(c, d))}</b> / ${D.unit}`,
+      max, init: Math.max(1, Math.floor(max / 2)), unit: D.unit,
+      info: (n) => `Total : <b class="y">${U.money(MarketData.buyCost(c, d, n))}</b><br><small class="m">Encombrement : ${U.num(n * D.bulk)} / ${U.num(PlayerData.capacity() - Inventory.bulk())} dispo</small>`,
+      confirm: '🛒 Acheter', onConfirm: (n) => {
+        const cost = Math.round(MarketData.buyCost(c, d, n));
+        if (cost > S.cash) return UI.toast('Pas assez de liquide.');
+        S.cash -= cost; S.stats.bought += cost;
+        Inventory.add(d, n, q); MarketData.impact(c, d, n, 1);
+        PlayerData.mod('heat', Math.min(5, n * D.bulk / 800));
+        log('🛒', `Achat en gros : ${U.num(n)} ${D.unit} ${U.de(D.name)} (${MarketData.brand(c, d)}, Q${q}) → −${U.money(cost)}.`, 'money');
+      } });
+  },
+  retailRisk(d, n) {
+    return Math.round(U.clamp(((n / DRUGS[d].demand) * 4 + S.heat * 0.1 + 0.5) * CITIES[S.city].police * (1 - PlayerData.respect() / 300), 0.5, 60) * 10) / 10;
+  },
+  sellRetail(d) {
+    if (S.jail) return;
+    const D = DRUGS[d], have = Inventory.qty(d), left = MarketData.demandLeft(d);
+    if (!have) return UI.toast('Tu n\'as pas ce produit.');
+    if (left < 1) return UI.toast(`Plus de clients pour ${D.name} ce mois-ci.`);
+    const q = Inventory.q(d), unit = MarketData.retail(S.city, d, q), max = Math.min(have, left);
+    UI.qty({ icon: D.icon, title: `Vente de rue — ${D.name}`, text: `Prix de rue : <b>${U.unitPrice(unit)}</b> / ${D.unit} (${U.q(q)})<br>Clients restants ce mois : ${U.num(left)} ${D.unit}`,
+      max, init: max, unit: D.unit,
+      info: (n) => `Recette : <b class="g">${U.money(n * unit)}</b><br>Risque d'interpellation : ${U.risk(this.retailRisk(d, n))}`,
+      confirm: '🏪 Vendre', onConfirm: (n) => this.doRetail(d, n) });
+  },
+  doRetail(d, n) {
+    const D = DRUGS[d]; n = Math.min(n, Inventory.qty(d)); if (n < 1) return;
+    if (U.chance(this.retailRisk(d, n))) return this.retailBust(d, n);
+    const q = Inventory.q(d), rev = Math.round(n * MarketData.retail(S.city, d, q));
+    Inventory.remove(d, n); PlayerData.earn(rev);
+    const k = S.city + ':' + d; S.market.sold[k] = (S.market.sold[k] || 0) + n;
+    S.stats.sold += rev;
+    PlayerData.mod('heat', Math.min(6, n * D.bulk / 60 + 0.5));
+    let extra = '';
+    if (q < 25) { PlayerData.mod('respect', -1); extra = ' Les clients se plaignent de ta came coupée (−1 👑).'; }
+    else if (q >= 80) { PlayerData.mod('respect', 0.6); extra = ' Ta came de qualité fait parler d\'elle.'; }
+    else PlayerData.mod('respect', 0.25);
+    log('🏪', `Vente de rue : ${U.num(n)} ${D.unit} ${U.de(D.name)} → <b>+${U.money(rev)}</b>.${extra}`, 'money');
+  },
+  retailBust(d, n) {
+    const D = DRUGS[d], value = Inventory.streetValue(d, n), cops = CITIES[S.city].cops;
+    const bribe = Math.round(500 + value * 0.6);
+    const pFlee = Math.round(U.clamp(40 + (S.owned.vehicles.includes('tmax') ? 15 : 0) + S.health * 0.2 - S.addiction * 0.15, 10, 85));
+    UI.modal({ icon: '🚓', title: 'Flagrant délit !', cls: 'bad', text: `Une patrouille de police (${cops}) déboule pendant que tu vends ${U.num(n)} ${D.unit} ${U.de(D.name)}.`,
+      choices: [
+        { label: '🏃 Prendre la fuite', sub: `Chance ~${pFlee} % · tu lâches la marchandise`, fn: () => {
+          Inventory.remove(d, n);
+          if (U.chance(pFlee)) { PlayerData.mod('heat', 8); log('🏃', `Tu sèmes les policiers mais tu perds ${U.num(n)} ${D.unit} ${U.de(D.name)}.`, 'bad'); UI.result('🏃', 'Semés !', 'Tu as pris la fuite par les toits. La marchandise est perdue.', 'bad'); }
+          else { log('🚔', `Les policiers (${cops}) te rattrapent au bout de la rue.`, 'bad'); this.arrest({ charge: 'Trafic de stupéfiants (flagrant délit) et rébellion', months: this.drugMonths(value) + 3 }); }
+        } },
+        { label: `💶 Glisser un billet (${U.money(bribe)})`, sub: 'Chance ~50 %', dis: S.cash < bribe, fn: () => {
+          S.cash -= bribe;
+          if (U.chance(50)) { log('💶', 'Les policiers empochent le billet et repartent comme si de rien n\'était.', ''); UI.result('💶', 'Arrangement', 'Les policiers ont empoché le billet.', 'good'); }
+          else { Inventory.remove(d, n); this.arrest({ charge: 'Trafic de stupéfiants et tentative de corruption', months: this.drugMonths(value) + 6 }); }
+        } },
+        { label: '🙌 Se rendre', fn: () => { Inventory.remove(d, n); this.arrest({ charge: 'Trafic de stupéfiants (flagrant délit)', months: this.drugMonths(value) }); } },
+      ] });
+  },
+  bulkRisk(d, n) { return Math.round(U.clamp((1 + n * DRUGS[d].bulk / 400 + S.heat * 0.05) * CITIES[S.city].police, 0.5, 25) * 10) / 10; },
+  sellBulk(d) {
+    if (S.jail) return;
+    const D = DRUGS[d], have = Inventory.qty(d); if (!have) return;
+    const q = Inventory.q(d), c = S.city;
+    UI.qty({ icon: D.icon, title: `Vente en gros — ${D.name}`, text: `Prix grossiste : ~<b>${U.unitPrice(MarketData.sellUnit(c, d, q))}</b> / ${D.unit} (${U.q(q)})<br><small class="m">Les gros volumes font baisser le prix.</small>`,
+      max: have, init: have, unit: D.unit,
+      info: (n) => `Recette : <b class="g">${U.money(MarketData.sellValue(c, d, q, n))}</b><br>Risque d'acheteur infiltré : ${U.risk(this.bulkRisk(d, n))}`,
+      confirm: '🏭 Vendre', onConfirm: (n) => {
+        n = Math.min(n, Inventory.qty(d)); if (n < 1) return;
+        if (U.chance(this.bulkRisk(d, n))) {
+          const value = Inventory.streetValue(d, n); Inventory.remove(d, n);
+          log('🕵️', `L'acheteur était un agent infiltré (${CITIES[c].cops}) !`, 'bad');
+          return this.arrest({ charge: 'Trafic de stupéfiants en bande organisée', months: this.drugMonths(value) });
+        }
+        const rev = Math.round(MarketData.sellValue(c, d, q, n));
+        Inventory.remove(d, n); PlayerData.earn(rev); MarketData.impact(c, d, n, -1);
+        S.stats.sold += rev; PlayerData.mod('heat', Math.min(8, n * D.bulk / 500)); PlayerData.mod('respect', Math.min(3, rev / 50000));
+        log('🏭', `Vente en gros : ${U.num(n)} ${D.unit} ${U.de(D.name)} → <b>+${U.money(rev)}</b>.`, 'money');
+      } });
+  },
+  stockMenu(d) {
+    const D = DRUGS[d];
+    UI.modal({ icon: D.icon, title: D.name, text: `${U.num(Inventory.qty(d))} ${D.unit} · ${U.q(Inventory.q(d))}<br>Valeur de rue ~${U.money(Inventory.streetValue(d, Inventory.qty(d)))}`,
+      choices: [
+        { label: '🏪 Vendre au détail', fn: () => this.sellRetail(d) },
+        { label: '🏭 Vendre en gros', fn: () => this.sellBulk(d) },
+        { label: '💉 Consommer', fn: () => this.consumeMenu(d) },
+        { label: '✂️ Couper la marchandise', sub: '+30 % de quantité · −28 % de qualité', fn: () => this.cut(d) },
+        { label: '🚽 Tout jeter', sub: 'Se débarrasser des preuves (−3 🚨)', cls: 'danger', fn: () => { const n = Inventory.remove(d, Inventory.qty(d)); PlayerData.mod('heat', -3); log('🚽', `Tu te débarrasses de ${U.num(n)} ${D.unit} ${U.de(D.name)}.`, ''); } },
+        { label: 'Fermer', cls: 'ghost' },
+      ] });
+  },
+  cut(d) {
+    const D = DRUGS[d], s = S.stock[d]; if (!s) return;
+    UI.confirm('✂️', 'Couper la marchandise', `Mélanger ton stock ${U.de(D.name)} avec des produits de coupe : <b>+30 % de quantité</b> mais <b>−28 % de qualité</b>.<br>Qualité actuelle : ${U.q(s.q)}`, '✂️ Couper', () => {
+      const add = Math.floor(s.qty * 0.3); s.qty += add; s.q = Math.max(1, Math.round(s.q * 0.72));
+      log('✂️', `Tu coupes ton stock ${U.de(D.name)} : +${U.num(add)} ${D.unit}, qualité ${s.q} %.`, 'drug');
+    });
+  },
+
+  /* ----- Voyages & importations ----- */
+  travelCost(to) {
+    const a = CITIES[S.city], b = CITIES[to];
+    if (a.country === b.country) return 120;
+    if (a.region === b.region) return a.region === 'eu' ? 280 : 450;
+    return 1300;
+  },
+  customsRisk(to) {
+    const b = Inventory.bulk(); if (!b) return 0;
+    const same = CITIES[S.city].country === CITIES[to].country;
+    return Math.round(U.clamp((b / 12) * CITIES[to].customs * (1 + S.heat / 100) * (same ? 0.35 : 1), 2, 90));
+  },
+  travel(to) {
+    if (S.jail) return;
+    const cost = this.travelCost(to), risk = this.customsRisk(to), C = CITIES[to];
+    const same = CITIES[S.city].country === C.country;
+    UI.modal({ icon: C.flag, title: `Partir pour ${C.name} ?`,
+      text: `${same ? '🚄 Train' : '✈️ Avion'} : <b>${U.money(cost)}</b> · 1 ⚡<br>${Inventory.bulk() > 0 ? `Tu transportes ton stock (${U.num(Inventory.bulk())} u.) : risque de contrôle ${U.risk(risk)}` : 'Tu voyages léger : aucun risque.'}`,
+      choices: [
+        { label: `${same ? '🚄' : '✈️'} Partir`, cls: 'primary', dis: !PlayerData.can(cost), fn: () => {
+          if (!PlayerData.useAP(1)) return;
+          PlayerData.pay(cost);
+          const from = S.city; S.city = to; S.gofasts = GoFast.gen();
+          if (Inventory.bulk() > 0 && U.chance(risk)) {
+            const value = Inventory.seize(1);
+            log('🛃', `Contrôle ${same ? 'en gare' : 'douanier'} à l'arrivée à ${C.name} : tout ton stock est saisi (~${U.money(value)}) !`, 'bad');
+            this.arrest({ charge: 'Transport et importation de stupéfiants', months: Math.round(this.drugMonths(value) * 1.3) + 3 });
+          } else log('✈️', `Tu quittes ${CITIES[from].name} et t'installes à <b>${C.flag} ${C.name}</b>.`, 'info');
+        } },
+        { label: 'Annuler', cls: 'ghost' },
+      ] });
+  },
+  importRisk(from, m) { return Math.round(U.clamp(m.risk * (CITIES[from].customs + CITIES[S.city].customs) / 2 * (1 + S.heat / 150), 1, 90)); },
+  importMethod(from, d) {
+    const D = DRUGS[d];
+    UI.modal({ icon: '🚢', title: `Importer ${D.name}`, text: `Depuis ${CITIES[from].flag} ${CITIES[from].name} vers ${CITIES[S.city].flag} ${CITIES[S.city].name}.<br>Choisis ta filière :`,
+      choices: IMPORT_METHODS.map((m) => {
+        const regionOk = !m.sameRegion || CITIES[from].region === CITIES[S.city].region;
+        const lock = S.rank < m.rank ? `🔒 ${RANKS[m.rank].name}` : !regionOk ? '🔒 même continent uniquement' : '';
+        return { label: `${m.icon} ${m.name}`, sub: lock || `Max ${U.num(m.max)} u. · ${U.money(m.fixed)} + ${Math.round(m.pct * 100)} % · saisie ~${this.importRisk(from, m)} % · ${m.months} mois`,
+          dis: !!lock, fn: () => this.importQty(from, d, m) };
+      }).concat([{ label: 'Annuler', cls: 'ghost' }]) });
+  },
+  importQty(from, d, m) {
+    const D = DRUGS[d];
+    const cost = (n) => MarketData.buyCost(from, d, n) * (1 + m.pct) + m.fixed;
+    const max = U.maxQty(cost, S.cash, Math.floor(m.max / D.bulk));
+    if (max < 1) return UI.toast(`💵 Pas assez de liquide (frais fixes : ${U.money(m.fixed)}).`);
+    const q = S.market.qual[from][d], risk = this.importRisk(from, m);
+    UI.qty({ icon: m.icon, title: `${m.name} — ${D.name}`, text: `${MarketData.brand(from, d)} · ${U.q(q)} · ${U.unitPrice(MarketData.buyUnit(from, d))} / ${D.unit} sur place`,
+      max, init: max, unit: D.unit,
+      info: (n) => `Marchandise : ${U.money(MarketData.buyCost(from, d, n))}<br>Transport : ${U.money(MarketData.buyCost(from, d, n) * m.pct + m.fixed)}<br>Total : <b class="y">${U.money(cost(n))}</b> · Saisie : ${U.risk(risk)}`,
+      confirm: '📦 Commander', onConfirm: (n) => {
+        const total = Math.round(cost(n)); if (total > S.cash) return UI.toast('Pas assez de liquide.');
+        S.cash -= total; S.stats.bought += total;
+        MarketData.impact(from, d, n, 1);
+        S.imports.push({ id: U.uid(), d, qty: n, q, from, method: m.id, arrive: S.ageMonths + m.months, risk });
+        log(m.icon, `Importation lancée : ${U.num(n)} ${D.unit} ${U.de(D.name)} depuis ${CITIES[from].name} (${m.name}, arrivée dans ${m.months} mois) → −${U.money(total)}.`, 'money');
+      } });
+  },
+
+  /* ----- Labos ----- */
+  buyLab(type) {
+    const L = LABS[type];
+    if (S.jail) return;
+    if (S.rank < L.rank) return UI.toast(`🔒 Grade requis : ${RANKS[L.rank].name}`);
+    UI.pay({ icon: L.icon, title: L.name, text: `Production : ${U.num(L.out)} ${DRUGS[L.drug].unit}/mois ${U.de(DRUGS[L.drug].name)}<br>Frais mensuels : ${U.money(L.upkeep)}`, price: L.price,
+      onPay: () => { S.labs.push({ id: U.uid(), type, level: 1 }); log(L.icon, `Tu montes un nouveau laboratoire : <b>${L.name}</b>.`, 'good'); } });
+  },
+  labMenu(id) {
+    const l = S.labs.find((x) => x.id === id); if (!l) return;
+    const L = LABS[l.type], up = Math.round(L.price * 0.7 * l.level);
+    UI.modal({ icon: L.icon, title: `${L.name} (niv. ${l.level})`, text: `Production : ~${U.num(L.out * LAB_MULT[l.level - 1])} ${DRUGS[L.drug].unit}/mois<br>Frais : ${U.money(L.upkeep * (1 + (l.level - 1) * 0.5))}/mois`,
+      choices: [
+        { label: `⬆️ Améliorer (${U.money(up)})`, sub: l.level >= 3 ? 'Niveau maximum' : '+60 % de production, +8 qualité', dis: l.level >= 3 || !PlayerData.can(up),
+          fn: () => { PlayerData.pay(up); l.level++; log('⬆️', `Amélioration terminée : ${L.name} (niveau ${l.level}).`, 'good'); } },
+        { label: `💰 Revendre (${U.money(L.price * 0.5)})`, cls: 'danger', fn: () => { S.labs = S.labs.filter((x) => x !== l); S.cash += Math.round(L.price * 0.5); log('💰', `Tu revends ton laboratoire (${L.name}).`, 'money'); } },
+        { label: 'Fermer', cls: 'ghost' },
+      ] });
+  },
+
+  /* ----- Hiérarchie / guerre ----- */
+  reqs(i) {
+    const r = RANKS[i];
+    return [
+      { label: `Respect ≥ ${r.respect}`, ok: PlayerData.respect() >= r.respect },
+      { label: `Gains criminels ≥ ${U.money(r.earned)}`, ok: S.earned >= r.earned },
+      ...(r.terr ? [{ label: `${r.terr} territoire(s) contrôlé(s)`, ok: S.territories >= r.terr }] : []),
+    ];
+  },
+  promote() {
+    const i = S.rank + 1; if (!RANKS[i]) return;
+    if (!this.reqs(i).every((x) => x.ok)) return UI.toast('Conditions non remplies.');
+    S.rank = i; PlayerData.mod('respect', 5);
+    const r = RANKS[i];
+    log(r.icon, `<b>PROMOTION !</b> Tu deviens <b>${r.name}</b>.`, 'good');
+    UI.result(r.icon, `Promotion : ${r.name}`, `Le milieu reconnaît ton ascension.<br><br>${r.perks.map((p) => '✅ ' + p).join('<br>')}`, 'good');
+  },
+  warChance(r) {
+    let w = 0; const my = PlayerData.warPower();
+    for (let i = 0; i < 300; i++) if (my + U.rand(-15, 35) > r.strength * U.rand(0.7, 1.3)) w++;
+    return Math.round(w / 3);
+  },
+  attack(id) {
+    const r = S.rivals.find((x) => x.id === id); if (!r) return;
+    if (S.rank < 2) return UI.toast('🔒 Grade requis : Lieutenant');
+    UI.confirm('⚔️', `Attaquer ${r.name} ?`, `Ta puissance : ~${PlayerData.warPower()} · Eux : ~${Math.round(r.strength)}<br>Chances estimées : ${U.pct(this.warChance(r))} · 2 ⚡`, '⚔️ Lancer l\'assaut', () => {
+      if (!PlayerData.useAP(2)) return;
+      S.stats.wars++;
+      const win = PlayerData.warPower() + U.rand(-15, 35) > r.strength * U.rand(0.7, 1.3);
+      if (win) {
+        const loot = Math.round(U.rand(5000, 20000) * (1 + S.rank));
+        S.territories++; r.terr--; PlayerData.earn(loot); PlayerData.mod('respect', 6); PlayerData.mod('heat', 15);
+        S.stats.kills += U.ri(1, 4);
+        PlayerData.soldiers().forEach((c) => { c.skill = Math.min(99, c.skill + 2); c.loyalty = Math.min(100, c.loyalty + 5); });
+        let txt = `Tu prends un territoire à ${r.name} et récupères ${U.money(loot)}.`;
+        if (r.terr <= 0) { S.rivals = S.rivals.filter((x) => x !== r); txt += ` <b>${r.name} est anéanti !</b>`; PlayerData.mod('respect', 5); }
+        log('⚔️', `Guerre de territoire : ${txt}`, 'good');
+        UI.result('🏴', 'Victoire !', txt, 'good');
+      } else {
+        const dmg = Math.round(U.ri(15, 45) * (1 - PlayerData.armor() / 150));
+        const dead = PlayerData.soldiers().filter(() => U.chance(30));
+        S.crew = S.crew.filter((c) => !dead.includes(c));
+        PlayerData.mod('respect', -4); PlayerData.mod('heat', 10); r.strength *= 1.05; S.wounded = true;
+        log('💀', `Guerre de territoire perdue contre ${r.name} : −${dmg} ❤️${dead.length ? `, ${dead.length} soldat(s) tué(s)` : ''}.`, 'bad');
+        PlayerData.hurt(dmg, `Tué dans une guerre de territoire contre ${r.name}`);
+        if (!S.alive) return;
+        UI.result('💀', 'Défaite', `Repli en catastrophe. −${dmg} ❤️${dead.length ? `<br>${dead.map((c) => c.name).join(', ')} n'en sont pas revenus.` : ''}`, 'bad');
+      }
+      if (S.alive && U.chance(15 * CITIES[S.city].police)) this.arrest({ charge: 'Association de malfaiteurs et tentative de meurtre', months: 60 });
+    }, 'danger');
+  },
+
+  /* ----- Finances ----- */
+  withdraw() {
+    if (S.bank < 1) return UI.toast('Compte en banque vide.');
+    UI.qty({ icon: '🏧', title: 'Retirer du liquide', text: 'Transférer de l\'argent blanchi vers ton liquide.', max: S.bank, init: Math.min(S.bank, 1000), unit: '€',
+      info: (n) => `Liquide après retrait : <b class="g">${U.money(S.cash + n)}</b>`, confirm: '🏧 Retirer',
+      onConfirm: (n) => { n = Math.min(n, S.bank); S.bank -= n; S.cash += n; UI.toast(`🏧 +${U.money(n)} en liquide`); } });
+  },
+  deposit() {
+    const max = Math.min(S.cash, 1500 - S.deposit);
+    if (max < 1) return UI.toast('Plafond de dépôt discret atteint ce mois-ci.');
+    UI.qty({ icon: '🏦', title: 'Dépôt en espèces', text: 'Sous le seuil de déclaration : 1 500 €/mois max, sans éveiller les soupçons.', max, init: max, unit: '€',
+      confirm: '🏦 Déposer', onConfirm: (n) => { n = Math.min(n, S.cash); S.cash -= n; S.bank += n; S.deposit += n; UI.toast(`🏦 ${U.money(n)} déposés`); } });
+  },
+  borrow(id) {
+    const L = LOANS.find((x) => x.id === id);
+    if (S.debts.some((d) => d.lender === L.lender)) return UI.toast('Tu as déjà une dette envers ce prêteur.');
+    UI.confirm('🤝', L.lender, `Prêt de <b>${U.money(L.amount)}</b> en liquide.<br>Intérêts : <b>${Math.round(L.rate * 100)} % par mois</b>.<br>À rembourser sous ${L.months} mois… sinon ses hommes viendront.`, '💵 Accepter', () => {
+      S.cash += L.amount; PlayerData.addDebt(L.lender, L.amount, L.rate, L.months);
+      log('🤝', `Tu empruntes ${U.money(L.amount)} à ${L.lender} (${Math.round(L.rate * 100)} %/mois).`, 'money');
+    });
+  },
+  repay(id) {
+    const d = S.debts.find((x) => x.id === id); if (!d) return;
+    const max = Math.min(d.amount, S.cash + S.bank);
+    if (max < 1) return UI.toast('Pas d\'argent pour rembourser.');
+    UI.qty({ icon: '💸', title: `Rembourser ${d.lender}`, text: `Dette : <b class="r">${U.money(d.amount)}</b>`, max, init: max, unit: '€', confirm: '💸 Rembourser',
+      onConfirm: (n) => {
+        n = Math.min(n, d.amount); if (!PlayerData.pay(n)) return;
+        d.amount -= n;
+        if (d.amount <= 0) { S.debts = S.debts.filter((x) => x !== d); log('✅', `Dette envers ${d.lender} entièrement remboursée.`, 'good'); }
+        else log('💸', `Remboursement de ${U.money(n)} à ${d.lender} (reste ${U.money(d.amount)}).`, '');
+      } });
+  },
+  setLaunder(v) { S.launderTarget = v; UI.toast(`🧼 Objectif : ${v == null ? 'capacité maximale' : U.money(v) + '/mois'}`); },
+  buyBusiness(type) {
+    const B = BUSINESSES[type];
+    if (S.jail) return UI.toast('Impossible depuis ta cellule.');
+    UI.pay({ icon: B.icon, title: B.name, text: `Blanchit jusqu'à <b>${U.money(B.cap)}/mois</b><br>Bénéfice légal : +${U.money(B.income)}/mois`, price: B.price,
+      onPay: () => { S.businesses.push({ id: U.uid(), type }); log(B.icon, `Tu rachètes un commerce : <b>${B.name}</b>. Une belle façade.`, 'good'); } });
+  },
+  sellBusiness(id) {
+    const b = S.businesses.find((x) => x.id === id); if (!b) return;
+    const B = BUSINESSES[b.type], v = Math.round(B.price * 0.6);
+    UI.confirm(B.icon, `Revendre ${B.name} ?`, `Prix de revente : <b>${U.money(v)}</b> (versé en banque)`, '💰 Revendre', () => {
+      S.businesses = S.businesses.filter((x) => x !== b); S.bank += v; log('💰', `Tu revends ${B.name} pour ${U.money(v)}.`, 'money');
+    }, 'danger');
+  },
+};
+
+/* ============================== GO FAST ============================== */
+const GoFast = {
+  run: null,
+  gen() {
+    const c = CITIES[S.city];
+    return Array.from({ length: U.ri(1, 3) }, () => {
+      const danger = U.ri(1, 3), d = U.pick(c.gfCargo);
+      const kg = d === 'hash' || d === 'weed' ? U.ri(150, 600) : U.ri(20, 150);
+      const pay = Math.round((4000 + danger * danger * 5000) * U.rand(0.8, 1.3) * (1 + S.rank * 0.25) * (c.region === 'am' ? 1.2 : 1) / 100) * 100;
+      return { id: U.uid(), route: U.pick(c.routes), drug: d, kg, pay, danger };
+    });
+  },
+  start(id) {
+    const g = S.gofasts.find((x) => x.id === id); if (!g || S.jail) return;
+    if (!PlayerData.useAP(2)) return;
+    S.gofasts = S.gofasts.filter((x) => x !== g);
+    this.run = { g, car: null };
+    const cars = PlayerData.items('vehicles').filter((v) => v.speed).sort((a, b) => b.speed - a.speed);
+    const ch = cars.map((v) => ({ label: `${v.icon} ${v.name}`, sub: `Vitesse ${v.speed} · Discrétion ${v.disc} · risque de saisie du véhicule`, fn: () => this.pickCar(v) }));
+    ch.push({ label: '🚙 Voiture fournie (volée)', sub: 'Vitesse 60 · Discrétion 50', fn: () => this.pickCar({ id: null, name: 'voiture volée', speed: 60, disc: 50 }) });
+    UI.modal({ icon: '🏎️', title: 'Go Fast', text: `<b>${g.route}</b><br>Cargaison : ${g.kg} kg ${U.de(DRUGS[g.drug].name)}<br>Paie : <b class="g">${U.money(g.pay)}</b> · Danger ${'🔥'.repeat(g.danger)}<br><br>Quel véhicule prends-tu ?`, choices: ch });
+  },
+  pSpeed() { return Math.round(U.clamp(this.run.car.speed * 0.85 - this.run.g.danger * 6 + PlayerData.crimeBuff() * 0.5, 5, 95)); },
+  pDisc() { return Math.round(U.clamp(this.run.car.disc * 0.75 + 12 - S.heat * 0.2 - this.run.g.danger * 5, 5, 95)); },
+  pDrive() { return Math.round(U.clamp(45 + this.run.car.speed * 0.35 - S.addiction * 0.2, 10, 95)); },
+  pickCar(v) {
+    this.run.car = v;
+    UI.modal({ icon: '🗺️', title: 'Itinéraire', text: `Au volant : ${v.name}. Par où passes-tu ?`, choices: [
+      { label: '🛣️ Autoroute', sub: 'Rapide, mais péages et contrôles fréquents', fn: () => this.leg({ ctrl: 40, crash: 6, name: 'l\'autoroute' }) },
+      { label: '🛤️ Nationales', sub: 'Équilibré', fn: () => this.leg({ ctrl: 25, crash: 12, name: 'les nationales' }) },
+      { label: '🌲 Petites routes de campagne', sub: 'Peu de flics, route dangereuse', fn: () => this.leg({ ctrl: 12, crash: 25, name: 'les petites routes' }) },
+    ] });
+  },
+  leg(r) {
+    const roll = U.rand(0, 100), dz = this.run.g.danger * 5;
+    if (roll < r.ctrl + dz) {
+      UI.modal({ icon: '🚓', title: 'Voiture banalisée !', text: `Sur ${r.name}, une voiture banalisée te colle au train depuis 10 km…`, choices: [
+        { label: '💨 Accélérer à fond', sub: `Chance ~${this.pSpeed()} %`, fn: () => (U.chance(this.pSpeed())
+          ? this.say('💨', 'Semés !', 'Tu pousses le moteur dans ses retranchements. Les gyrophares disparaissent dans le rétro.', () => this.checkpoint(5))
+          : this.end(U.chance(50) ? 'crash' : 'arrest')) },
+        { label: '😐 Rester calme, respecter les limitations', sub: `Chance ~${this.pDisc()} %`, fn: () => (U.chance(this.pDisc())
+          ? this.say('😮‍💨', 'Fausse alerte', 'La voiture finit par te doubler et disparaît dans la nuit.', () => this.checkpoint())
+          : this.end('arrest')) },
+        { label: '📦 Sortir et larguer la marchandise', sub: 'Tu t\'en sors, mais le cartel voudra être remboursé', fn: () => this.end('dump') },
+      ] });
+    } else if (roll < r.ctrl + dz + r.crash) {
+      UI.modal({ icon: '💥', title: 'Danger sur la route !', text: 'Un camion déboîte sans prévenir alors que tu roules à 220 km/h !', choices: [
+        { label: '🛞 Braquer sèchement', sub: `Chance ~${this.pDrive()} %`, fn: () => (U.chance(this.pDrive())
+          ? this.say('😱', 'Ouf !', 'Tu évites le camion de quelques centimètres.', () => this.checkpoint()) : this.end('crash')) },
+        { label: '🛑 Piler', sub: 'Plus sûr, mais tu perds du temps', fn: () => (U.chance(80)
+          ? this.say('🛑', 'Évité', 'Tu t\'arrêtes net. Le cœur à 200. Tu as perdu de précieuses minutes.', () => this.checkpoint(12)) : this.end('crash')) },
+      ] });
+    } else {
+      this.say('🌙', 'Route calme', 'La nuit est calme. Seul le ronronnement du moteur te tient compagnie.', () => this.checkpoint());
+    }
+  },
+  checkpoint(extra = 0) {
+    const g = this.run.g;
+    if (!U.chance(30 + g.danger * 8 + extra)) return this.end('ok');
+    const pForce = Math.round(U.clamp(this.run.car.speed * 0.6 + PlayerData.firepower() * 0.3 - g.danger * 5, 5, 90));
+    const pTurn = Math.round(U.clamp(this.run.car.speed * 0.5 + 15, 5, 90));
+    const pBluff = Math.round(U.clamp(this.run.car.disc * 0.6 + PlayerData.respect() * 0.15 - S.heat * 0.2, 5, 90));
+    UI.modal({ icon: '🚧', title: 'Barrage de douane !', text: 'Au loin, des gyrophares bleus et une herse en travers de la route. Un barrage des douanes !', choices: [
+      { label: '🏎️ Forcer le barrage', sub: `Chance ~${pForce} %`, fn: () => (U.chance(pForce) ? this.end('ok', 15) : this.end(U.chance(50) ? 'crash' : 'arrest')) },
+      { label: '↩️ Faire demi-tour', sub: `Chance ~${pTurn} %`, fn: () => (U.chance(pTurn) ? this.end('ok', 5) : this.end('arrest')) },
+      { label: '😎 Passer au culot', sub: `Chance ~${pBluff} %`, fn: () => (U.chance(pBluff) ? this.end('ok') : this.end('arrest')) },
+    ] });
+  },
+  say(icon, title, text, next) { UI.modal({ icon, title, text, choices: [{ label: 'Continuer ▶', cls: 'primary', fn: next }] }); },
+  loseCar() {
+    const car = this.run.car;
+    if (car.id) { S.owned.vehicles = S.owned.vehicles.filter((x) => x !== car.id); return ` Véhicule perdu : ${car.name}.`; }
+    return '';
+  },
+  end(outcome, heat = 0) {
+    const g = this.run.g, D = DRUGS[g.drug];
+    if (outcome === 'ok') {
+      PlayerData.earn(g.pay); PlayerData.mod('respect', 2 + g.danger); PlayerData.mod('heat', 3 + heat);
+      log('🏁', `Go Fast réussi (${g.route}) : <b>+${U.money(g.pay)}</b>.`, 'money');
+      UI.result('🏁', 'Livraison effectuée !', `La marchandise est arrivée à bon port.<br><b class="g">+${U.money(g.pay)}</b> · +${2 + g.danger} respect`, 'good');
+    } else if (outcome === 'dump') {
+      const debt = g.pay * 2;
+      PlayerData.addDebt('El Patrón (cartel)', debt, 0, 3); PlayerData.mod('respect', -3);
+      log('📦', `Go Fast avorté : cargaison larguée. Le cartel exige ${U.money(debt)} sous 3 mois.`, 'bad');
+      UI.result('📦', 'Cargaison perdue', `Tu t'en sors, mais ${g.kg} kg ${U.de(D.name)} sont perdus.<br>Le cartel te réclame <b class="r">${U.money(debt)}</b> sous 3 mois.`, 'bad');
+    } else if (outcome === 'crash') {
+      const dmg = Math.round(U.ri(25, 60) * (1 - PlayerData.armor() / 250));
+      const carTxt = this.loseCar();
+      PlayerData.addDebt('El Patrón (cartel)', g.pay * 1.5, 0, 4);
+      log('💥', `Go Fast : accident à pleine vitesse ! −${dmg} ❤️.${carTxt} Le cartel réclame la marchandise.`, 'bad');
+      PlayerData.hurt(dmg, 'Crash mortel lors d\'un go fast');
+      if (S.alive) UI.result('💥', 'Accident !', `La voiture part en tonneaux. −${dmg} ❤️.${carTxt}<br>Tu fuis à pied avant l'arrivée des secours. Le cartel veut ${U.money(g.pay * 1.5)}.`, 'bad');
+    } else if (outcome === 'arrest') {
+      const carTxt = this.loseCar();
+      log('🚔', `Go Fast : interpellation avec ${g.kg} kg ${U.de(D.name)} dans le coffre.${carTxt}`, 'bad');
+      Actions.arrest({ charge: `Transport de ${g.kg} kg de stupéfiants (go fast)`, months: 18 + g.danger * 12 });
+    }
+    this.run = null;
+  },
+};
+
+/* =============================== CREW =============================== */
+const Crew = {
+  gen() {
+    const reg = NAMES[CITIES[S.city].names];
+    const skill = U.clamp(U.ri(12, 50 + S.rank * 10), 5, 95);
+    return { id: U.uid(), name: `${U.pick(reg.first)} « ${U.pick(NICKS)} »`, skill, loyalty: U.ri(35, 85), trait: U.pick(Object.keys(TRAITS)),
+      cost: Math.round((300 + skill * skill * 1.5) / 50) * 50, role: 'dealer', drug: null, months: 0 };
+  },
+  genList(n) { return Array.from({ length: n }, () => this.gen()); },
+  max() { return RANKS[S.rank].crew; },
+  get(id) { return S.crew.find((c) => c.id === id); },
+  remove(m) { S.crew = S.crew.filter((x) => x !== m); },
+  recruit(id) {
+    const c = S.candidates.find((x) => x.id === id); if (!c) return;
+    if (S.crew.length >= this.max()) return UI.toast(`Équipe au complet pour ton grade (${this.max()}).`);
+    if (S.cash < c.cost) return UI.toast('Pas assez de liquide.');
+    S.cash -= c.cost;
+    S.candidates = S.candidates.filter((x) => x !== c);
+    const best = Inventory.list().sort((a, b) => Inventory.qty(b) - Inventory.qty(a))[0];
+    c.drug = best || null;
+    S.crew.push(c);
+    log('🤝', `<b>${c.name}</b> rejoint ton organisation (${TRAITS[c.trait].name}, talent ${c.skill}).`, 'good');
+    UI.toast(`🤝 Nouvelle recrue : ${c.name}`);
+  },
+  refresh() {
+    if (S.cash < 200) return UI.toast('Il faut 200 € pour faire tourner le mot.');
+    S.cash -= 200; S.candidates = this.genList(3); UI.toast('🔄 Nouveaux profils');
+  },
+  assign(id, role, drug = null) {
+    const m = this.get(id); if (!m) return;
+    m.role = role; m.drug = drug;
+    UI.toast(role === 'soldier' ? `🛡️ ${m.name} devient soldat` : `💊 ${m.name} vend : ${DRUGS[drug].name}`);
+    UI.back();
+  },
+  praise(id) {
+    const m = this.get(id); if (!m) return;
+    const cost = 500 + S.rank * 1000;
+    if (S.cash < cost) return UI.toast(`Il faut ${U.money(cost)} de prime.`);
+    S.cash -= cost; m.loyalty = Math.min(100, m.loyalty + 15);
+    S.crew.forEach((c) => { if (c !== m) c.loyalty = Math.min(100, c.loyalty + 2); });
+    log('🤝', `Tu félicites ${m.name} devant tout le monde et lui glisses une prime de ${U.money(cost)}.`, 'good');
+    UI.toast('🤝 Loyauté +15');
+  },
+  punish(id) {
+    const m = this.get(id); if (!m) return;
+    PlayerData.mod('respect', 1);
+    if ((m.trait === 'violent' || m.trait === 'ambitieux') && U.chance(35)) {
+      this.remove(m); PlayerData.mod('heat', 5);
+      log('🚪', `Tu recadres ${m.name} violemment… qui claque la porte de l'organisation.`, 'bad');
+      UI.result('🚪', 'Départ', `${m.name} n'a pas supporté la sanction et part avec rancune.`, 'bad');
+    } else {
+      m.loyalty = Math.min(100, m.loyalty + 10); m.skill = Math.max(5, m.skill - 2);
+      S.crew.forEach((c) => { if (c !== m) c.loyalty = Math.min(100, c.loyalty + 3); });
+      log('👊', `Tu recadres ${m.name} à coups de poing. Le message est passé dans toute l'équipe.`, '');
+      UI.toast('👊 Loyauté +10 (par la peur)');
+    }
+  },
+  fire(id) {
+    const m = this.get(id); if (!m) return;
+    UI.confirm('🚪', `Virer ${m.name} ?`, 'Un ex-membre mécontent peut parler…', '🚪 Virer', () => {
+      this.remove(m);
+      if (U.chance(m.loyalty < 40 ? 30 : 5)) { PlayerData.mod('heat', 15); log('🐀', `Après son renvoi, ${m.name} va raconter tes affaires aux flics (+15 🚨).`, 'bad'); }
+      else log('🚪', `Tu vires ${m.name} de l'organisation.`, '');
+    }, 'danger');
+  },
+  kill(id) {
+    const m = this.get(id); if (!m) return;
+    UI.confirm('☠️', `Éliminer ${m.name} ?`, 'Un exemple pour les autres. Respect ↑, police ↑↑.', '☠️ Faire le nécessaire', () => {
+      this.remove(m); S.stats.kills++;
+      PlayerData.mod('respect', 5); PlayerData.mod('heat', 20);
+      S.crew.forEach((c) => { c.loyalty = Math.min(100, c.loyalty + 5); });
+      log('☠️', `${m.name} a disparu. Plus personne n'osera te trahir. (+5 👑, +20 🚨)`, 'bad');
+      UI.back();
+      if (U.chance(10 * CITIES[S.city].police)) this.investigation();
+    }, 'danger');
+  },
+  investigation() { log('🔎', 'La brigade criminelle remonte jusqu\'à toi pour le meurtre…', 'bad'); Actions.arrest({ charge: 'Homicide volontaire', months: 180 }); },
+};
+
+/* =============================== SHOP =============================== */
+const Shop = {
+  statLine(cat, it) {
+    if (cat === 'vehicles') return `⚡ Vitesse ${it.speed} · 🕶️ Discrétion ${it.disc} · +${it.respect} 👑 · ${U.money(it.price * 0.004)}/mois`;
+    if (cat === 'properties') return `📦 Planque ${U.num(it.cap)} · 🛡️ Sécurité ${it.sec} · +${it.respect} 👑 · charges ${U.money(it.upkeep)}/mois`;
+    if (cat === 'weapons') return it.power ? `💥 Puissance de feu ${it.power}` : `🛡️ Protection ${it.armor}`;
+    return `+${it.respect} respect`;
+  },
+  buy(cat, it) {
+    if (S.jail) return UI.toast('⛓️ Impossible depuis ta cellule.');
+    const C = SHOP[cat];
+    UI.pay({ icon: it.icon, title: it.name, text: this.statLine(cat, it), price: it.price, cashOnly: !!C.cashOnly,
+      onPay: () => { S.owned[cat].push(it.id); log(it.icon, `Achat : <b>${it.name}</b> (${U.money(it.price)}).`, 'money'); UI.toast(`${it.icon} ${it.name} acheté !`); } });
+  },
+  sell(cat, it) {
+    const v = Math.round(it.price * RESALE[cat]), toBank = cat === 'vehicles' || cat === 'properties';
+    UI.confirm(it.icon, `Revendre ${it.name} ?`, `Prix de revente : <b>${U.money(v)}</b>${toBank ? ' (versé en banque)' : ' (en liquide)'}`, '💰 Revendre', () => {
+      S.owned[cat] = S.owned[cat].filter((x) => x !== it.id);
+      if (toBank) S.bank += v; else S.cash += v;
+      log('💰', `Tu revends ${it.name} pour ${U.money(v)}.`, 'money');
+    }, 'danger');
+  },
+};
+
+/* ============================== MONTHLY ============================== */
+const Monthly = {
+  jail() {
+    if (S.jail <= 0) return;
+    S.jail--; S.stats.jailMonths++; PlayerData.mod('heat', -5);
+    if (S.jail === 0) Actions.release();
+  },
+  addiction(consumed) {
+    const a = S.addiction;
+    if (!consumed) {
+      if (a >= 25) {
+        const dmg = Math.round(a / 12);
+        log('🥶', `Crise de manque : sueurs, tremblements, insomnies… (−${dmg} ❤️)`, 'drug');
+        PlayerData.mod('addiction', -3);
+        PlayerData.hurt(dmg, 'Complications d\'un sevrage brutal');
+      } else if (a > 0) PlayerData.mod('addiction', -2.5);
+    }
+    if (!S.alive) return;
+    if (a >= 60) { PlayerData.hurt(2, 'Organes détruits par la drogue'); if (U.chance(30)) log('🫀', 'Ton corps encaisse de plus en plus mal tes excès…', 'drug'); }
+    if (S.alive && a >= 70 && !S.jail && U.chance((a - 60) / 2.5)) {
+      log('🌀', 'Tu as craqué : une nuit de défonce totale, seul dans un squat…', 'drug');
+      PlayerData.mod('addiction', 3);
+      if (U.chance(35)) Actions.overdose(U.pick(['heroB', 'heroW', 'oxy', 'crack']), 2.5);
+    }
+  },
+  health() {
+    const y = S.ageMonths / 12;
+    if (y > 40) PlayerData.hurt(y > 60 ? 0.7 : 0.25, 'Mort de vieillesse');
+    if (S.alive && S.health < 75 && S.addiction < 40 && y < 55 && !S.wounded) PlayerData.heal(1.5);
+    if (S.wounded && U.chance(25)) S.wounded = false;
+  },
+  income() {
+    if (S.rank === 0 && !S.jail) { PlayerData.earn(350); PlayerData.mod('heat', 0.5); log('👀', 'Le réseau te verse <b>350 €</b> pour avoir tenu le guet.', 'money'); }
+    if (S.territories > 0) {
+      const t = Math.round(S.territories * 1500 * (1 + S.rank * 0.3));
+      PlayerData.earn(t);
+      log('🏴', `Tes ${S.territories} territoire(s) rapportent <b>${U.money(t)}</b> (racket & points de deal).`, 'money');
+    }
+  },
+  crew() {
+    if (!S.crew.length) return;
+    let rev = 0, sold = 0, salaries = 0; const notes = [];
+    for (const m of [...S.crew]) {
+      m.months++;
+      let drift = m.trait === 'fidele' ? 0 : -1;
+      if (PlayerData.respect() >= 60) drift += 1;
+      if (S.jail) drift -= 1;
+      m.loyalty = U.clamp(m.loyalty + drift, 0, 100);
+      if (m.role === 'soldier') {
+        if (S.cash >= SOLDIER_PAY) { S.cash -= SOLDIER_PAY; salaries += SOLDIER_PAY; }
+        else { m.loyalty = U.clamp(m.loyalty - 10, 0, 100); notes.push(`${m.name} : salaire impayé`); }
+      } else if (m.drug && Inventory.qty(m.drug) > 0) {
+        const D = DRUGS[m.drug], q = Inventory.q(m.drug);
+        const cap = Math.max(1, Math.round(D.demand * (0.35 + m.skill / 100) * (1 + 0.2 * S.territories) * (m.trait === 'bosseur' ? 1.25 : 1)));
+        const n = Inventory.remove(m.drug, cap);
+        if (m.loyalty < 20 && U.chance(35)) {
+          this.crewLeave(m); PlayerData.mod('respect', -3);
+          log('💸', `<b>${m.name}</b> a disparu avec la marchandise et la recette (${U.num(n)} ${D.unit} ${U.de(D.name)}) !`, 'bad');
+          continue;
+        }
+        rev += Math.round(n * MarketData.retail(S.city, m.drug, q) * 0.65); sold += n;
+        m.skill = Math.min(99, m.skill + (m.trait === 'ambitieux' ? 1 : 0.4));
+        if (q < 25) PlayerData.mod('respect', -0.5);
+        const risk = (2 + S.heat / 15 + n * D.bulk / 250) * CITIES[S.city].police * (m.trait === 'discret' ? 0.55 : 1) * (1 - m.skill / 200);
+        if (U.chance(risk)) {
+          this.crewLeave(m); PlayerData.mod('heat', 6);
+          log('🚔', `<b>${m.name}</b> s'est fait serrer par la police (${CITIES[S.city].cops}) en plein deal.`, 'bad');
+          if (U.chance((m.loyalty < 40 ? 50 : 8) * (m.trait === 'bavard' ? 2 : 1))) { PlayerData.mod('heat', 20); log('🐀', `En garde à vue, ${m.name} a balancé ton nom aux enquêteurs ! (+20 🚨)`, 'bad'); }
+          continue;
+        }
+      } else if (m.role === 'dealer') notes.push(`${m.name} attend de la marchandise`);
+      if (m.loyalty <= 0) { this.crewLeave(m); log('🚪', `${m.name} quitte ton organisation (loyauté à zéro).`, 'bad'); }
+    }
+    if (rev > 0) { PlayerData.earn(rev); S.stats.sold += rev; log('🧑‍🤝‍🧑', `Ton équipe a écoulé ${U.num(sold)} unités → <b>+${U.money(rev)}</b> pour toi (après leur part).`, 'money'); }
+    if (salaries) log('🛡️', `Paie des soldats : −${U.money(salaries)}.`, '');
+    if (notes.length) log('📋', notes.join(' · ') + '.', '');
+  },
+  crewLeave(m) { S.crew = S.crew.filter((x) => x !== m); },
+  labs() {
+    if (!S.labs.length) return;
+    const out = [];
+    for (const l of [...S.labs]) {
+      const L = LABS[l.type], mult = LAB_MULT[l.level - 1];
+      if (!PlayerData.pay(Math.round(L.upkeep * (1 + (l.level - 1) * 0.5)))) { out.push(`${L.icon} à l'arrêt (frais impayés)`); continue; }
+      if (L.input) {
+        const need = Math.round(L.input.qty * mult);
+        if (Inventory.qty(L.input.drug) < need) { out.push(`${L.icon} en attente de ${need} ${DRUGS[L.input.drug].unit} ${U.de(DRUGS[L.input.drug].name)}`); continue; }
+        Inventory.remove(L.input.drug, need);
+      }
+      const n = Math.round(L.out * mult * U.rand(0.85, 1.15));
+      const q = U.clamp(U.ri(L.q[0], L.q[1]) + (l.level - 1) * 8, 1, 100);
+      Inventory.add(L.drug, n, q);
+      out.push(`${L.icon} +${U.num(n)} ${DRUGS[L.drug].unit} (Q${q})`);
+      if (L.boom && U.chance(L.boom)) { S.labs = S.labs.filter((x) => x !== l); PlayerData.mod('heat', 10); log('💥', `EXPLOSION ! Ton laboratoire (${L.name}) est parti en fumée.`, 'bad'); continue; }
+      if (U.chance(L.risk * (1 + S.heat / 40) * CITIES[S.city].police)) { S.labs = S.labs.filter((x) => x !== l); PlayerData.mod('heat', 12); log('🚨', `La police a démantelé ton laboratoire : ${L.name} !`, 'bad'); }
+    }
+    if (out.length) log('🧪', 'Production des labos : ' + out.join(' · '), 'drug');
+  },
+  business() {
+    if (!S.businesses.length) return;
+    const cap = S.businesses.reduce((a, b) => a + BUSINESSES[b.type].cap, 0);
+    const target = S.launderTarget == null ? cap : Math.min(S.launderTarget, cap);
+    const amt = Math.floor(Math.min(target, S.cash));
+    const income = S.businesses.reduce((a, b) => a + BUSINESSES[b.type].income, 0);
+    S.bank += income;
+    if (amt > 0) { S.cash -= amt; S.bank += Math.round(amt * (1 - LAUNDER_FEE)); }
+    log('🧼', `Tes commerces : ${amt > 0 ? `<b>${U.money(amt)}</b> blanchis (−15 % de commission) · ` : ''}bénéfices légaux +${U.money(income)}.`, 'money');
+    if (amt > cap * 0.9 && U.chance(6)) { PlayerData.mod('heat', 6); log('🧾', 'La cellule anti-blanchiment s\'interroge sur le chiffre d\'affaires de tes commerces (+6 🚨).', 'bad'); }
+  },
+  upkeep() {
+    const cost = PlayerData.items('properties').reduce((a, p) => a + p.upkeep, 0) + PlayerData.items('vehicles').reduce((a, v) => a + Math.round(v.price * 0.004), 0);
+    if (!cost) return;
+    const unpaid = PlayerData.charge(cost);
+    if (unpaid > 0) {
+      S.unpaid++;
+      log('⚠️', `Charges impayées (${U.money(unpaid)}) : loyers, assurances, entretien… (${S.unpaid}/3 avant saisie)`, 'bad');
+      if (S.unpaid >= 3) {
+        const all = [...PlayerData.items('properties').map((i) => ['properties', i]), ...PlayerData.items('vehicles').map((i) => ['vehicles', i])].sort((a, b) => b[1].price - a[1].price);
+        if (all.length) { const [cat, it] = all[0]; S.owned[cat] = S.owned[cat].filter((x) => x !== it.id); log('⚖️', `Les huissiers saisissent ton bien : <b>${it.name}</b>.`, 'bad'); }
+        S.unpaid = 0;
+      }
+    } else { S.unpaid = 0; log('🧾', `Charges du mois (logements, véhicules) : −${U.money(cost)}.`, ''); }
+  },
+  imports() {
+    for (const im of [...S.imports]) {
+      if (im.arrive > S.ageMonths) continue;
+      S.imports = S.imports.filter((x) => x !== im);
+      const D = DRUGS[im.d], F = CITIES[im.from];
+      if (U.chance(im.risk)) { PlayerData.mod('heat', 8); log('🛃', `Saisie douanière ! Ta cargaison de ${U.num(im.qty)} ${D.unit} ${U.de(D.name)} en provenance de ${F.name} a été interceptée.`, 'bad'); }
+      else { Inventory.add(im.d, im.qty, im.q); log('📦', `Livraison reçue : <b>${U.num(im.qty)} ${D.unit}</b> ${U.de(D.name)} (Q${im.q}) depuis ${F.flag} ${F.name}.`, 'good'); }
+    }
+  },
+  debts() {
+    for (const d of [...S.debts]) {
+      if (d.rate) d.amount = Math.round(d.amount * (1 + d.rate));
+      if (S.ageMonths <= d.due) {
+        if (d.due - S.ageMonths === 1) log('📞', `${d.lender} : « N'oublie pas, tu me dois ${U.money(d.amount)} le mois prochain. »`, 'bad');
+        continue;
+      }
+      d.overdue++;
+      const take = Math.min(S.cash, d.amount);
+      S.cash -= take; d.amount -= take;
+      const dmg = Math.round(U.ri(12, 28) * (1 - PlayerData.armor() / 200));
+      log('🩸', `Les hommes de ${d.lender} te tombent dessus pour ta dette : ils prennent ${U.money(take)} et te passent à tabac (−${dmg} ❤️).`, 'bad');
+      if (d.amount <= 0) { S.debts = S.debts.filter((x) => x !== d); log('✅', `Ta dette envers ${d.lender} est soldée… de force.`, ''); }
+      PlayerData.hurt(dmg, `Battu à mort par les recouvreurs de ${d.lender}`);
+      if (!S.alive) return;
+      if (d.amount > 0 && d.overdue >= 4 && U.chance(Math.max(5, 30 - PlayerData.soldiers().length * 3))) return Game.die(`Exécuté pour une dette impayée envers ${d.lender}`);
+    }
+  },
+  heat() {
+    let d = -3 - PlayerData.security() / 30;
+    const b = Inventory.bulk();
+    if (b > 500) d += Math.min(5, b / 2000);
+    d += S.crew.length * 0.25 + S.territories * 0.8;
+    if (PlayerData.possessionRespect() > 20) d += 1;
+    PlayerData.mod('heat', d);
+    if (b > PlayerData.capacity()) log('📦', `Ta planque déborde (${U.num(b)}/${U.num(PlayerData.capacity())}) : risque de descente accru !`, 'bad');
+    if (S.respect > 60) S.respect -= 0.3;
+  },
+  refresh() {
+    MarketData.monthly();
+    if (S.ageMonths % 2 === 0 || !S.candidates.length) S.candidates = Crew.genList(3);
+    S.gofasts = GoFast.gen();
+    S.rivals.forEach((r) => { r.strength += 0.6; });
+    if (S.rivals.length < 3 && U.chance(5)) S.rivals.push(Game.rival(U.ri(80, 260), U.ri(1, 3)));
+  },
+  naturalDeath() {
+    const y = S.ageMonths / 12;
+    if (y >= 60 && U.chance(Math.pow((y - 55) / 30, 3) * 2.5)) return Game.die('Mort de vieillesse');
+    if (S.health < 10 && U.chance(8)) Game.die('Santé trop dégradée');
+  },
+};
+
+/* =============================== EVENTS =============================== */
+const Events = {
+  monthly() {
+    if (S.jail > 0) { if (U.chance(30)) this.prisonEvent(); return; }
+    if (this.raidCheck()) return;
+    if (!U.chance(60)) return;
+    const pool = this.pool.filter((e) => !e.cond || e.cond());
+    const tot = pool.reduce((a, e) => a + (typeof e.w === 'function' ? e.w() : e.w), 0);
+    let r = Math.random() * tot;
+    for (const e of pool) { r -= typeof e.w === 'function' ? e.w() : e.w; if (r <= 0) { e.run(); return; } }
+  },
+  raidCheck() {
+    const over = Inventory.bulk() > PlayerData.capacity() ? 10 : 0;
+    const p = (Math.max(0, S.heat - 20) / 4 + over) * CITIES[S.city].police * (1 - PlayerData.security() / 150);
+    if (!U.chance(p)) return false;
+    this.raid(); return true;
+  },
+  raid() {
+    const sec = PlayerData.security();
+    const value = Inventory.seize(U.clamp(U.rand(0.5, 1) * (1 - sec / 200), 0, 1));
+    const cashLoss = Math.round(S.cash * U.clamp(U.rand(0.3, 0.9) * (1 - sec / 200), 0, 1));
+    S.cash -= cashLoss;
+    let guns = '';
+    if (PlayerData.firepower() > 0 && U.chance(60)) { S.owned.weapons = S.owned.weapons.filter((id) => SHOP.weapons.items.find((w) => w.id === id).armor); guns = ' Tes armes sont confisquées.'; }
+    PlayerData.mod('heat', -15);
+    const arrestP = 30 + (value > 0 ? 25 : 0) - sec / 3;
+    log('🚨', `DESCENTE DE POLICE ! Saisie : marchandise (~${U.money(value)}) et ${U.money(cashLoss)} en liquide.${guns}`, 'bad');
+    UI.modal({ icon: '🚨', title: 'Descente de police !', cls: 'bad',
+      text: `6 h du matin. La porte vole en éclats. ${value > 0 ? `Les enquêteurs saisissent ta marchandise (~${U.money(value)})` : 'Ils retournent tout l\'appartement'} et ${U.money(cashLoss)} en liquide.${guns}`,
+      choices: [{ label: 'Encaisser le coup', fn: () => { if (U.chance(arrestP)) Actions.arrest({ charge: 'Détention et trafic de stupéfiants', months: Actions.drugMonths(value) + 2 }); else log('😮‍💨', 'Garde à vue de 48 h… puis libération faute de preuves suffisantes.', ''); } }] });
+  },
+  prisonEvent() {
+    U.pick([
+      () => { if (PlayerData.combatPower() + U.rand(0, 40) > U.rand(20, 80)) { PlayerData.mod('respect', 3); log('👊', 'Un détenu te cherche en promenade : tu le remets à sa place. +3 👑', 'good'); } else { const d = U.ri(6, 15); log('🤕', `Agression en promenade (−${d} ❤️).`, 'bad'); PlayerData.hurt(d, 'Poignardé en détention'); } },
+      () => { S.crew.forEach((c) => { c.loyalty = Math.min(100, c.loyalty + 4); }); log('📞', 'Tu donnes tes ordres à ton équipe depuis un téléphone passé en douce. Loyauté +4.', 'info'); },
+      () => { log('📚', 'Tu passes tes journées à lire et à réfléchir. Le temps passe lentement.', ''); PlayerData.mod('addiction', -3); },
+    ])();
+  },
+  pool: [
+    { w: 10, run: () => Events.altercation() },
+    { w: 8, run: () => Events.marketShock() },
+    { w: () => 4 + S.territories * 3 + (PlayerData.respect() > 40 ? 3 : 0), cond: () => PlayerData.respect() > 25 || S.territories > 0, run: () => Events.hit() },
+    { w: 6, cond: () => S.crew.some((c) => c.loyalty < 35), run: () => Events.snitch() },
+    { w: 3, cond: () => PlayerData.respect() > 35, run: () => Events.rapper() },
+    { w: 4, run: () => Events.wallet() },
+    { w: 6, cond: () => S.cash > 200, run: () => Events.oldFriend() },
+    { w: 5, cond: () => !PlayerData.items('properties').some((p) => !p.stash) && Inventory.bulk() > 0, run: () => Events.mom() },
+    { w: 4, cond: () => S.heat > 40, run: () => Events.dirtyCop() },
+    { w: 3, cond: () => S.bank > 50000 && S.heat > 25, run: () => Events.taxAudit() },
+    { w: 4, cond: () => S.crew.length > 0, run: () => Events.raise() },
+    { w: 3, cond: () => S.ageMonths > 12 * 35, run: () => Events.sick() },
+    { w: 4, cond: () => S.cash > 1500, run: () => Events.party() },
+    { w: 4, cond: () => S.cash > 5000 && PlayerData.security() < 30, run: () => Events.burglary() },
+    { w: 2, cond: () => S.rank >= 2, run: () => Events.journalist() },
+    { w: 3, cond: () => S.rank >= 2, run: () => Events.cartelOffer() },
+    { w: 4, cond: () => PlayerData.dealers().some((c) => c.drug), run: () => Events.dealerRobbed() },
+    { w: 5, cond: () => PlayerData.items('vehicles').length > 0 && Inventory.bulk() > 30, run: () => Events.roadCheck() },
+  ],
+  altercation() {
+    const why = U.pick(['te bouscule devant le kebab', 'te traite de balance devant tout le quartier', 'te fixe avec un sourire provocateur', 'crache sur tes baskets neuves']);
+    UI.modal({ icon: '😤', title: 'Altercation de rue', text: `Un type ${why} et te cherche ouvertement.`, choices: [
+      { label: '👊 Lui mettre une droite', fn: () => {
+        if (PlayerData.combatPower() + U.rand(0, 40) > U.rand(20, 75)) { PlayerData.mod('respect', 3); log('👊', 'Altercation : tu le mets au sol en deux coups. Le quartier a vu.', 'good'); UI.result('👊', 'Victoire', 'Il finit au sol. Ton respect grimpe (+3).', 'good'); }
+        else { const d = U.ri(6, 16); PlayerData.mod('respect', -2); log('🤕', `Altercation : tu te prends une raclée (−${d} ❤️).`, 'bad'); PlayerData.hurt(d, 'Mort dans une bagarre de rue'); if (S.alive) UI.result('🤕', 'Défaite', `Il était plus costaud que prévu. −${d} ❤️`, 'bad'); }
+      } },
+      { label: '🔫 Sortir ton arme', dis: PlayerData.firepower() < 15, sub: PlayerData.firepower() < 15 ? 'Il te faut une arme à feu' : '+5 respect, +8 🚨', fn: () => {
+        PlayerData.mod('respect', 5); PlayerData.mod('heat', 8);
+        log('🔫', 'Tu sors ton arme : le type détale en courant. (+5 👑, +8 🚨)', 'good');
+        if (U.chance(20)) { PlayerData.mod('heat', 10); log('📱', 'Quelqu\'un a filmé la scène et la vidéo tourne sur les réseaux… (+10 🚨)', 'bad'); }
+      } },
+      { label: '🚶 Laisser couler', fn: () => { PlayerData.mod('respect', -2); log('🚶', 'Tu laisses couler. Certains y voient de la faiblesse (−2 👑).', ''); } },
+    ] });
+  },
+  hit() {
+    const rv = S.rivals.length ? U.pick(S.rivals).name : 'des inconnus';
+    UI.modal({ icon: '🏍️', title: 'Règlement de compte !', cls: 'bad', text: `Deux hommes cagoulés sur une moto ralentissent à ta hauteur… Envoyés par <b>${rv}</b>. Des coups de feu éclatent !`, choices: [
+      { label: '🔫 Riposter', dis: PlayerData.firepower() < 15, sub: PlayerData.firepower() < 15 ? 'Il te faut une arme à feu' : '', fn: () => this.hitResolve(true, rv) },
+      { label: '🏃 Plonger et fuir', fn: () => this.hitResolve(false, rv) },
+    ] });
+  },
+  hitResolve(fight, rv) {
+    const prot = PlayerData.soldiers().length * 4;
+    if (fight && PlayerData.combatPower() + prot + U.rand(0, 40) > U.rand(40, 110)) {
+      PlayerData.mod('respect', 6); PlayerData.mod('heat', 12); if (U.chance(50)) S.stats.kills++;
+      log('🔫', `Règlement de compte : tu ripostes et mets les tueurs de ${rv} en fuite. (+6 👑)`, 'good');
+      UI.result('🔫', 'Riposte', 'Les tireurs prennent la fuite sous ton feu. Le quartier parle de toi.', 'good'); return;
+    }
+    if (!fight && U.chance(45 + prot)) { log('🏃', 'Règlement de compte : tu échappes aux balles de justesse.', ''); UI.result('🏃', 'Sauvé', 'Tu plonges derrière une voiture. Les balles sifflent… mais aucune ne te touche.', 'good'); return; }
+    const dmg = Math.round(U.ri(20, 65) * (1 - PlayerData.armor() / 130));
+    S.wounded = true;
+    log('🩸', `Règlement de compte : touché par balle (−${dmg} ❤️).`, 'bad');
+    PlayerData.hurt(dmg, `Abattu lors d'un règlement de compte (${rv})`);
+    if (S.alive) UI.result('🩸', 'Touché !', `Une balle t'atteint. −${dmg} ❤️. Fais-toi soigner vite.`, 'bad');
+  },
+  marketShock() {
+    const city = U.chance(60) ? S.city : U.pick(Object.keys(CITIES)), d = U.pick(Object.keys(DRUGS)), up = U.chance(50);
+    const mult = up ? U.rand(1.4, 1.9) : U.rand(0.5, 0.7);
+    MarketData.shock(city, d, mult);
+    const C = CITIES[city], D = DRUGS[d];
+    const txt = up
+      ? U.pick([`Grosse saisie au port : pénurie ${U.de(D.name)} à ${C.name}`, `Les douanes frappent fort : ${D.name} introuvable à ${C.name}`, `Guerre de gangs à ${C.name} : ${D.name} en rupture`])
+      : U.pick([`Le marché de ${C.name} est inondé ${U.de(D.name)}`, `Un nouveau réseau casse les prix à ${C.name} (${D.name})`, `Arrivage massif à ${C.name} (${D.name})`]);
+    log(up ? '📈' : '📉', `Marché noir : ${txt} → prix ${up ? '+' : ''}${Math.round((mult - 1) * 100)} %.`, 'info');
+  },
+  snitch() {
+    const m = S.crew.slice().sort((a, b) => a.loyalty - b.loyalty)[0];
+    UI.modal({ icon: '🐀', title: 'Une balance ?', text: `Des rumeurs disent que <b>${m.name}</b> parlerait aux flics…`, choices: [
+      { label: '☠️ Régler le problème définitivement', fn: () => { Crew.remove(m); S.stats.kills++; PlayerData.mod('respect', 5); PlayerData.mod('heat', 10); log('☠️', `${m.name} ne parlera plus jamais. (+5 👑, +10 🚨)`, 'bad'); } },
+      { label: '💶 Acheter son silence (3 000 €)', dis: S.cash < 3000, fn: () => { S.cash -= 3000; m.loyalty = Math.min(100, m.loyalty + 30); log('💶', `Tu achètes la loyauté de ${m.name} (+30).`, ''); } },
+      { label: '🤷 Ignorer les rumeurs', fn: () => { if (U.chance(60)) { PlayerData.mod('heat', 18); log('🐀', `${m.name} était bien une balance ! (+18 🚨)`, 'bad'); } else log('🤷', 'Fausse rumeur, apparemment.', ''); } },
+    ] });
+  },
+  rapper() { PlayerData.mod('respect', 4); PlayerData.mod('heat', 3); log('🎤', 'Un rappeur local cite ton nom dans son dernier son. Il tourne en boucle dans le quartier. (+4 👑, +3 🚨)', 'good'); },
+  wallet() {
+    const n = U.ri(150, 900);
+    UI.modal({ icon: '👛', title: 'Portefeuille trouvé', text: `Tu trouves un portefeuille par terre avec <b>${U.money(n)}</b> en liquide et une carte d'identité.`, choices: [
+      { label: '💵 Garder l\'argent', fn: () => { S.cash += n; log('👛', `Tu gardes les ${U.money(n)} du portefeuille.`, 'money'); } },
+      { label: '📮 Le rendre à son propriétaire', fn: () => { PlayerData.heal(3); PlayerData.mod('heat', -2); log('📮', 'Tu rends le portefeuille. Ça fait du bien de faire une bonne action. (+3 ❤️)', 'good'); } },
+    ] });
+  },
+  oldFriend() {
+    const d = U.pick(['coke', 'weed', 'hash', 'mdma', 'oxy', 'benzo', 'keta']), D = DRUGS[d];
+    const qty = Math.max(5, Math.round(D.demand * U.rand(0.5, 1.5)));
+    const price = Math.round(MarketData.buyUnit(S.city, d) * qty * 0.5), q = U.ri(5, 95);
+    const fits = Inventory.bulk() + qty * D.bulk <= PlayerData.capacity();
+    UI.modal({ icon: '🤝', title: 'Le plan d\'un vieux pote', text: `Un ami d'enfance te propose <b>${qty} ${D.unit}</b> ${U.de(D.name)} pour <b>${U.money(price)}</b> (moitié prix). Qualité inconnue…`, choices: [
+      { label: '💵 Acheter le lot', sub: !fits ? 'Planque trop petite' : '', dis: S.cash < price || !fits, fn: () => {
+        S.cash -= price; Inventory.add(d, qty, q);
+        log('🤝', `Tu achètes le lot de ton pote : ${qty} ${D.unit} ${U.de(D.name)}. Qualité réelle : ${q} %${q < 30 ? ' — une arnaque !' : q > 75 ? ' — une pépite !' : '.'}`, q < 30 ? 'bad' : 'good');
+      } },
+      { label: '🙅 Refuser', fn: () => log('🙅', 'Tu déclines l\'offre de ton pote.', '') },
+    ] });
+  },
+  mom() {
+    UI.modal({ icon: '👩', title: 'Ta mère a trouvé ta marchandise !', text: 'En faisant le ménage, ta mère est tombée sur ton stock planqué sous le lit. Elle est en larmes.', choices: [
+      { label: '🤥 Mentir : « C\'est à un pote »', fn: () => { if (U.chance(50)) log('🤥', 'Ta mère fait semblant de te croire.', ''); else { const v = Inventory.seize(0.5); log('🚽', `Ta mère ne te croit pas et jette la moitié de ton stock dans les toilettes (~${U.money(v)}).`, 'bad'); } } },
+      { label: '😔 Promettre d\'arrêter', fn: () => { PlayerData.mod('addiction', -3); PlayerData.mod('respect', -1); log('😔', 'Tu promets à ta mère d\'arrêter. Elle veut y croire. Il serait temps de prendre ton propre appart…', ''); } },
+      { label: '😠 Lui crier dessus', fn: () => { PlayerData.mod('respect', 1); PlayerData.hurt(2, 'Chagrin'); log('😠', 'Tu cries et claques la porte. L\'ambiance à la maison est glaciale.', 'bad'); } },
+    ] });
+  },
+  dirtyCop() {
+    const cost = Math.round((3000 + S.heat * 250) * (1 + S.rank * 0.5));
+    UI.modal({ icon: '👮', title: 'Un flic ripou', text: `Un policier (${CITIES[S.city].cops}) t'aborde discrètement : pour <b>${U.money(cost)}</b>, ton dossier pourrait « s'égarer ».`, choices: [
+      { label: `💶 Payer (${U.money(cost)})`, sub: '−30 🚨', dis: !PlayerData.can(cost), fn: () => { PlayerData.pay(cost); PlayerData.mod('heat', -30); log('👮', `Tu paies un flic ripou ${U.money(cost)} : ton dossier s'allège (−30 🚨).`, 'good'); } },
+      { label: '🙅 Refuser', fn: () => log('🙅', 'Tu refuses l\'offre du flic ripou.', '') },
+      { label: '😈 Le menacer', fn: () => { if (U.chance(50)) { PlayerData.mod('heat', -10); PlayerData.mod('respect', 3); log('😈', 'Le flic a eu peur et t\'oublie un moment (−10 🚨, +3 👑).', 'good'); } else { PlayerData.mod('heat', 15); log('😈', 'Mauvaise idée : le flic se venge en te mettant sur écoute (+15 🚨).', 'bad'); } } },
+    ] });
+  },
+  taxAudit() {
+    const fine = Math.round(S.bank * U.rand(0.1, 0.25) * (S.businesses.length ? 0.5 : 1));
+    S.bank -= fine;
+    log('🧾', `Contrôle fiscal ! Tes revenus sont jugés suspects : redressement de <b>${U.money(fine)}</b>.${S.businesses.length ? ' Tes commerces ont servi de justificatif.' : ''}`, 'bad');
+    UI.result('🧾', 'Contrôle fiscal', `Le fisc te réclame ${U.money(fine)}.`, 'bad');
+  },
+  raise() {
+    const m = U.pick(S.crew), cost = 500 + Math.round(m.skill * 20);
+    UI.modal({ icon: '💬', title: 'Demande d\'augmentation', text: `<b>${m.name}</b> estime mériter une plus grosse part et demande <b>${U.money(cost)}</b>.`, choices: [
+      { label: `💵 Accepter (${U.money(cost)})`, dis: S.cash < cost, fn: () => { S.cash -= cost; m.loyalty = Math.min(100, m.loyalty + 15); log('💵', `Tu augmentes ${m.name} (+15 loyauté).`, ''); } },
+      { label: '🙅 Refuser', fn: () => { m.loyalty = Math.max(0, m.loyalty - 12); log('🙅', `Tu refuses. ${m.name} fait la gueule (−12 loyauté).`, ''); } },
+      { label: '👊 Le recadrer', fn: () => { PlayerData.mod('respect', 1); if (U.chance(50)) { m.loyalty = Math.min(100, m.loyalty + 5); log('👊', `${m.name} a compris qui est le chef.`, ''); } else { m.loyalty = Math.max(0, m.loyalty - 20); log('👊', `${m.name} ruminera cette humiliation (−20 loyauté).`, 'bad'); } } },
+    ] });
+  },
+  sick() { const d = U.ri(5, 15); log('🤒', `Tu tombes malade : grosse grippe, fièvre et courbatures (−${d} ❤️).`, 'bad'); PlayerData.hurt(d, 'Maladie'); },
+  party() {
+    UI.modal({ icon: '🪩', title: 'Soirée VIP', text: 'Un promoteur t\'invite dans le carré VIP de la boîte la plus chaude de la ville. Bouteilles, jolies personnes, rappeurs…', choices: [
+      { label: '🍾 Y aller (1 500 €)', fn: () => {
+        S.cash -= 1500; PlayerData.mod('respect', 3); log('🍾', 'Tu flambes 1 500 € en carré VIP. On parle de toi (+3 👑).', 'money');
+        UI.modal({ icon: '❄️', title: 'On te tend un plateau…', text: 'Au fond du carré, quelqu\'un te tend un plateau avec des traces de cocaïne.', choices: [
+          { label: '👃 Accepter', fn: () => Actions.consume('coke', 1, true) },
+          { label: '🙅 Refuser poliment', fn: () => log('🙅', 'Tu refuses le plateau. Tête froide.', '') },
+        ] });
+      } },
+      { label: '🏠 Rester tranquille', fn: () => log('🏠', 'Tu déclines l\'invitation et restes discret.', '') },
+    ] });
+  },
+  burglary() {
+    const loss = Math.round(S.cash * U.rand(0.1, 0.4) * (1 - PlayerData.security() / 100));
+    S.cash -= loss;
+    log('🏚️', `Ton logement a été cambriolé pendant ton absence : ${U.money(loss)} en liquide envolés.`, 'bad');
+    UI.result('🏚️', 'Cambriolé !', `On t'a volé ${U.money(loss)}. Investis dans un logement plus sécurisé.`, 'bad');
+  },
+  journalist() {
+    UI.modal({ icon: '📰', title: 'Journaliste d\'investigation', text: 'Une journaliste prépare un grand article sur ton réseau. Elle a des photos.', choices: [
+      { label: '😈 L\'intimider', fn: () => { PlayerData.mod('respect', 2); PlayerData.mod('heat', 8); log('😈', 'La journaliste renonce à publier… pour l\'instant (+8 🚨).', ''); } },
+      { label: '💶 Racheter les photos (8 000 €)', dis: !PlayerData.can(8000), fn: () => { PlayerData.pay(8000); log('💶', 'Tu rachètes les photos. Affaire étouffée.', 'good'); } },
+      { label: '🤷 Ignorer', fn: () => { PlayerData.mod('heat', 15); PlayerData.mod('respect', 3); log('📰', 'L\'article fait la une : la police redouble d\'attention (+15 🚨), mais ta légende grandit (+3 👑).', 'bad'); } },
+    ] });
+  },
+  cartelOffer() {
+    const d = U.pick(['coke', 'heroW', 'meth']), D = DRUGS[d];
+    const qty = U.ri(300, 2000), price = Math.round(MarketData.buyUnit(S.city, d) * qty * 0.6), q = U.ri(75, 95);
+    const fits = Inventory.bulk() + qty * D.bulk <= PlayerData.capacity();
+    UI.modal({ icon: '🤝', title: 'Offre d\'un cartel', text: `Un émissaire te propose <b>${U.num(qty)} ${D.unit}</b> ${U.de(D.name)} (Q${q}) pour <b>${U.money(price)}</b> (−40 %).`, choices: [
+      { label: '💵 Accepter le deal', sub: !fits ? 'Planque trop petite' : '', dis: S.cash < price || !fits, fn: () => { S.cash -= price; Inventory.add(d, qty, q); PlayerData.mod('respect', 2); log('🤝', `Deal avec le cartel : ${U.num(qty)} ${D.unit} ${U.de(D.name)} pour ${U.money(price)}.`, 'money'); } },
+      { label: '🙅 Décliner', fn: () => { PlayerData.mod('respect', -1); log('🙅', 'Tu déclines l\'offre du cartel. Ils s\'en souviendront.', ''); } },
+    ] });
+  },
+  dealerRobbed() {
+    const m = U.pick(PlayerData.dealers().filter((c) => c.drug)), D = DRUGS[m.drug];
+    const lost = Inventory.remove(m.drug, Math.floor(Inventory.qty(m.drug) * U.rand(0.1, 0.3)));
+    UI.modal({ icon: '🔪', title: 'Dealeur braqué', text: `<b>${m.name}</b> s'est fait braquer par une bande rivale : ${U.num(lost)} ${D.unit} ${U.de(D.name)} envolés.`, choices: [
+      { label: '⚔️ Venger l\'affront', fn: () => {
+        if (PlayerData.combatPower() + PlayerData.soldiers().length * 5 + U.rand(0, 40) > U.rand(35, 95)) { PlayerData.mod('respect', 5); PlayerData.mod('heat', 8); m.loyalty = Math.min(100, m.loyalty + 15); log('⚔️', `Vengeance accomplie pour ${m.name}. (+5 👑)`, 'good'); UI.result('⚔️', 'Vengé', 'La bande rivale a payé. Ton équipe te voue une loyauté sans faille.', 'good'); }
+        else { const d = U.ri(10, 25); log('🤕', `Vengeance ratée (−${d} ❤️).`, 'bad'); PlayerData.hurt(d, 'Tué en voulant venger un de ses dealeurs'); if (S.alive) UI.result('🤕', 'Échec', `Ils étaient plus nombreux. −${d} ❤️`, 'bad'); }
+      } },
+      { label: '🤷 Laisser tomber', fn: () => { PlayerData.mod('respect', -3); m.loyalty = Math.max(0, m.loyalty - 10); log('🤷', 'Tu laisses passer. Ton équipe doute de toi (−3 👑).', 'bad'); } },
+    ] });
+  },
+  roadCheck() {
+    const car = PlayerData.items('vehicles').sort((a, b) => b.speed - a.speed)[0];
+    const value = Inventory.value() * 2;
+    UI.modal({ icon: '🚔', title: 'Contrôle routier', text: `Des policiers te font signe de te garer. Ton véhicule (${car.name}) sent la marchandise…`, choices: [
+      { label: '😐 Rester calme', sub: `Chance ~${Math.round(car.disc * 0.7 + 15)} %`, fn: () => {
+        if (U.chance(car.disc * 0.7 + 15)) log('😐', 'Contrôle routier : papiers en règle, ils te laissent repartir.', 'good');
+        else { const v = Inventory.seize(1); log('🚔', `Contrôle routier : fouille du véhicule, stock saisi (~${U.money(v)}).`, 'bad'); Actions.arrest({ charge: 'Transport de stupéfiants', months: Actions.drugMonths(v) }); }
+      } },
+      { label: '💨 Prendre la fuite', sub: `Chance ~${Math.round(car.speed * 0.8)} %`, fn: () => {
+        if (U.chance(car.speed * 0.8)) { PlayerData.mod('heat', 12); log('💨', `Course-poursuite : tu sèmes la police au volant de ton véhicule (${car.name}) (+12 🚨).`, 'good'); }
+        else { S.owned.vehicles = S.owned.vehicles.filter((x) => x !== car.id); Inventory.seize(1); log('💥', `Course-poursuite terminée dans un poteau. ${car.name} saisie, stock saisi.`, 'bad'); PlayerData.hurt(U.ri(10, 30), 'Accident lors d\'une course-poursuite'); if (S.alive) Actions.arrest({ charge: 'Refus d\'obtempérer et transport de stupéfiants', months: Actions.drugMonths(value / 2) + 6 }); }
+      } },
+      { label: '💶 Proposer un billet (1 000 €)', dis: S.cash < 1000, fn: () => {
+        S.cash -= 1000;
+        if (U.chance(60)) log('💶', 'Les policiers empochent le billet et te souhaitent bonne route.', '');
+        else { const v = Inventory.seize(1); log('🚔', 'Tentative de corruption refusée : fouille et saisie.', 'bad'); Actions.arrest({ charge: 'Transport de stupéfiants et corruption', months: Actions.drugMonths(v) + 6 }); }
+      } },
+    ] });
+  },
+};
+
+/* ================================ UI ================================ */
+const CB = { h: [], p: [], m: [] };
+function cb(fn, scope = 'p') { CB[scope].push(fn); return scope + (CB[scope].length - 1); }
+
+const H = {
+  sec: (t) => `<div class="sec">${t}</div>`,
+  note: (t) => `<div class="note">${t}</div>`,
+  card: (html, cls = '') => `<div class="card ${cls}">${html}</div>`,
+  mini: (v, max, cls = '') => `<div class="mini ${cls}"><i style="width:${U.clamp(v / Math.max(1, max) * 100, 0, 100)}%"></i></div>`,
+  kv: (pairs) => `<div class="kv">${pairs.map(([k, v]) => `<div><small>${k}</small><b>${v}</b></div>`).join('')}</div>`,
+  row({ icon, title, sub = '', right = '', fn, dis = false, cls = '' }) {
+    const inner = `<span class="r-ic">${icon}</span><span class="r-tx"><b>${title}</b>${sub ? `<small>${sub}</small>` : ''}</span>${right ? `<span class="r-rt">${right}</span>` : ''}`;
+    if (!fn) return `<div class="row static ${cls}">${inner}</div>`;
+    return `<button class="row ${cls}" data-cb="${cb(fn)}" ${dis ? 'disabled' : ''}>${inner}</button>`;
+  },
+};
+
+const UI = {
+  stack: [], tab: null, cur: null, queue: [], _seq: -1, _toastT: null,
+  toast(msg) {
+    const t = $('#toast'); t.innerHTML = msg; t.classList.add('show');
+    clearTimeout(this._toastT); this._toastT = setTimeout(() => t.classList.remove('show'), 2200);
+  },
+  /* ----- Modales (file d'attente) ----- */
+  modal(m) {
+    if (S && !S.alive && !m.force) return;
+    if (this.cur) { this.queue.push(m); return; }
+    this.showModal(m);
+  },
+  showModal(m) {
+    this.cur = m; CB.m = [];
+    const choices = (m.choices || [{ label: 'OK', cls: 'primary' }]).map((c) =>
+      `<button class="mbtn ${c.cls || ''}" ${c.dis ? 'disabled' : ''} data-cb="${cb(() => this.choose(c), 'm')}">${c.label}${c.sub ? `<small>${c.sub}</small>` : ''}</button>`).join('');
+    const root = $('#modal-root');
+    root.innerHTML = `<div class="overlay"><div class="modal ${m.cls || ''}" role="dialog">${m.icon ? `<div class="m-icon">${m.icon}</div>` : ''}${m.title ? `<h3>${m.title}</h3>` : ''}<div class="m-text">${m.text || ''}</div>${m.html || ''}<div class="m-choices">${choices}</div></div></div>`;
+    root.classList.add('show');
+    if (m.onShow) m.onShow(root);
+    this.renderNav();
+  },
+  choose(c) {
+    this.cur = null;
+    const root = $('#modal-root'); root.innerHTML = ''; root.classList.remove('show');
+    if (c.fn) c.fn();
+    if (!this.cur && this.queue.length) this.showModal(this.queue.shift());
+    this.renderNav();
+  },
+  result(icon, title, text, cls = '') { this.modal({ icon, title, text, cls }); },
+  confirm(icon, title, text, label, fn, cls = 'primary') { this.modal({ icon, title, text, choices: [{ label, cls, fn }, { label: 'Annuler', cls: 'ghost' }] }); },
+  pay({ icon, title, text = '', price, cashOnly = false, onPay }) {
+    const heat = cashOnly ? 0 : Actions.cashHeat(price);
+    const ch = [{ label: '💵 Payer en liquide', sub: heat ? `Gros paiement cash suspect : +${heat} 🚨` : `Liquide : ${U.money(S.cash)}`, dis: S.cash < price,
+      fn: () => { S.cash -= price; PlayerData.mod('heat', heat); onPay('cash'); } }];
+    if (!cashOnly) ch.push({ label: '🏦 Payer par virement', sub: `Banque : ${U.money(S.bank)} · aucune trace suspecte`, dis: S.bank < price, fn: () => { S.bank -= price; onPay('bank'); } });
+    ch.push({ label: 'Annuler', cls: 'ghost' });
+    this.modal({ icon, title, text: `${text}${text ? '<br>' : ''}Prix : <b class="y">${U.money(price)}</b>${cashOnly ? '<br><small class="m">Marché noir : liquide uniquement</small>' : ''}`, choices: ch });
+  },
+  qty({ icon, title, text = '', max, init = 1, unit = '', info, confirm = 'Valider', onConfirm }) {
+    max = Math.floor(max); if (max < 1) return;
+    let cur = U.clamp(Math.floor(init), 1, max);
+    const html = `<div class="qty">
+      <div class="qty-row"><button type="button" class="qb" data-d="-1">−</button><input id="q-num" type="number" inputmode="numeric" min="1" max="${max}" value="${cur}"><button type="button" class="qb" data-d="1">+</button></div>
+      <div class="qty-unit">${unit} · max ${U.num(max)}</div>
+      <input id="q-rng" type="range" min="1" max="${max}" value="${cur}">
+      <div class="qty-pre"><button type="button" data-p="0.1">10 %</button><button type="button" data-p="0.25">25 %</button><button type="button" data-p="0.5">50 %</button><button type="button" data-p="1">MAX</button></div>
+      <div id="q-info" class="qty-info"></div></div>`;
+    this.modal({ icon, title, text, html, choices: [{ label: confirm, cls: 'primary', fn: () => onConfirm(cur) }, { label: 'Annuler', cls: 'ghost' }],
+      onShow: (root) => {
+        const num = root.querySelector('#q-num'), rng = root.querySelector('#q-rng'), inf = root.querySelector('#q-info');
+        const upd = () => { inf.innerHTML = info ? info(cur) : ''; };
+        const set = (v) => { cur = U.clamp(Math.round(+v || 1), 1, max); num.value = cur; rng.value = cur; upd(); };
+        num.addEventListener('input', () => { const v = +num.value; if (v >= 1) { cur = U.clamp(Math.round(v), 1, max); rng.value = cur; upd(); } });
+        num.addEventListener('change', () => set(num.value));
+        rng.addEventListener('input', () => set(rng.value));
+        root.querySelectorAll('[data-p]').forEach((b) => b.addEventListener('click', () => set(Math.max(1, Math.floor(max * +b.dataset.p)))));
+        root.querySelectorAll('[data-d]').forEach((b) => b.addEventListener('click', () => set(cur + +b.dataset.d)));
+        set(cur);
+      } });
+  },
+  gameOver() {
+    this.queue = []; this.cur = null; this.stack = []; this.tab = null;
+    const d = S.death || { cause: 'Inconnue' };
+    this.showModal({ force: true, icon: '⚰️', title: 'Fin de partie', cls: 'bad',
+      text: `La vie de <b>${U.esc(S.name)}</b> s'arrête à <b>${U.age(S.ageMonths)}</b>.<br>Cause : ${d.cause}.`,
+      html: `<div class="sumgrid">
+        <div>Grade<b>${RANKS[S.rank].icon} ${RANKS[S.rank].name}</b></div>
+        <div>Fortune max.<b>${U.money(S.stats.maxWorth)}</b></div>
+        <div>Gains criminels<b>${U.money(S.earned)}</b></div>
+        <div>Territoires<b>${S.territories}</b></div>
+        <div>Arrestations<b>${S.stats.arrests}</b></div>
+        <div>Temps en prison<b>${U.dur(S.stats.jailMonths)}</b></div>
+        <div>Victimes<b>${S.stats.kills}</b></div>
+        <div>Overdoses<b>${S.stats.ods}</b></div></div>`,
+      choices: [{ label: '🔄 Nouvelle vie', cls: 'primary', fn: () => Game.newLifeScreen() }] });
+  },
+  /* ----- Panneau ----- */
+  open(view, arg) { this.stack.push({ view, arg }); this.renderPanel(); $('#p-body').scrollTop = 0; },
+  back() { this.stack.pop(); if (!this.stack.length) this.tab = null; this.renderPanel(); this.renderNav(); },
+  closePanel() { this.stack = []; this.tab = null; this.renderPanel(); this.renderNav(); },
+  openTab(tab) {
+    if (!S || !S.alive) return;
+    if (this.tab === tab && this.stack.length) return this.closePanel();
+    this.tab = tab; this.stack = [{ view: tab }];
+    this.renderPanel(); this.renderNav(); $('#p-body').scrollTop = 0;
+  },
+  render() {
+    if (!S) { $('#hud').innerHTML = ''; $('#log').innerHTML = ''; this.renderPanel(); this.renderNav(); return; }
+    this.renderHud(); this.renderLog(); this.renderPanel(); this.renderNav();
+  },
+  renderNav() {
+    document.querySelectorAll('.tab').forEach((t) => t.classList.toggle('on', t.dataset.tab === this.tab && this.stack.length > 0));
+    $('#age-btn').disabled = !S || !S.alive || !!this.cur;
+  },
+  bar(icon, label, v, cls) { return `<div class="bar ${cls}"><div class="bl"><span>${icon} ${label}</span><b>${Math.round(v)}%</b></div><div class="bt"><div class="bf" style="width:${U.clamp(v, 0, 100)}%"></div></div></div>`; },
+  renderHud() {
+    CB.h = [];
+    const r = RANKS[S.rank], c = CITIES[S.city];
+    $('#hud').innerHTML = `
+      <div class="hud-top">
+        <div class="avatar">${S.avatar}</div>
+        <div class="who"><div class="name">${U.esc(S.name)}</div><div class="sub">${r.icon} ${r.name} · ${U.age(S.ageMonths)}</div></div>
+        <div class="loc">${c.flag} ${c.name}<small>${c.country}</small></div>
+        <button class="gear" aria-label="Paramètres" data-cb="${cb(() => { this.tab = null; this.stack = [{ view: 'settings' }]; }, 'h')}">⚙️</button>
+      </div>
+      <div class="hud-money">
+        <div class="chip cash"><small>💵 Liquide (sale)</small><b>${U.money(S.cash)}</b></div>
+        <div class="chip bank"><small>🏦 Banque (blanchi)</small><b>${U.money(S.bank)}</b></div>
+        <div class="chip ap"><small>Énergie</small><b>⚡ ${S.ap}</b></div>
+      </div>
+      <div class="bars">
+        ${this.bar('❤️', 'Santé', S.health, 'hp')}
+        ${this.bar('👑', 'Respect', PlayerData.respect(), 'rs')}
+        ${this.bar('💉', 'Addiction', S.addiction, 'ad')}
+        ${this.bar('🚨', 'Police', S.heat, 'ht')}
+      </div>
+      ${S.jail ? `<div class="jailband">⛓️ EN PRISON — encore ${U.dur(S.jail)}</div>` : ''}`;
+  },
+  renderLog() {
+    const el = $('#log');
+    if (this._seq === S.logSeq && el.childElementCount) return;
+    let h = '', last = -1;
+    for (const e of S.log) {
+      if (e.m !== last) { h += `<div class="log-age">📅 ${U.age(e.m)}</div>`; last = e.m; }
+      h += `<div class="log-e ${e.c || ''}"><span class="le-i">${e.e}</span><span>${e.t}</span></div>`;
+    }
+    el.innerHTML = h || '<div class="empty-log">Ta vie commence…</div>';
+    el.scrollTop = el.scrollHeight;
+    this._seq = S.logSeq;
+  },
+  renderPanel() {
+    const p = $('#panel');
+    if (!this.stack.length || !S) { p.classList.remove('open'); return; }
+    const top = this.stack[this.stack.length - 1];
+    CB.p = [];
+    const r = V[top.view](top.arg);
+    $('#p-title').textContent = r.title;
+    $('#p-back').classList.toggle('hide', this.stack.length < 2);
+    $('#p-body').innerHTML = r.html;
+    p.classList.add('open');
+  },
+};
+
+/* =============================== VUES =============================== */
+const V = {
+  /* ---------- Onglet 1 : Activités ---------- */
+  activities() {
+    if (S.jail) return V.prison();
+    const n = Inventory.list().length;
+    let h = H.sec('Crimes');
+    h += H.row({ icon: '🥷', title: 'Voler', sub: 'Vol à l\'arraché, cambriolages, braquages', fn: () => UI.open('steal') });
+    h += H.row({ icon: '👊', title: 'Agression', sub: 'Racket, caïds, balances', fn: () => UI.open('assault') });
+    h += H.sec('Vices & santé');
+    h += H.row({ icon: '💉', title: 'Consommer de la drogue', sub: n ? `${n} produit(s) en stock` : 'Stock vide', fn: () => UI.open('consume') });
+    h += H.row({ icon: '🧘', title: 'Cure de désintox', sub: `Addiction : ${Math.round(S.addiction)} %`, fn: () => UI.open('rehab') });
+    h += H.row({ icon: '🏥', title: 'Hôpital / Soins', sub: `Santé : ${Math.round(S.health)} %${S.wounded ? ' · 🩸 blessure par balle' : ''}`, fn: () => UI.open('heal') });
+    h += H.row({ icon: '🔪', title: 'Chirurgie', sub: 'Esthétique, nouveau visage, empreintes', fn: () => UI.open('surgery') });
+    h += H.sec('Quotidien');
+    h += H.row({ icon: '🌳', title: 'Se mettre au vert', sub: 'Faire profil bas pour calmer la pression policière', right: '1 ⚡', fn: () => Actions.lowProfile() });
+    return { title: '🎯 Activités', html: h };
+  },
+  steal() {
+    let h = H.note('Chances calculées selon ton armement, ton respect, tes boosts et la pression policière.');
+    for (const t of THEFTS) {
+      const lock = t.rank && S.rank < t.rank ? `🔒 ${RANKS[t.rank].name}` : t.crew && PlayerData.soldiers().length < t.crew ? `🔒 ${t.crew} soldats requis` : '';
+      h += H.row({ icon: t.icon, title: t.name, sub: `${U.money(t.min)} – ${U.money(t.max)} · ${t.armed ? '🔫 armé · ' : ''}${t.ap} ⚡${lock ? ' · ' + lock : ''}`,
+        right: U.pct(Actions.stealChance(t)), dis: !!lock, fn: () => Actions.steal(t.id) });
+    }
+    return { title: '🥷 Voler', html: h };
+  },
+  assault() {
+    let h = H.note(`Ta force de combat : <b>${Math.round(PlayerData.combatPower())}</b> (santé, armes, gilet, respect).`);
+    for (const a of ASSAULTS) {
+      h += H.row({ icon: a.icon, title: a.name, sub: `${a.cash[1] ? U.money(a.cash[0]) + ' – ' + U.money(a.cash[1]) + ' · ' : ''}+${a.respect} 👑 · ${a.heat >= 0 ? '+' : ''}${a.heat} 🚨 · ${a.ap} ⚡${a.lethal ? ' · ☠️ dangereux' : ''}`,
+        right: U.pct(Actions.fightChance(a)), fn: () => Actions.assault(a.id) });
+    }
+    return { title: '👊 Agression', html: h };
+  },
+  consume() {
+    const list = Inventory.list();
+    let h = H.card(`💉 Addiction : <b class="p">${Math.round(S.addiction)} %</b>${H.mini(S.addiction, 100)}<small class="m">Au-dessus de 25 %, chaque mois sans consommer provoque une crise de manque. Mélanger opioïdes et benzos multiplie le risque d'overdose.</small>`);
+    if (PlayerData.crimeBuff()) h += H.note(`⚡ Boost actif : +${PlayerData.crimeBuff()} % de réussite aux crimes ce mois-ci.`);
+    if (!list.length) h += H.note('Ton stock est vide. Achète sur le marché (onglet Trafic).');
+    for (const d of list) {
+      const D = DRUGS[d];
+      h += H.row({ icon: D.icon, title: D.name, sub: `${U.num(Inventory.qty(d))} ${D.unit} · ${U.q(Inventory.q(d))} · ${Actions.fxText(D)}`, fn: () => Actions.consumeMenu(d) });
+    }
+    return { title: '💉 Consommer', html: h };
+  },
+  rehab() {
+    let h = H.card(`💉 Addiction actuelle : <b class="p">${Math.round(S.addiction)} %</b>${H.mini(S.addiction, 100)}`);
+    for (const r of REHABS) h += H.row({ icon: r.icon, title: r.name, sub: `${r.desc} · réussite ${r.success} % · ${r.ap} ⚡`, right: r.cost ? U.money(r.cost) : 'Gratuit', dis: !PlayerData.can(r.cost), fn: () => Actions.rehab(r.id) });
+    return { title: '🧘 Désintox', html: h };
+  },
+  heal() {
+    let h = H.card(`❤️ Santé : <b class="g">${Math.round(S.health)} %</b>${H.mini(S.health, 100, 'gr')}${S.wounded ? '<small class="r">🩸 Blessure par balle non soignée</small>' : ''}`);
+    for (const x of HEALS) h += H.row({ icon: x.icon, title: x.name, sub: `${x.desc} · +${x.hp[0]}–${x.hp[1]} ❤️ · ${x.ap} ⚡`, right: U.money(x.cost), dis: !PlayerData.can(x.cost), fn: () => Actions.heal(x.id) });
+    return { title: '🏥 Soins', html: h };
+  },
+  surgery() {
+    let h = H.note('Chirurgie esthétique (respect) ou clandestine (effacer ta trace auprès de la police).');
+    for (const s of SURGERIES) {
+      const done = s.once && S.surgeries.includes(s.id);
+      const fx = [s.respect ? `+${s.respect} 👑` : '', s.heat ? `${s.heat} 🚨` : '', s.record ? `casier −${s.record}` : '', s.hp ? `−${s.hp} ❤️` : ''].filter(Boolean).join(' · ');
+      h += H.row({ icon: s.icon, title: s.name, sub: `${fx} · échec ${s.fail} %`, right: done ? '<span class="g">✔ Fait</span>' : U.money(s.cost), dis: done || !PlayerData.can(s.cost), fn: () => Actions.surgery(s.id) });
+    }
+    return { title: '🔪 Chirurgie', html: h };
+  },
+  prison() {
+    let h = H.card(`<div class="big">⛓️ Détention</div>Encore <b class="y">${U.dur(S.jail)}</b> à tirer · Casier : ${S.record} condamnation(s)<br><small class="m">Ton équipe, tes labos et tes commerces continuent de tourner. Le marché et les achats sont inaccessibles.</small>`, 'accent');
+    h += H.sec('Vie en détention');
+    h += H.row({ icon: '💪', title: 'Musculation en cellule', sub: '+3 ❤️ · +1 👑 · 1 ⚡', fn: () => Actions.prison('muscu') });
+    h += H.row({ icon: '👊', title: 'Se battre dans la cour', sub: 'Gagner le respect du bâtiment · 1 ⚡', fn: () => Actions.prison('bagarre') });
+    h += H.row({ icon: '📦', title: 'Trafic en détention', sub: 'Téléphones, shit… 25 % de risque de rallonge · 1 ⚡', fn: () => Actions.prison('trafic') });
+    h += H.row({ icon: '💶', title: 'Corrompre un surveillant', sub: `−25 % de peine (70 %) · ${U.money(3000 * (S.rank + 1))} · 1 ⚡`, fn: () => Actions.prison('maton') });
+    h += H.row({ icon: '🪢', title: 'Tenter une évasion', sub: `Chance ~${Math.round(U.clamp(10 + PlayerData.respect() / 8 + PlayerData.soldiers().length * 2, 5, 40))} % · échec : +12 mois · 2 ⚡`, fn: () => Actions.prison('evasion') });
+    h += H.row({ icon: '🏥', title: 'Infirmerie', sub: 'Soins gratuits (+10 ❤️) · 1 ⚡', fn: () => { if (PlayerData.useAP(1)) { PlayerData.heal(10); S.wounded = false; UI.toast('🏥 +10 santé'); } } });
+    return { title: '⛓️ Prison', html: h };
+  },
+
+  /* ---------- Onglet 2 : Trafic & Marché ---------- */
+  trafic() {
+    if (S.jail) return { title: '💊 Trafic & Marché', html: H.card('⛓️ <b>Impossible depuis ta cellule.</b><br>Ton équipe continue d\'écouler le stock et tes labos de produire.', 'accent') };
+    const c = CITIES[S.city], b = Inventory.bulk(), cap = PlayerData.capacity();
+    let h = H.card(`📍 <b>${c.flag} ${c.name}</b> — ${c.country} · police ×${c.police} · douanes ×${c.customs}
+      ${H.kv([['📦 Planque', `${U.num(b)} / ${U.num(cap)}`], ['💰 Valeur du stock', U.money(Inventory.value())]])}${H.mini(b, cap)}`, 'accent');
+    h += H.sec('Marché');
+    h += H.row({ icon: '📦', title: 'Mon stock', sub: `${Inventory.list().length} produit(s) · vendre, consommer, couper`, fn: () => UI.open('stock') });
+    h += H.row({ icon: '🛒', title: 'Acheter en gros', sub: 'Approvisionnement volumique (grossistes)', fn: () => UI.open('wholesale') });
+    h += H.row({ icon: '🏪', title: 'Vendre au détail (rue)', sub: 'Meilleur prix, clients limités chaque mois', fn: () => UI.open('retail') });
+    h += H.row({ icon: '🏭', title: 'Vendre en gros', sub: 'Gros volumes, prix grossiste', fn: () => UI.open('sellbulk') });
+    h += H.row({ icon: '📊', title: 'Comparer les prix', sub: 'Cours du marché noir dans chaque ville', fn: () => UI.open('compare') });
+    h += H.row({ icon: '🏧', title: 'Retirer du liquide', sub: `Banque : ${U.money(S.bank)}`, fn: () => Actions.withdraw() });
+    h += H.sec('Logistique');
+    h += H.row({ icon: '🏎️', title: 'Go Fast', sub: `${S.gofasts.length} contrat(s) disponible(s) · 2 ⚡`, fn: () => UI.open('gofast') });
+    h += H.row({ icon: '🚢', title: 'Importations', sub: S.rank < 1 ? '🔒 Grade Dealeur requis' : `${S.imports.length} cargaison(s) en route`, fn: () => UI.open('imports') });
+    h += H.row({ icon: '✈️', title: 'Voyager', sub: 'Changer de ville (prix, police et douanes différents)', fn: () => UI.open('travel') });
+    h += H.sec('Production');
+    h += H.row({ icon: '🧪', title: 'Laboratoires', sub: `${S.labs.length} labo(s) · augmente ta marge chaque mois`, fn: () => UI.open('labs') });
+    return { title: '💊 Trafic & Marché', html: h };
+  },
+  stock() {
+    const list = Inventory.list(), b = Inventory.bulk(), cap = PlayerData.capacity();
+    let h = H.card(`${PlayerData.home().icon} Planque : <b>${U.num(b)} / ${U.num(cap)}</b> ${b > cap ? '<b class="r">— DÉBORDE !</b>' : ''}${H.mini(b, cap)}<small class="m">Agrandis ta planque via l'immobilier (onglet Patrimoine).</small>`);
+    if (!list.length) h += H.note('Ta planque est vide. Passe par le marché de gros.');
+    for (const d of list) {
+      const D = DRUGS[d];
+      h += H.row({ icon: D.icon, title: D.name, sub: `${U.num(Inventory.qty(d))} ${D.unit} · ${U.q(Inventory.q(d))} · encombrement ${U.num(Inventory.qty(d) * D.bulk)}`, right: U.money(Inventory.streetValue(d, Inventory.qty(d))), fn: () => Actions.stockMenu(d) });
+    }
+    return { title: '📦 Mon stock', html: h };
+  },
+  wholesale() {
+    const c = S.city;
+    let h = H.note(`Grossistes de ${CITIES[c].name}. La qualité (Q1–100) change chaque mois. Acheter gros fait monter les prix. Liquide : <b class="g">${U.money(S.cash)}</b>`);
+    for (const cat in CATS) {
+      h += H.sec(CATS[cat]);
+      for (const d in DRUGS) {
+        const D = DRUGS[d]; if (D.cat !== cat) continue;
+        h += H.row({ icon: D.icon, title: D.name, sub: `${MarketData.brand(c, d)} · ${U.q(S.market.qual[c][d])} ${MarketData.trendIcon(c, d)}`, right: `${U.unitPrice(MarketData.buyUnit(c, d))}<br><small class="m">/${D.unit}</small>`, fn: () => Actions.buy(d) });
+      }
+    }
+    return { title: '🛒 Acheter en gros', html: h };
+  },
+  retail() {
+    const list = Inventory.list();
+    let h = H.note(`Vente directe dans la rue à ${CITIES[S.city].name}. Le nombre de clients par mois dépend de ton respect et de tes territoires. Plus tu vends, plus le risque d'interpellation grimpe.`);
+    if (!list.length) h += H.note('Rien à vendre. Achète d\'abord en gros.');
+    for (const d of list) {
+      const D = DRUGS[d], left = MarketData.demandLeft(d), q = Inventory.q(d);
+      h += H.row({ icon: D.icon, title: D.name, sub: `Stock ${U.num(Inventory.qty(d))} · ${U.q(q)} · clients restants : ${U.num(left)} ${D.unit}`, right: `${U.unitPrice(MarketData.retail(S.city, d, q))}<br><small class="m">/${D.unit}</small>`, dis: left < 1, fn: () => Actions.sellRetail(d) });
+    }
+    return { title: '🏪 Vente au détail', html: h };
+  },
+  sellbulk() {
+    const list = Inventory.list();
+    let h = H.note('Revente à des semi-grossistes : pas de limite de clients, mais prix plus bas et risque d\'agent infiltré.');
+    if (!list.length) h += H.note('Rien à vendre.');
+    for (const d of list) {
+      const D = DRUGS[d], q = Inventory.q(d);
+      h += H.row({ icon: D.icon, title: D.name, sub: `Stock ${U.num(Inventory.qty(d))} ${D.unit} · ${U.q(q)} ${MarketData.trendIcon(S.city, d)}`, right: `${U.unitPrice(MarketData.sellUnit(S.city, d, q))}<br><small class="m">/${D.unit}</small>`, fn: () => Actions.sellBulk(d) });
+    }
+    return { title: '🏭 Vente en gros', html: h };
+  },
+  compare() {
+    let h = H.note('Touche un produit pour voir ses prix dans chaque ville. Achète là où c\'est bon marché, revends là où c\'est cher (voyages ou importations).');
+    for (const d in DRUGS) {
+      const D = DRUGS[d];
+      const prices = Object.keys(CITIES).map((c) => MarketData.buyUnit(c, d));
+      const lo = Object.keys(CITIES)[prices.indexOf(Math.min(...prices))];
+      h += H.row({ icon: D.icon, title: D.name, sub: `Moins cher : ${CITIES[lo].flag} ${CITIES[lo].name} (${U.unitPrice(Math.min(...prices))})`, fn: () => UI.open('compareDrug', d) });
+    }
+    return { title: '📊 Comparateur', html: h };
+  },
+  compareDrug(d) {
+    const D = DRUGS[d];
+    let h = H.note(`Prix pour ${D.unit}. Achat = grossiste local · Revente = prix payé par les semi-grossistes (Q50) · Rue = prix de détail (Q50).`);
+    for (const c in CITIES) {
+      const C = CITIES[c];
+      h += H.row({ icon: C.flag, title: `${C.name}${c === S.city ? ' (ici)' : ''} ${MarketData.trendIcon(c, d)}`, cls: c === S.city ? 'hl' : '',
+        sub: `Achat ${U.unitPrice(MarketData.buyUnit(c, d))} (${U.q(S.market.qual[c][d])}) · Revente ${U.unitPrice(MarketData.sellUnit(c, d, 50))} · Rue ${U.unitPrice(MarketData.retail(c, d, 50))}` });
+    }
+    return { title: `📊 ${D.name}`, html: h };
+  },
+  gofast() {
+    let h = H.note('Transporter la marchandise d\'un cartel à toute vitesse. Chaque course est un mini-jeu à choix : véhicule, itinéraire, fuite. Si tu perds la cargaison, le cartel voudra être remboursé.');
+    if (!S.gofasts.length) h += H.note('Aucun contrat ce mois-ci. Reviens le mois prochain.');
+    for (const g of S.gofasts) h += H.row({ icon: '🏎️', title: g.route, sub: `${g.kg} kg ${U.de(DRUGS[g.drug].name)} · Danger ${'🔥'.repeat(g.danger)} · 2 ⚡`, right: `<span class="g">${U.money(g.pay)}</span>`, fn: () => GoFast.start(g.id) });
+    const cars = PlayerData.items('vehicles');
+    h += H.note(cars.length ? `Tes véhicules : ${cars.map((v) => `${v.icon} ${v.name} (⚡${v.speed})`).join(', ')}` : 'Sans véhicule personnel, le réseau te fournit une voiture volée (vitesse 60).');
+    return { title: '🏎️ Go Fast', html: h };
+  },
+  imports() {
+    if (S.rank < 1) return { title: '🚢 Importations', html: H.card('🔒 Grade <b>Dealeur</b> requis pour monter des filières d\'importation.', 'accent') };
+    let h = H.row({ icon: '➕', title: 'Nouvelle importation', sub: 'Acheter à la source et faire livrer ici', fn: () => UI.open('importFrom') });
+    h += H.sec('Cargaisons en route');
+    if (!S.imports.length) h += H.note('Aucune cargaison en route.');
+    for (const im of S.imports) {
+      const D = DRUGS[im.d], m = IMPORT_METHODS.find((x) => x.id === im.method);
+      h += H.row({ icon: m.icon, title: `${U.num(im.qty)} ${D.unit} ${U.de(D.name)}`, sub: `${CITIES[im.from].flag} ${CITIES[im.from].name} · ${m.name} · arrivée dans ${Math.max(1, im.arrive - S.ageMonths)} mois · saisie ${im.risk} %` });
+    }
+    return { title: '🚢 Importations', html: h };
+  },
+  importFrom() {
+    let h = H.note(`Livraison vers ${CITIES[S.city].flag} ${CITIES[S.city].name}. Choisis la ville d'origine :`);
+    for (const c in CITIES) {
+      if (c === S.city) continue;
+      const C = CITIES[c], spec = Object.keys(C.spec || {}).map((d) => DRUGS[d].icon).join(' ');
+      h += H.row({ icon: C.flag, title: C.name, sub: `${C.country} · douanes ×${C.customs}${spec ? ' · spécialités : ' + spec : ''}`, fn: () => UI.open('importDrug', c) });
+    }
+    return { title: '🚢 Origine', html: h };
+  },
+  importDrug(c) {
+    let h = H.note(`Prix de gros à ${CITIES[c].name} (comparés à ${CITIES[S.city].name}).`);
+    for (const d in DRUGS) {
+      const D = DRUGS[d], there = MarketData.buyUnit(c, d), here = MarketData.sellUnit(S.city, d, S.market.qual[c][d]);
+      const margin = Math.round((here / there - 1) * 100);
+      h += H.row({ icon: D.icon, title: D.name, sub: `${U.q(S.market.qual[c][d])} · revente ici ~${U.unitPrice(here)} (<span class="${margin > 0 ? 'g' : 'r'}">${margin > 0 ? '+' : ''}${margin} %</span>)`, right: `${U.unitPrice(there)}<br><small class="m">/${D.unit}</small>`, fn: () => Actions.importMethod(c, d) });
+    }
+    return { title: `${CITIES[c].flag} ${CITIES[c].name}`, html: h };
+  },
+  travel() {
+    let h = H.note(`Ton stock voyage avec toi : risque de contrôle ${Inventory.bulk() ? 'proportionnel au volume transporté' : 'nul (stock vide)'}. Les go fast et marchés changent selon la ville.`);
+    for (const c in CITIES) {
+      if (c === S.city) continue;
+      const C = CITIES[c], r = Actions.customsRisk(c);
+      h += H.row({ icon: C.flag, title: C.name, sub: `${C.country} · police ×${C.police}${Inventory.bulk() ? ` · contrôle ${U.risk(r)}` : ''} · 1 ⚡`, right: U.money(Actions.travelCost(c)), fn: () => Actions.travel(c) });
+    }
+    return { title: '✈️ Voyager', html: h };
+  },
+  labs() {
+    let h = '';
+    if (S.labs.length) {
+      h += H.sec('Mes laboratoires');
+      for (const l of S.labs) {
+        const L = LABS[l.type];
+        h += H.row({ icon: L.icon, title: `${L.name} · niv. ${l.level}`, sub: `~${U.num(L.out * LAB_MULT[l.level - 1])} ${DRUGS[L.drug].unit}/mois · frais ${U.money(L.upkeep * (1 + (l.level - 1) * 0.5))}/mois${L.input ? ` · consomme ${Math.round(L.input.qty * LAB_MULT[l.level - 1])} ${DRUGS[L.input.drug].unit} ${U.de(DRUGS[L.input.drug].name)}` : ''}`, fn: () => Actions.labMenu(l.id) });
+      }
+    }
+    h += H.sec('Monter un laboratoire');
+    h += H.note('La production arrive dans ton stock chaque mois. Risque de démantèlement lié à la pression policière.');
+    for (const t in LABS) {
+      const L = LABS[t], lock = S.rank < L.rank;
+      h += H.row({ icon: L.icon, title: L.name, sub: `${lock ? `🔒 ${RANKS[L.rank].name} · ` : ''}${U.num(L.out)} ${DRUGS[L.drug].unit}/mois ${U.de(DRUGS[L.drug].name)} (Q${L.q[0]}–${L.q[1]}) · frais ${U.money(L.upkeep)}/mois${L.input ? ` · nécessite ${L.input.qty} g de cocaïne/mois` : ''}${L.boom ? ' · 💥 explosif' : ''}`,
+        right: U.money(L.price), dis: lock, fn: () => Actions.buyLab(t) });
+    }
+    return { title: '🧪 Laboratoires', html: h };
+  },
+
+  /* ---------- Onglet 3 : Mafia & Business ---------- */
+  mafia() {
+    const r = RANKS[S.rank], cap = S.businesses.reduce((a, b) => a + BUSINESSES[b.type].cap, 0);
+    let h = H.card(`<div class="big">${r.icon} ${r.name}</div>${H.kv([['👥 Équipe', `${S.crew.length} / ${r.crew}`], ['🏴 Territoires', S.territories], ['🧼 Blanchiment', `${U.money(cap)}/mois`], ['💸 Dettes', U.money(PlayerData.debt())]])}`, 'accent');
+    h += H.sec('Organisation');
+    h += H.row({ icon: '🎖️', title: 'Hiérarchie', sub: RANKS[S.rank + 1] ? `Prochain grade : ${RANKS[S.rank + 1].icon} ${RANKS[S.rank + 1].name}` : 'Sommet atteint', fn: () => UI.open('hierarchy') });
+    h += H.row({ icon: '🧑‍🤝‍🧑', title: 'Mon équipe', sub: S.crew.length ? `${PlayerData.dealers().length} dealeur(s), ${PlayerData.soldiers().length} soldat(s)` : 'Personne pour l\'instant', fn: () => UI.open('crew') });
+    h += H.row({ icon: '➕', title: 'Recruter des sous-fifres', sub: r.crew ? `${S.candidates.length} profil(s) disponible(s)` : '🔒 Grade Dealeur requis', fn: () => UI.open('recruit') });
+    h += H.row({ icon: '⚔️', title: 'Guerre de territoire', sub: S.rank < 2 ? '🔒 Grade Lieutenant requis' : `${S.rivals.length} gang(s) rival(aux)`, fn: () => UI.open('war') });
+    h += H.sec('Business & finances');
+    h += H.row({ icon: '🏢', title: 'Clubs & Entreprises', sub: `${S.businesses.length} commerce(s) · façades légales`, fn: () => UI.open('biz') });
+    h += H.row({ icon: '🧼', title: 'Blanchiment', sub: `Objectif : ${S.launderTarget == null ? 'max' : U.money(S.launderTarget)}/mois · capacité ${U.money(cap)}`, fn: () => UI.open('launder') });
+    h += H.row({ icon: '🏦', title: 'Banque & Usurier', sub: 'Retraits, dépôts, prêts, dettes', fn: () => UI.open('finance') });
+    return { title: '🕴️ Mafia & Business', html: h };
+  },
+  hierarchy() {
+    let h = '';
+    RANKS.forEach((rk, i) => {
+      const st = i < S.rank ? '✅' : i === S.rank ? '📍' : '🔒';
+      h += H.row({ icon: rk.icon, title: `${st} ${rk.name}`, cls: i === S.rank ? 'hl' : '', sub: `${i ? `Respect ${rk.respect} · gains ${U.money(rk.earned)}${rk.terr ? ` · ${rk.terr} territoire(s)` : ''}<br>` : ''}${rk.perks.join(' · ')}` });
+    });
+    const nx = S.rank + 1;
+    if (RANKS[nx]) {
+      const req = Actions.reqs(nx), ok = req.every((x) => x.ok);
+      h += H.sec(`Pour devenir ${RANKS[nx].name}`);
+      h += H.card(req.map((x) => `${x.ok ? '✅' : '❌'} ${x.label}`).join('<br>') + `<br><small class="m">Tes gains criminels : ${U.money(S.earned)} · Respect : ${PlayerData.respect()}</small>`);
+      h += H.row({ icon: '🎖️', title: 'Demander une promotion', sub: ok ? 'Toutes les conditions sont réunies !' : 'Conditions non remplies', dis: !ok, cls: ok ? 'hl' : '', fn: () => Actions.promote() });
+    }
+    return { title: '🎖️ Hiérarchie', html: h };
+  },
+  crew() {
+    let h = H.note(`Les dealeurs écoulent ton stock chaque mois (ils gardent 35 %). Les soldats te protègent et combattent (${U.money(SOLDIER_PAY)}/mois).`);
+    if (!S.crew.length) h += H.note('Aucun membre. Recrute des sous-fifres !');
+    for (const m of S.crew) {
+      const job = m.role === 'soldier' ? '🛡️ Soldat' : m.drug ? `${DRUGS[m.drug].icon} ${DRUGS[m.drug].name}` : '💤 Sans affectation';
+      h += H.row({ icon: TRAITS[m.trait].icon, title: m.name, sub: `${job} · talent ${Math.round(m.skill)} · loyauté <span class="${m.loyalty < 35 ? 'r' : m.loyalty < 60 ? 'y' : 'g'}">${Math.round(m.loyalty)}</span>`, fn: () => UI.open('member', m.id) });
+    }
+    return { title: '🧑‍🤝‍🧑 Mon équipe', html: h };
+  },
+  member(id) {
+    const m = Crew.get(id); if (!m) return V.crew();
+    const T = TRAITS[m.trait];
+    let h = H.card(`<div class="big">${T.icon} ${m.name}</div><small class="m">${T.name} — ${T.desc} · depuis ${U.dur(m.months)}</small>
+      ${H.kv([['Talent', Math.round(m.skill)], ['Loyauté', Math.round(m.loyalty)]])}`);
+    h += H.sec('Affectation');
+    h += H.row({ icon: m.role === 'soldier' ? '🛡️' : '💊', title: m.role === 'soldier' ? 'Soldat (protection)' : m.drug ? `Vend : ${DRUGS[m.drug].name}` : 'Sans affectation', sub: 'Changer d\'affectation', fn: () => UI.open('assign', id) });
+    h += H.sec('Gestion');
+    h += H.row({ icon: '🤝', title: 'Féliciter (prime)', sub: `+15 loyauté · ${U.money(500 + S.rank * 1000)}`, fn: () => Crew.praise(id) });
+    h += H.row({ icon: '👊', title: 'Sanctionner', sub: 'Recadrage physique : loyauté par la peur (risque de départ)', fn: () => Crew.punish(id) });
+    h += H.row({ icon: '🚪', title: 'Virer', sub: 'Risque qu\'il ou elle parle à la police', fn: () => Crew.fire(id) });
+    h += H.row({ icon: '☠️', title: 'Éliminer', sub: '+5 respect · +20 police · terrorise l\'équipe', fn: () => Crew.kill(id) });
+    return { title: m.name, html: h };
+  },
+  assign(id) {
+    const m = Crew.get(id); if (!m) return V.crew();
+    let h = H.row({ icon: '🛡️', title: 'Soldat', sub: `Protection, guerres de territoire · ${U.money(SOLDIER_PAY)}/mois`, cls: m.role === 'soldier' ? 'hl' : '', fn: () => Crew.assign(id, 'soldier') });
+    h += H.sec('Dealeur — produit à écouler');
+    for (const d in DRUGS) {
+      const D = DRUGS[d];
+      h += H.row({ icon: D.icon, title: D.name, sub: `En stock : ${U.num(Inventory.qty(d))} ${D.unit}`, cls: m.role === 'dealer' && m.drug === d ? 'hl' : '', fn: () => Crew.assign(id, 'dealer', d) });
+    }
+    return { title: 'Affectation', html: h };
+  },
+  recruit() {
+    const max = Crew.max();
+    if (!max) return { title: '➕ Recrutement', html: H.card('🔒 Grade <b>Dealeur</b> requis pour avoir des sous-fifres.', 'accent') };
+    let h = H.note(`Équipe : ${S.crew.length} / ${max}. Coût d'embauche payé en liquide. Nouveaux profils tous les 2 mois.`);
+    for (const c of S.candidates) {
+      const T = TRAITS[c.trait];
+      h += H.row({ icon: T.icon, title: c.name, sub: `${T.name} (${T.desc}) · talent ${c.skill} · loyauté ${c.loyalty}`, right: U.money(c.cost), dis: S.crew.length >= max || S.cash < c.cost, fn: () => Crew.recruit(c.id) });
+    }
+    h += H.row({ icon: '🔄', title: 'Faire tourner le mot', sub: 'Trouver d\'autres profils', right: '200 €', fn: () => Crew.refresh() });
+    return { title: '➕ Recrutement', html: h };
+  },
+  war() {
+    if (S.rank < 2) return { title: '⚔️ Guerre', html: H.card('🔒 Grade <b>Lieutenant</b> requis pour lancer une guerre de territoire.', 'accent') };
+    let h = H.card(`⚔️ Ta puissance de feu : <b>~${PlayerData.warPower()}</b><br><small class="m">Armes, gilet, soldats (talent), dealeurs, respect. Chaque territoire rapporte un racket mensuel et augmente la demande de ton réseau.</small>`, 'accent');
+    if (!S.rivals.length) h += H.note('Plus aucun gang rival. Tu règnes sans partage… pour l\'instant.');
+    for (const r of S.rivals) h += H.row({ icon: '🏴', title: r.name, sub: `Puissance ~${Math.round(r.strength)} · ${r.terr} territoire(s) · 2 ⚡`, right: U.pct(Actions.warChance(r)), fn: () => Actions.attack(r.id) });
+    return { title: '⚔️ Guerre de territoire', html: h };
+  },
+  biz() {
+    let h = '';
+    if (S.businesses.length) {
+      h += H.sec('Mes commerces');
+      for (const b of S.businesses) { const B = BUSINESSES[b.type]; h += H.row({ icon: B.icon, title: B.name, sub: `Blanchit ${U.money(B.cap)}/mois · +${U.money(B.income)}/mois légal`, right: '<span class="g">✔</span>', cls: 'owned', fn: () => Actions.sellBusiness(b.id) }); }
+    }
+    h += H.sec('Racheter une façade');
+    h += H.note('Chaque commerce blanchit un montant d\'argent sale par mois (commission 15 %) et verse un petit bénéfice légal en banque.');
+    for (const t in BUSINESSES) { const B = BUSINESSES[t]; h += H.row({ icon: B.icon, title: B.name, sub: `Blanchit ${U.money(B.cap)}/mois · +${U.money(B.income)}/mois${B.respect ? ` · +${B.respect} 👑` : ''}`, right: U.money(B.price), fn: () => Actions.buyBusiness(t) }); }
+    return { title: '🏢 Clubs & Entreprises', html: h };
+  },
+  launder() {
+    const cap = S.businesses.reduce((a, b) => a + BUSINESSES[b.type].cap, 0);
+    let h = H.card(`🧼 Capacité totale : <b>${U.money(cap)}/mois</b><br>Objectif actuel : <b>${S.launderTarget == null ? 'maximum' : U.money(S.launderTarget)}</b><br><small class="m">Chaque mois, ce montant est prélevé sur ton liquide et crédité en banque (−15 % de commission). L'argent en banque est à l'abri des descentes et sert à acheter l'immobilier et le luxe sans éveiller les soupçons.</small>`, 'accent');
+    if (!cap) return { title: '🧼 Blanchiment', html: h + H.note('Aucun commerce : rachète une façade dans « Clubs & Entreprises ».') };
+    h += H.sec('Objectif mensuel');
+    [[null, 'Maximum'], [0, 'Suspendre'], [Math.round(cap * 0.25), '25 %'], [Math.round(cap * 0.5), '50 %'], [Math.round(cap * 0.75), '75 %']].forEach(([v, l]) => {
+      h += H.row({ icon: v === 0 ? '⏸️' : '🧼', title: l, sub: v == null ? U.money(cap) + '/mois' : U.money(v) + '/mois', cls: S.launderTarget === v ? 'hl' : '', fn: () => Actions.setLaunder(v) });
+    });
+    h += H.row({ icon: '✏️', title: 'Montant personnalisé', fn: () => UI.qty({ icon: '🧼', title: 'Objectif de blanchiment', max: cap, init: S.launderTarget || cap, unit: '€/mois', confirm: 'Valider', onConfirm: (n) => Actions.setLaunder(n) }) });
+    return { title: '🧼 Blanchiment', html: h };
+  },
+  finance() {
+    let h = H.card(H.kv([['💵 Liquide', U.money(S.cash)], ['🏦 Banque', U.money(S.bank)], ['💸 Dettes', U.money(PlayerData.debt())], ['📈 Valeur nette', U.money(PlayerData.netWorth())]]));
+    h += H.sec('Banque');
+    h += H.row({ icon: '🏧', title: 'Retirer du liquide', sub: 'Banque → liquide', fn: () => Actions.withdraw() });
+    h += H.row({ icon: '🏦', title: 'Dépôt discret', sub: `Liquide → banque, max 1 500 €/mois (reste ${U.money(Math.max(0, 1500 - S.deposit))})`, fn: () => Actions.deposit() });
+    if (S.debts.length) {
+      h += H.sec('Mes dettes');
+      for (const d of S.debts) {
+        const left = d.due - S.ageMonths;
+        h += H.row({ icon: '💸', title: d.lender, sub: `${d.rate ? Math.round(d.rate * 100) + ' %/mois · ' : ''}${left >= 0 ? `échéance dans ${left} mois` : `<span class="r">EN RETARD (${d.overdue} mois)</span>`}`, right: `<span class="r">${U.money(d.amount)}</span>`, fn: () => Actions.repay(d.id) });
+      }
+    }
+    h += H.sec('Usuriers & prêteurs');
+    for (const L of LOANS) {
+      const has = S.debts.some((d) => d.lender === L.lender), lock = PlayerData.respect() < L.respect;
+      h += H.row({ icon: '🤝', title: L.lender, sub: `${Math.round(L.rate * 100)} %/mois · ${L.months} mois${lock ? ` · 🔒 respect ${L.respect}` : ''}${has ? ' · déjà endetté' : ''}`, right: U.money(L.amount), dis: lock || has, fn: () => Actions.borrow(L.id) });
+    }
+    return { title: '🏦 Banque & Usurier', html: h };
+  },
+
+  /* ---------- Onglet 4 : Achats & Patrimoine ---------- */
+  assets() {
+    let h = H.card(`${H.kv([['📈 Valeur nette', U.money(PlayerData.netWorth())], ['👑 Respect (biens)', `+${PlayerData.possessionRespect()}`], ['📦 Planque', U.num(PlayerData.capacity())], ['🛡️ Sécurité', PlayerData.security()], ['💥 Puissance de feu', PlayerData.firepower()], ['🦺 Protection', PlayerData.armor()]])}<small class="m">Logement : ${PlayerData.home().icon} ${PlayerData.home().name}</small>`, 'accent');
+    h += H.sec('Boutiques');
+    for (const cat in SHOP) {
+      const C = SHOP[cat], own = S.owned[cat].length;
+      h += H.row({ icon: C.icon, title: C.label, sub: own ? `${own} possédé(s)` : 'Rien pour l\'instant', fn: () => UI.open('shop', cat) });
+    }
+    h += H.sec('Ma vie');
+    h += H.row({ icon: '📊', title: 'Statistiques', sub: 'Bilan de ta carrière criminelle', fn: () => UI.open('stats') });
+    h += H.row({ icon: '⚙️', title: 'Paramètres', sub: 'Sauvegarde, nouvelle vie', fn: () => UI.open('settings') });
+    return { title: '💎 Achats & Patrimoine', html: h };
+  },
+  shop(cat) {
+    const C = SHOP[cat];
+    let h = '';
+    if (cat === 'properties') h += H.note(`Ta planque de base : chambre chez ta mère (50). Capacité actuelle : <b>${U.num(PlayerData.capacity())}</b> · sécurité <b>${PlayerData.security()}</b>. La sécurité réduit les descentes et les cambriolages.`);
+    else if (cat === 'weapons') h += H.note(`Marché noir, liquide uniquement. Puissance de feu : <b>${PlayerData.firepower()}</b> · protection : <b>${PlayerData.armor()}</b>. Les armes augmentent tes chances aux braquages, agressions et guerres, mais alourdissent les peines.`);
+    else if (cat === 'vehicles') h += H.note('La vitesse aide à fuir (go fast, contrôles), la discrétion à passer inaperçu. Entretien mensuel : 0,4 % du prix.');
+    else h += H.note('Le style impose le respect. Bonus total des biens plafonné à +40.');
+    for (const it of C.items) {
+      const own = S.owned[cat].includes(it.id);
+      h += H.row({ icon: it.icon, title: it.name, sub: Shop.statLine(cat, it) + (own ? ` · revente ${U.money(it.price * RESALE[cat])}` : ''), right: own ? '<span class="g">✔ Possédé</span>' : U.money(it.price), cls: own ? 'owned' : '',
+        fn: () => (own ? Shop.sell(cat, it) : Shop.buy(cat, it)) });
+    }
+    return { title: `${C.icon} ${C.label}`, html: h };
+  },
+  stats() {
+    const s = S.stats;
+    const h = H.card(H.kv([
+      ['Âge', U.age(S.ageMonths)], ['Grade', `${RANKS[S.rank].icon} ${RANKS[S.rank].name}`],
+      ['Valeur nette', U.money(PlayerData.netWorth())], ['Fortune max.', U.money(s.maxWorth)],
+      ['Gains criminels', U.money(S.earned)], ['Ventes de drogue', U.money(s.sold)],
+      ['Achats de drogue', U.money(s.bought)], ['Crimes commis', s.crimes],
+      ['Arrestations', s.arrests], ['Temps en prison', U.dur(s.jailMonths)],
+      ['Casier', `${S.record} condamnation(s)`], ['Victimes', s.kills],
+      ['Guerres menées', s.wars], ['Territoires', S.territories],
+      ['Doses consommées', s.doses], ['Overdoses', s.ods],
+    ]));
+    return { title: '📊 Statistiques', html: h };
+  },
+  settings() {
+    let h = H.card('💾 La partie est <b>sauvegardée automatiquement</b> dans ton navigateur (localStorage) après chaque action et chaque mois.');
+    h += H.row({ icon: '🔄', title: 'Nouvelle vie', sub: 'Efface la partie en cours et recommence à 18 ans', cls: 'hl', fn: () => UI.confirm('⚠️', 'Nouvelle vie ?', 'Ta partie actuelle sera définitivement effacée.', '🔄 Recommencer', () => { Game.wipe(); Game.newLifeScreen(); }, 'danger') });
+    h += H.note('Crime Life est une œuvre de fiction. Aucune incitation à la consommation de drogues ni à la commission de crimes. Besoin d\'aide face à une addiction ? En France : Drogues Info Service, 0 800 23 13 13 (gratuit, anonyme).');
+    return { title: '⚙️ Paramètres', html: h };
+  },
+};
+
+/* ================================ GAME ================================ */
+const Game = {
+  rival(strength, terr) { return { id: U.uid(), name: U.pick(RIVAL_NAMES), strength, terr }; },
+  genRivals() {
+    const names = U.shuffle(RIVAL_NAMES).slice(0, 5);
+    return [[50, 1], [85, 2], [130, 3], [200, 4], [320, 6]].map(([s, t], i) => ({ id: U.uid(), name: names[i], strength: s, terr: t }));
+  },
+  create(name, avatar, city) {
+    S = PlayerData.blank(name, avatar, city);
+    S.market = MarketData.init();
+    S.rivals = this.genRivals();
+    S.candidates = Crew.genList(3);
+    S.gofasts = GoFast.gen();
+    log('👶', CITIES[city].intro, 'info');
+    log('🎂', `Tu as <b>18 ans</b>. Poche : ${U.money(S.cash)}. La rue t'appelle.`, 'info');
+    log('💡', 'Astuce : achète un peu de marchandise en gros (onglet Trafic), revends-la au détail, et appuie sur <b>+1 mois</b> pour avancer.', '');
+    UI.stack = []; UI.tab = null; UI._seq = -1;
+    this.commit();
+  },
+  newLifeScreen() {
+    const reg = NAMES.fr;
+    let name = `${U.pick(reg.first)} ${U.pick(reg.last)}`, avatar = U.pick(AVATARS), city = 'marseille';
+    UI.queue = []; UI.cur = null;
+    const html = `<div class="form">
+      <label>Nom</label><input type="text" id="ng-name" maxlength="28" value="${U.esc(name)}">
+      <label>Apparence</label><div class="picks" id="ng-av">${AVATARS.map((a) => `<button type="button" class="pick av ${a === avatar ? 'sel' : ''}" data-v="${a}">${a}</button>`).join('')}</div>
+      <label>Ville de départ</label><div class="picks" id="ng-city">${Object.keys(CITIES).map((c) => `<button type="button" class="pick ${c === city ? 'sel' : ''}" data-v="${c}">${CITIES[c].flag} ${CITIES[c].name}</button>`).join('')}</div>
+      <div class="disclaimer">Œuvre de fiction. Aucune incitation à la consommation ni au crime.</div></div>`;
+    UI.showModal({ force: true, title: '<span class="logo">CRIME LIFE</span>', text: 'De guetteur à parrain. Chaque mois compte. Chaque choix se paie.', html,
+      choices: [{ label: '▶ Commencer ma vie', cls: 'primary', fn: () => this.create((name || '').trim() || 'Anonyme', avatar, city) }],
+      onShow: (root) => {
+        root.querySelector('#ng-name').addEventListener('input', (e) => { name = e.target.value.slice(0, 28); });
+        const group = (sel, set) => root.querySelectorAll(`${sel} .pick`).forEach((b) => b.addEventListener('click', () => {
+          root.querySelectorAll(`${sel} .pick`).forEach((x) => x.classList.remove('sel')); b.classList.add('sel'); set(b.dataset.v);
+        }));
+        group('#ng-av', (v) => { avatar = v; });
+        group('#ng-city', (v) => { city = v; });
+      } });
+    UI.render();
+  },
+  ageUp() {
+    if (!S || !S.alive || UI.cur) return;
+    UI.closePanel();
+    S.ageMonths++;
+    if (S.ageMonths % 12 === 0) log('🎂', `Joyeux anniversaire ! Tu as maintenant <b>${S.ageMonths / 12} ans</b>.`, 'info');
+    const consumed = Object.keys(S.used).length > 0;
+    S.used = {}; S.deposit = 0;
+    S.buffs = S.buffs.filter((b) => --b.months > 0);
+    const steps = [Monthly.jail, () => Monthly.addiction(consumed), Monthly.health, Monthly.income, () => Monthly.crew(), Monthly.labs,
+      Monthly.business, Monthly.upkeep, Monthly.imports, Monthly.debts, Monthly.heat, Monthly.refresh];
+    for (const st of steps) { st.call(Monthly); if (!S.alive) break; }
+    S.ap = PlayerData.apMax();
+    if (S.alive) Events.monthly();
+    if (S.alive) Monthly.naturalDeath();
+    S.stats.maxWorth = Math.max(S.stats.maxWorth, PlayerData.netWorth());
+    this.commit();
+  },
+  die(cause) {
+    if (!S || !S.alive) return;
+    log('⚰️', `<b>Fin de partie à ${U.age(S.ageMonths)}.</b> Cause du décès : ${cause}.`, 'death');
+    S.alive = false; S.death = { cause, m: S.ageMonths };
+    S.stats.maxWorth = Math.max(S.stats.maxWorth, PlayerData.netWorth());
+    this.save();
+    UI.gameOver();
+  },
+  save() { try { if (S) localStorage.setItem(SAVE_KEY, JSON.stringify(S)); } catch (e) { /* stockage indisponible */ } },
+  load() {
+    try {
+      const raw = localStorage.getItem(SAVE_KEY);
+      if (!raw) return false;
+      const data = JSON.parse(raw);
+      if (!data || typeof data !== 'object' || !data.name) return false;
+      S = data; this.migrate(); return true;
+    } catch (e) { return false; }
+  },
+  migrate() {
+    const b = PlayerData.blank(S.name, S.avatar, S.city);
+    for (const k in b) if (!(k in S)) S[k] = b[k];
+    for (const k in b.owned) if (!S.owned[k]) S.owned[k] = [];
+    for (const k in b.stats) if (!(k in S.stats)) S.stats[k] = 0;
+    if (!S.market) S.market = MarketData.init();
+    if (!S.rivals || !S.rivals.length) S.rivals = this.genRivals();
+    if (!CITIES[S.city]) S.city = 'marseille';
+  },
+  wipe() { try { localStorage.removeItem(SAVE_KEY); } catch (e) { /* ignore */ } S = null; UI.stack = []; UI.tab = null; UI.render(); },
+  commit() { this.save(); UI.render(); },
+};
+const SAVE_KEY = 'crimelife_save_v1';
+
+/* ============================ INITIALISATION ============================ */
+document.addEventListener('click', (e) => {
+  const el = e.target.closest('[data-cb]');
+  if (!el || el.disabled) return;
+  const id = el.dataset.cb, fn = CB[id[0]] && CB[id[0]][+id.slice(1)];
+  if (!fn) return;
+  e.preventDefault();
+  fn();
+  if (S) Game.commit();
+});
+document.querySelectorAll('.tab').forEach((t) => t.addEventListener('click', () => UI.openTab(t.dataset.tab)));
+$('#age-btn').addEventListener('click', () => Game.ageUp());
+$('#p-back').addEventListener('click', () => UI.back());
+$('#p-close').addEventListener('click', () => UI.closePanel());
+
+if (Game.load()) {
+  UI.render();
+  if (!S.alive) UI.gameOver(); else UI.toast('💾 Partie chargée');
+} else Game.newLifeScreen();
+</script>
+</body>
+</html>
