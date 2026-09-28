@@ -30,8 +30,7 @@ La partie est sauvegardée automatiquement dans le `localStorage` du navigateur.
 - **Mini-jeux de consommation** : séquences animées pas à pas (comprimés : ouvrir la boîte → blister → prendre ; sirop : dévisser → verser → consommer ; cannabis : effriter → feuille → rouler → allumer). Une étape peut rater et doit être recommencée ; les effets s'appliquent à la fin.
 - **Mode détention** : interface dédiée (thème orange, « Purger +1 mois »), journal mois par mois, corvées, trafics internes, alliances de détenus et **menace des cartels rivaux** (intimidations, tentatives d'assassinat) selon ton historique. Choix : se défendre, soudoyer les gardes ou négocier sa protection.
 - **Profil & Style** : touche ton avatar pour voir ta tenue portée (silhouette), tes accessoires et ton bonus de respect / statut social.
-
-- 13 substances (médicaments détournés, drogues dures et douces) avec marques, qualité 1–100 et prix dynamiques propres à 6 villes (Marseille, Paris, Amsterdam, Medellín, Culiacán, Miami).
+- 14 substances (médicaments détournés, drogues dures et douces, stéroïdes anabolisants) avec marques, qualité 1–100 et prix dynamiques propres à 6 villes (Marseille, Paris, Amsterdam, Medellín, Culiacán, Miami).
 - Les gros volumes font bouger les prix ; les chocs de marché (pénuries, arrivages massifs) tombent chaque mois.
 - Consommation : boosts temporaires (énergie, réussite des crimes, respect), addiction, crises de manque, overdoses (mélange opioïdes + benzos très dangereux), rechutes.
 - Deux argents : le **liquide** (sale, saisissable lors des descentes) et la **banque** (blanchie via tes commerces, idéale pour l'immobilier et le luxe sans éveiller les soupçons).
