@@ -25,22 +25,23 @@ button{font:inherit;color:inherit}
 #hud{flex:none;padding:calc(8px + env(safe-area-inset-top)) 12px 8px;background:linear-gradient(180deg,#1c0a10,#131316);
   border-bottom:1px solid #3a1420;box-shadow:0 2px 18px rgba(255,45,85,.10)}
 .hud-top{display:flex;align-items:center;gap:10px}
-.avatar{width:42px;height:42px;flex:none;border-radius:50%;background:#222;display:grid;place-items:center;font-size:24px;
+.avatar{width:42px;height:42px;flex:none;border-radius:50%;background:#222;display:grid;place-items:center;font-size:24px;padding:0;cursor:pointer;position:relative;
   border:2px solid var(--red);box-shadow:0 0 10px rgba(255,45,85,.55)}
+.avatar:active{transform:scale(.94)}
 .who{flex:1;min-width:0}
 .who .name{font-weight:800;font-size:16px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .who .sub{font-size:12px;color:var(--mut);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .loc{text-align:right;font-size:13px;font-weight:700;white-space:nowrap}
 .loc small{display:block;color:var(--mut);font-weight:400;font-size:11px}
 .gear{background:none;border:0;font-size:18px;padding:4px 2px 4px 6px;cursor:pointer;opacity:.85}
-.hud-money{display:grid;grid-template-columns:1fr 1fr auto;gap:6px;margin-top:8px}
+.hud-money{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:8px}
 .chip{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:5px 8px;display:flex;flex-direction:column;line-height:1.2;min-width:0}
 .chip b{font-size:14px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .chip small{color:var(--mut);font-size:9.5px;text-transform:uppercase;letter-spacing:.5px}
 .chip.cash b{color:var(--green)} .chip.bank b{color:var(--cyan)} .chip.ap b{color:var(--gold)}
-.bars{display:grid;grid-template-columns:1fr 1fr;gap:5px 12px;margin-top:8px}
+.bars{display:grid;grid-template-columns:repeat(3,1fr);gap:5px 10px;margin-top:8px}
 .bar{font-size:11px}
-.bar .bl{display:flex;justify-content:space-between;color:var(--mut);margin-bottom:2px}
+.bar .bl{display:flex;justify-content:space-between;gap:4px;color:var(--mut);margin-bottom:2px;white-space:nowrap}
 .bar .bl b{color:var(--tx)}
 .bt{height:6px;background:#2a2a2f;border-radius:4px;overflow:hidden}
 .bf{height:100%;border-radius:4px;transition:width .4s}
@@ -157,6 +158,130 @@ button.row:active{background:var(--card2);transform:scale(.99)}
 .sumgrid div{background:#141417;border-radius:8px;padding:7px;font-size:12px;color:var(--mut)}
 .sumgrid b{display:block;color:#fff;font-size:14px}
 
+/* ---------- HUD : force, énergie, avatar ---------- */
+.fo .bf{background:linear-gradient(90deg,#ff7a00,#ffb347)}
+.en .bf{background:linear-gradient(90deg,#0097b2,#00e5ff)}
+.avatar::after{content:'👕';position:absolute;right:-6px;bottom:-6px;font-size:10px;width:18px;height:18px;border-radius:50%;background:#18181b;
+  border:1px solid var(--line);display:grid;place-items:center}
+
+/* ---------- MODE DÉTENTION ---------- */
+body.jail #hud{background:linear-gradient(180deg,#201a0c,#141416);border-bottom-color:#5c4513;box-shadow:0 2px 18px rgba(255,159,28,.12)}
+body.jail .avatar{border-color:var(--orange);box-shadow:0 0 10px rgba(255,159,28,.55)}
+body.jail #log{background:repeating-linear-gradient(90deg,transparent 0 56px,rgba(170,170,180,.06) 56px 62px)}
+body.jail .log-age{color:var(--orange);background:rgba(255,159,28,.08);border-color:rgba(255,159,28,.4)}
+body.jail #tabs{border-top-color:#5c4513}
+body.jail .tab.on{color:var(--orange)} body.jail .tab.on .ti{filter:drop-shadow(0 0 6px var(--orange))}
+body.jail .sec{color:var(--orange)}
+body.jail .age-btn{border-color:#ffc27a;background:radial-gradient(circle at 30% 28%,#ffb347,#a65200 70%);box-shadow:0 0 16px rgba(255,159,28,.7);animation:none}
+.log-e.jail{border-left-color:var(--orange);background:#1d1a14}
+.m-text:empty,.m-choices:empty{display:none}
+
+/* ---------- COMBAT ---------- */
+.cb-head{text-align:center;font-size:11px;color:var(--mut);text-transform:uppercase;letter-spacing:1px;margin-bottom:8px}
+.cb-arena{display:grid;grid-template-columns:1fr auto 1fr;gap:6px;align-items:center}
+.cb-f{background:#141417;border:1px solid #2e2e34;border-radius:12px;padding:8px 6px;text-align:center;min-width:0}
+.cb-f .ic{font-size:34px;line-height:1.15}
+.cb-f b{display:block;font-size:13px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.cb-f small{display:block;font-size:10.5px;color:var(--mut);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.cb-vs{font-weight:900;color:var(--red);font-size:15px;text-shadow:0 0 8px var(--red)}
+.hpbar{height:8px;background:#2a2a2f;border-radius:5px;overflow:hidden;margin-top:6px}
+.hpbar i{display:block;height:100%;background:linear-gradient(90deg,#16c25a,#32ff7e);transition:width .35s}
+.cb-f.foe .hpbar i{background:linear-gradient(90deg,#c2002f,#ff2d55)}
+.hpnum{font-size:11px;color:#ddd;margin-top:3px}
+.cb-f.hit{animation:hit .4s}
+@keyframes hit{0%,100%{transform:none}20%{transform:translateX(-6px);box-shadow:0 0 16px var(--red);border-color:var(--red)}60%{transform:translateX(6px)}}
+.cb-log{margin-top:10px;background:#0e0e10;border:1px solid #2a2a2f;border-radius:10px;height:140px;overflow-y:auto;padding:8px;font-size:13px;line-height:1.4;text-align:left}
+.cb-log p{margin:0 0 5px}
+.cb-log .me{color:#a8ecff} .cb-log .en{color:#ffb3c0} .cb-log .sys{color:var(--gold);font-weight:700}
+.cb-acts{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px}
+.cb-acts .full{grid-column:1/-1}
+
+/* ---------- RITUELS DE CONSOMMATION ---------- */
+.stage{position:relative;height:170px;margin:10px auto 4px;max-width:300px;border-radius:14px;overflow:hidden;
+  background:radial-gradient(circle at 50% 65%,#2a1d36,#141417 72%);border:1px solid #2e2e34}
+.r-cap{min-height:40px;text-align:center;color:#d8d8dc;font-size:14px;line-height:1.4;margin:8px 4px}
+.r-steps{display:flex;justify-content:center;gap:6px}
+.r-steps i{width:26px;height:4px;border-radius:2px;background:#333;transition:background .3s}
+.r-steps i.on{background:var(--purple);box-shadow:0 0 6px var(--purple)}
+.st-pill .box{position:absolute;left:50%;bottom:20px;width:124px;height:64px;margin-left:-62px;background:linear-gradient(180deg,#f5f7fb,#cdd5e6);border-radius:6px;box-shadow:0 5px 14px rgba(0,0,0,.55);z-index:2}
+.st-pill .box span{position:absolute;inset:0;display:grid;place-items:center;font-size:11px;font-weight:800;color:#1b3a8a;text-align:center;padding:4px;line-height:1.15}
+.st-pill .lid{position:absolute;left:50%;bottom:84px;width:124px;height:12px;margin-left:-62px;background:#e3e8f2;border-radius:4px 4px 0 0;transform-origin:left bottom;transition:transform .5s;z-index:3}
+.st-pill .blister{position:absolute;left:50%;bottom:36px;width:96px;height:42px;margin-left:-48px;background:linear-gradient(135deg,#dfe3e8,#9aa2ac);border-radius:6px;display:grid;grid-template-columns:repeat(4,1fr);gap:4px;padding:5px;transition:transform .9s .35s cubic-bezier(.2,.8,.2,1);z-index:1}
+.st-pill .blister i{background:radial-gradient(circle at 35% 35%,#fff,#e6e6e6 60%,#b9b9b9);border-radius:50%}
+.st-pill .pill{position:absolute;left:50%;top:50%;width:16px;height:16px;margin:-8px;border-radius:50%;background:radial-gradient(circle at 35% 35%,#fff,#d6d6d6);opacity:0;z-index:4}
+.st-pill .mouth{position:absolute;top:2px;left:50%;transform:translateX(-50%);font-size:26px;opacity:0;transition:opacity .4s;z-index:5}
+.st-pill.s1 .lid{transform:translateX(-4px) rotate(-90deg)}
+.st-pill.s1 .blister{transform:translateY(-60px) rotate(-3deg)}
+.st-pill.s2 .blister i:first-child{background:#7d858f;box-shadow:inset 0 2px 4px rgba(0,0,0,.5)}
+.st-pill.s2 .mouth{opacity:1}
+.st-pill.s2 .pill{animation:pillTake 1.1s forwards}
+@keyframes pillTake{0%{opacity:1;transform:translate(-34px,-40px)}45%{opacity:1;transform:translate(-14px,-58px) scale(1.4)}100%{opacity:0;transform:translate(0,-66px) scale(.2)}}
+.st-syrup .bottle{position:absolute;left:64px;bottom:22px;width:44px;height:96px;border:2px solid rgba(255,255,255,.4);border-radius:10px 10px 8px 8px;
+  background:linear-gradient(90deg,rgba(255,255,255,.16),rgba(255,255,255,.04));overflow:hidden;transform-origin:50% 15%;transition:transform .8s .5s,opacity .5s;z-index:2}
+.st-syrup .bottle .liq{position:absolute;left:0;right:0;bottom:0;height:72%;background:linear-gradient(180deg,#a64dff,#5c0aa8);transition:height 1.2s 1s}
+.st-syrup .bottle .lbl{position:absolute;left:3px;right:3px;top:36%;background:#fff;color:#5c0aa8;font-size:8px;font-weight:900;text-align:center;padding:2px 0;border-radius:2px;z-index:1;white-space:nowrap;overflow:hidden}
+.st-syrup .cap{position:absolute;left:72px;bottom:116px;width:28px;height:14px;background:#f0f0f0;border-radius:3px;transition:transform .6s,opacity .6s;z-index:3}
+.st-syrup .cup{position:absolute;right:64px;bottom:22px;width:52px;height:66px;background:linear-gradient(90deg,#fbfbfb,#d6d6d6);clip-path:polygon(0 0,100% 0,86% 100%,14% 100%);overflow:hidden;transform-origin:50% 100%;transition:transform .6s;z-index:1}
+.st-syrup .cup .liq{position:absolute;left:0;right:0;bottom:0;height:0;background:linear-gradient(180deg,#b76bff,#7a1fd1);transition:height 1.2s 1.1s}
+.st-syrup .stream{position:absolute;right:88px;top:62px;width:5px;height:0;background:#8f33e8;border-radius:3px;opacity:1;transition:height .3s 1.05s,opacity .3s 2.1s}
+.st-syrup.s1 .cap{transform:translate(-26px,-30px) rotate(-220deg);opacity:0}
+.st-syrup.s1 .bottle{transform:translate(52px,-26px) rotate(-112deg)}
+.st-syrup.s1 .bottle .liq{height:22%}
+.st-syrup.s1 .stream{height:44px;opacity:0}
+.st-syrup.s1 .cup .liq{height:64%}
+.st-syrup.s2 .bottle{opacity:.2}
+.st-syrup.s2 .cup{transform:translate(-40px,-24px) rotate(-38deg)}
+.st-syrup.s2 .cup .liq{height:0;transition:height 1s .5s}
+.st-joint .bud{position:absolute;left:50%;top:34px;font-size:48px;margin-left:-26px;transition:transform .6s,opacity .6s}
+.st-joint .crumb{position:absolute;left:50%;top:62px;width:7px;height:7px;margin-left:-3px;border-radius:50%;background:#5aa02c;opacity:0;transition:transform .7s .25s,opacity .4s .2s}
+.st-joint .paper{position:absolute;left:50%;top:108px;width:140px;height:42px;margin-left:-70px;background:#f3eee2;border-radius:3px;opacity:0;transform:translateY(24px);transition:transform .5s,opacity .5s}
+.st-joint .tip{position:absolute;left:calc(50% + 66px);top:122px;width:10px;height:14px;border-radius:3px;background:#ff5a00;opacity:0}
+.st-joint .smoke{position:absolute;left:calc(50% + 64px);top:108px;width:16px;height:16px;border-radius:50%;background:rgba(225,225,225,.55);opacity:0;filter:blur(2px)}
+.st-joint.s1 .bud{transform:scale(.2) rotate(120deg);opacity:0}
+.st-joint.s1 .crumb{opacity:1;transform:translate(var(--x),var(--y))}
+.st-joint.s2 .paper{opacity:1;transform:none;animation:roll .9s 1s forwards}
+.st-joint.s2 .crumb{transform:translate(var(--px),62px);animation:hide .3s 1.05s forwards}
+@keyframes roll{to{top:122px;height:14px;border-radius:7px;background:#efe8d6}}
+@keyframes hide{to{opacity:0}}
+.st-joint.s3 .paper{top:122px;height:14px;border-radius:7px;background:#efe8d6}
+.st-joint.s3 .tip{opacity:1;animation:ember 1.1s infinite}
+.st-joint.s3 .smoke{animation:smoke 2.1s infinite}
+.st-joint.s3 .smoke:nth-of-type(2){animation-delay:.7s} .st-joint.s3 .smoke:nth-of-type(3){animation-delay:1.4s}
+@keyframes ember{0%,100%{background:#ff4500;box-shadow:0 0 8px #ff4500}50%{background:#ffc300;box-shadow:0 0 16px #ffa000}}
+@keyframes smoke{0%{opacity:.75;transform:translate(0,0) scale(.6)}100%{opacity:0;transform:translate(-24px,-96px) scale(2.6)}}
+.st-powder .mirror{position:absolute;left:50%;top:50%;width:210px;height:104px;margin:-52px 0 0 -105px;background:linear-gradient(135deg,#3b404b,#15171c);border:2px solid #565c68;border-radius:8px}
+.st-powder .pile{position:absolute;left:50%;top:50%;width:34px;height:18px;margin:-9px 0 0 -17px;background:#f4f4f4;border-radius:50% 50% 40% 40%;transition:all .8s .3s}
+.st-powder .line{position:absolute;left:50%;top:50%;width:124px;height:5px;margin:-2px 0 0 -62px;background:#fff;border-radius:3px;transform:scaleX(0);transform-origin:left;transition:transform .9s .3s}
+.st-powder .card{position:absolute;left:50%;top:50%;width:44px;height:28px;margin:-44px 0 0 -92px;background:linear-gradient(135deg,#ffd23f,#b98a00);border-radius:4px;opacity:0}
+.st-powder.s1 .pile{width:0;height:0;margin:0;opacity:0}
+.st-powder.s1 .line{transform:scaleX(1)}
+.st-powder.s1 .card{animation:swipe 1.1s}
+@keyframes swipe{0%{opacity:1;transform:translate(0,30px)}100%{opacity:0;transform:translate(130px,30px)}}
+.st-powder.s2 .line{transform:scaleX(0);transform-origin:right;transition:transform .9s}
+
+/* ---------- PROFIL & STYLE ---------- */
+.prof{display:grid;grid-template-columns:112px 1fr;gap:10px;text-align:left}
+.doll{background:linear-gradient(180deg,#1f1f24,#141417);border:1px solid #2e2e34;border-radius:14px;padding:6px 4px;display:flex;flex-direction:column;align-items:center}
+.doll .d{width:100%;text-align:center;font-size:21px;line-height:1.2;padding:2px 0;border-bottom:1px dashed #26262b}
+.doll .d:last-child{border-bottom:0}
+.doll .d.head{font-size:42px;line-height:1.1}
+.doll .d small{display:block;font-size:8.5px;color:var(--mut);text-transform:uppercase;letter-spacing:.5px}
+.doll .empty{opacity:.22;filter:grayscale(1)}
+.pinfo{font-size:13px;line-height:1.55}
+.pinfo .big{font-size:17px;line-height:1.25;margin-bottom:2px;word-break:break-word}
+.tier{display:inline-block;margin-top:6px;padding:3px 8px;border-radius:8px;background:rgba(255,210,63,.12);border:1px solid rgba(255,210,63,.35);color:var(--gold);font-weight:800;font-size:12px}
+.ptitle{font-size:11px;text-transform:uppercase;letter-spacing:1px;color:var(--red);margin:14px 0 4px;font-weight:800;text-align:left}
+.slot{display:flex;align-items:center;gap:8px;width:100%;background:#141417;border:1px solid #2e2e34;border-radius:10px;padding:7px 9px;margin:5px 0;cursor:pointer;text-align:left}
+.slot:active{transform:scale(.99)}
+.slot .si{font-size:19px;width:26px;text-align:center;flex:none}
+.slot .sl{flex:1;min-width:0}
+.slot .sl small{display:block;color:var(--mut);font-size:10px;text-transform:uppercase;letter-spacing:.5px}
+.slot .sl b{display:block;font-size:13.5px;font-weight:650;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.slot.none b{color:var(--mut);font-weight:400}
+.slot .sr{font-weight:800;color:var(--gold);font-size:12px;flex:none}
+.bonus{display:grid;grid-template-columns:1fr auto;gap:3px 10px;background:#141417;border-radius:10px;padding:8px 10px;font-size:13px;text-align:left}
+.bonus .tot{border-top:1px solid #2e2e34;padding-top:5px;margin-top:2px;font-weight:800}
+
 /* ---------- TOAST ---------- */
 #toast{position:fixed;left:50%;top:calc(10px + env(safe-area-inset-top));transform:translate(-50%,-160%);background:#26262b;border:1px solid var(--red);
   padding:10px 14px;border-radius:12px;font-size:14px;z-index:60;transition:transform .25s;max-width:92vw;text-align:center;box-shadow:0 4px 22px rgba(0,0,0,.6)}
@@ -166,6 +291,7 @@ button.row:active{background:var(--card2);transform:scale(.99)}
   .chip b{font-size:12.5px} .who .name{font-size:15px} .log-e{font-size:13px} .r-tx b{font-size:14px}
   #tabs{grid-template-columns:1fr 1fr 80px 1fr 1fr} .age-btn{width:70px;height:70px}
 }
+@media (max-width:350px){ .bar .t{display:none} }
 @media (min-width:561px){ body{background:#0a0a0a} }
 </style>
 </head>
@@ -228,6 +354,12 @@ const U = {
   dur(m) { if (m < 12) return `${m} mois`; const y = Math.floor(m / 12), r = m % 12; return `${y} an${y > 1 ? 's' : ''}${r ? ` et ${r} mois` : ''}`; },
   esc: (s) => String(s).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c])),
   de: (s) => (/^[aeiouyhéèêàâîïôûAEIOUYHÉÈÊÀÂÎÏÔÛ]/.test(s) ? 'd\'' + s : 'de ' + s),
+  the: (n) => (/^(La |Le |Les |L'|Ta |Ton )/.test(n) ? n : (/^[aeiouyhéèêàâîïôûAEIOUYHÉÈÊÀÂÎÏÔÛ]/.test(n) ? 'L\'' : 'Le ') + n.charAt(0).toLowerCase() + n.slice(1)),
+  // unité au pluriel (flacons, cailloux) ; « g » et « cp » sont invariables
+  u(D, n) { const v = typeof n === 'number' ? n : parseFloat(String(n).replace(/\s/g, '').replace(',', '.')); return v > 1 ? ({ flacon: 'flacons', caillou: 'cailloux' }[D.unit] || D.unit) : D.unit; },
+  // contractions devant un nom de gang : « des Tigres », « au Clan Moreau », « à la Mafia des Docks »
+  deN: (n) => (/^Les /.test(n) ? 'des ' + n.slice(4) : /^Le /.test(n) ? 'du ' + n.slice(3) : /^La /.test(n) ? 'de la ' + n.slice(3) : 'de ' + n),
+  aN: (n) => (/^Les /.test(n) ? 'aux ' + n.slice(4) : /^Le /.test(n) ? 'au ' + n.slice(3) : /^La /.test(n) ? 'à la ' + n.slice(3) : 'à ' + n),
   pct: (p) => `<span class="${p >= 60 ? 'g' : p >= 30 ? 'y' : 'r'}">${Math.round(p * 10) / 10}%</span>`,
   risk: (p) => `<span class="${p <= 10 ? 'g' : p <= 30 ? 'y' : 'r'}">${Math.round(p * 10) / 10}%</span>`,
   q: (q) => `<span class="${q >= 70 ? 'g' : q >= 40 ? 'y' : 'r'}">Q${q}</span>`,
@@ -247,22 +379,24 @@ function log(e, t, c = '') {
 }
 
 /* =============================== DATA =============================== */
+const CONFIG = { anim: 1 }; // facteur de durée des animations (0 = instantané)
 const DRUGS = {
-  oxy:   { name: 'Oxycodone', cat: 'med', icon: '💊', unit: 'cp', brands: ['Percocet 10 mg', 'OxyContin 80 mg'], base: 25, demand: 60, depth: 4000, bulk: 0.2, add: 7, od: 1.4, opioid: true, fx: { health: 4 }, txt: 'Une chaleur cotonneuse t\'enveloppe, la douleur disparaît.' },
-  lean:  { name: 'Sirop codéiné / Prométhazine', cat: 'med', icon: '🟣', unit: 'flacon', brands: ['Actavis', 'Euphon', 'Maka'], base: 120, demand: 10, depth: 400, bulk: 3, add: 5, od: 1.0, opioid: true, fx: { health: 1, respect: 1 }, txt: 'Double cup en main, le temps ralentit…' },
-  benzo: { name: 'Benzodiazépines', cat: 'med', icon: '💠', unit: 'cp', brands: ['Xanax (Alprazolam)', 'Rivotril'], base: 8, demand: 120, depth: 8000, bulk: 0.2, add: 5, od: 0.6, benzo: true, fx: { crime: 6 }, txt: 'Plus rien ne t\'atteint. Sang-froid total.' },
-  rita:  { name: 'Méthylphénidate', cat: 'med', icon: '⚪', unit: 'cp', brands: ['Ritaline', 'Concerta'], base: 10, demand: 70, depth: 6000, bulk: 0.2, add: 3, od: 0.3, stim: true, fx: { ap: 1 }, txt: 'Concentration maximale, tu enchaînes les tâches.' },
-  coke:  { name: 'Cocaïne (poudre)', cat: 'dure', icon: '❄️', unit: 'g', brands: ['Écaille de poisson', 'Plaquette 90 %', 'Colombienne'], base: 70, demand: 40, depth: 4000, bulk: 1, add: 4, od: 0.8, stim: true, fx: { ap: 1, crime: 8, respect: 1, health: -2 }, txt: 'Tu te sens invincible, le roi du monde.' },
-  crack: { name: 'Crack', cat: 'dure', icon: '🪨', unit: 'caillou', brands: ['Galette', 'Cailloux'], base: 20, demand: 70, depth: 4000, bulk: 0.3, add: 9, od: 1.5, stim: true, fx: { ap: 1, crime: 12, health: -5 }, txt: 'Un flash violent… puis l\'envie immédiate d\'y retourner.' },
-  heroB: { name: 'Héroïne (brown sugar)', cat: 'dure', icon: '🟤', unit: 'g', brands: ['Brown sugar', 'Brune afghane'], base: 40, demand: 30, depth: 2500, bulk: 1, add: 10, od: 2.2, opioid: true, fx: { health: 3 }, txt: 'Tu pars loin, très loin…' },
-  heroW: { name: 'Héroïne (blanche)', cat: 'dure', icon: '🤍', unit: 'g', brands: ['Blanche n°4', 'Chiva'], base: 80, demand: 20, depth: 1800, bulk: 1, add: 11, od: 2.8, opioid: true, fx: { health: 3 }, txt: 'Une vague tiède te submerge. Plus rien n\'existe.' },
-  weed:  { name: 'Cannabis (herbe)', cat: 'douce', icon: '🌿', unit: 'g', brands: ['Amnesia', 'Gelato', 'OG Kush', 'Purple Haze'], base: 10, demand: 160, depth: 25000, bulk: 1, add: 1, od: 0, fx: { health: 2 }, txt: 'Tu te poses, le stress redescend.' },
-  hash:  { name: 'Résine filtrée', cat: 'douce', icon: '🟫', unit: 'g', brands: ['Jaune mousseux', 'Filtré 120 µ', 'Charas'], base: 7, demand: 220, depth: 35000, bulk: 1, add: 1, od: 0, fx: { health: 1 }, txt: 'Un gros spliff sur le toit du bâtiment.' },
-  mdma:  { name: 'MDMA / Ecstasy', cat: 'dure', icon: '💗', unit: 'cp', brands: ['Tesla', 'Punisher', 'Blue Dolphin', 'Skull'], base: 10, demand: 90, depth: 10000, bulk: 0.3, add: 3, od: 0.6, fx: { respect: 2, health: -1 }, txt: 'Tu aimes tout le monde, la soirée est magique.' },
-  keta:  { name: 'Kétamine', cat: 'dure', icon: '🐴', unit: 'g', brands: ['Cristaux', 'Poudre fine'], base: 30, demand: 30, depth: 2500, bulk: 1, add: 4, od: 1.0, fx: { health: -1 }, txt: 'Le sol se dérobe, tu flottes hors de ton corps.' },
-  meth:  { name: 'Méthamphétamine', cat: 'dure', icon: '🧊', unit: 'g', brands: ['Crystal', 'Ice bleue'], base: 60, demand: 20, depth: 2500, bulk: 1, add: 9, od: 1.2, stim: true, fx: { ap: 2, crime: 10, health: -5 }, txt: 'Tu ne dors plus. Tu n\'as plus besoin de dormir.' },
+  oxy:   { form: 'pill', name: 'Oxycodone', cat: 'med', icon: '💊', unit: 'cp', brands: ['Percocet 10 mg', 'OxyContin 80 mg'], base: 25, demand: 60, depth: 4000, bulk: 0.2, add: 7, od: 1.4, opioid: true, fx: { health: 4 }, txt: 'Une chaleur cotonneuse t\'enveloppe, la douleur disparaît.' },
+  lean:  { form: 'syrup', name: 'Sirop codéiné / Prométhazine', cat: 'med', icon: '🟣', unit: 'flacon', brands: ['Actavis', 'Euphon', 'Maka'], base: 120, demand: 10, depth: 400, bulk: 3, add: 5, od: 1.0, opioid: true, fx: { health: 1, respect: 1 }, txt: 'Double cup en main, le temps ralentit…' },
+  benzo: { form: 'pill', name: 'Benzodiazépines', cat: 'med', icon: '💠', unit: 'cp', brands: ['Xanax (Alprazolam)', 'Rivotril'], base: 8, demand: 120, depth: 8000, bulk: 0.2, add: 5, od: 0.6, benzo: true, fx: { crime: 6 }, txt: 'Plus rien ne t\'atteint. Sang-froid total.' },
+  rita:  { form: 'pill', name: 'Méthylphénidate', cat: 'med', icon: '⚪', unit: 'cp', brands: ['Ritaline', 'Concerta'], base: 10, demand: 70, depth: 6000, bulk: 0.2, add: 3, od: 0.3, stim: true, fx: { ap: 1 }, txt: 'Concentration maximale, tu enchaînes les tâches.' },
+  coke:  { form: 'powder', name: 'Cocaïne (poudre)', cat: 'dure', icon: '❄️', unit: 'g', brands: ['Écaille de poisson', 'Plaquette 90 %', 'Colombienne'], base: 70, demand: 40, depth: 4000, bulk: 1, add: 4, od: 0.8, stim: true, fx: { ap: 1, crime: 8, respect: 1, health: -2 }, txt: 'Tu te sens invincible, le roi du monde.' },
+  crack: { form: 'powder', name: 'Crack', cat: 'dure', icon: '🪨', unit: 'caillou', brands: ['Galette', 'Cailloux'], base: 20, demand: 70, depth: 4000, bulk: 0.3, add: 9, od: 1.5, stim: true, fx: { ap: 1, crime: 12, health: -5 }, txt: 'Un flash violent… puis l\'envie immédiate d\'y retourner.' },
+  heroB: { form: 'powder', name: 'Héroïne (brown sugar)', cat: 'dure', icon: '🟤', unit: 'g', brands: ['Brown sugar', 'Brune afghane'], base: 40, demand: 30, depth: 2500, bulk: 1, add: 10, od: 2.2, opioid: true, fx: { health: 3 }, txt: 'Tu pars loin, très loin…' },
+  heroW: { form: 'powder', name: 'Héroïne (blanche)', cat: 'dure', icon: '🤍', unit: 'g', brands: ['Blanche n°4', 'Chiva'], base: 80, demand: 20, depth: 1800, bulk: 1, add: 11, od: 2.8, opioid: true, fx: { health: 3 }, txt: 'Une vague tiède te submerge. Plus rien n\'existe.' },
+  weed:  { form: 'joint', name: 'Cannabis (herbe)', cat: 'douce', icon: '🌿', unit: 'g', brands: ['Amnesia', 'Gelato', 'OG Kush', 'Purple Haze'], base: 10, demand: 160, depth: 25000, bulk: 1, add: 1, od: 0, fx: { health: 2 }, txt: 'Tu te poses, le stress redescend.' },
+  hash:  { form: 'joint', name: 'Résine filtrée', cat: 'douce', icon: '🟫', unit: 'g', brands: ['Jaune mousseux', 'Filtré 120 µ', 'Charas'], base: 7, demand: 220, depth: 35000, bulk: 1, add: 1, od: 0, fx: { health: 1 }, txt: 'Un gros spliff sur le toit du bâtiment.' },
+  mdma:  { form: 'pill', name: 'MDMA / Ecstasy', cat: 'dure', icon: '💗', unit: 'cp', brands: ['Tesla', 'Punisher', 'Blue Dolphin', 'Skull'], base: 10, demand: 90, depth: 10000, bulk: 0.3, add: 3, od: 0.6, fx: { respect: 2, health: -1 }, txt: 'Tu aimes tout le monde, la soirée est magique.' },
+  keta:  { form: 'powder', name: 'Kétamine', cat: 'dure', icon: '🐴', unit: 'g', brands: ['Cristaux', 'Poudre fine'], base: 30, demand: 30, depth: 2500, bulk: 1, add: 4, od: 1.0, fx: { health: -1 }, txt: 'Le sol se dérobe, tu flottes hors de ton corps.' },
+  meth:  { form: 'powder', name: 'Méthamphétamine', cat: 'dure', icon: '🧊', unit: 'g', brands: ['Crystal', 'Ice bleue'], base: 60, demand: 20, depth: 2500, bulk: 1, add: 9, od: 1.2, stim: true, fx: { ap: 2, crime: 10, health: -5 }, txt: 'Tu ne dors plus. Tu n\'as plus besoin de dormir.' },
+  ster:  { form: 'pill', name: 'Stéroïdes anabolisants', cat: 'dope', icon: '🧬', unit: 'cp', brands: ['Dianabol 10 mg', 'Anadrol 50', 'Winstrol 10 mg', 'Turinabol'], base: 12, demand: 60, depth: 6000, bulk: 0.2, add: 2.5, od: 0.1, roids: 14, fx: { force: 5, crime: 5, health: -2 }, txt: 'Tes muscles gonflent à vue d\'œil… et une rage sourde monte en toi.' },
 };
-const CATS = { med: '💊 Médicaments détournés', dure: '💀 Drogues dures', douce: '🌿 Drogues douces' };
+const CATS = { med: '💊 Médicaments détournés', dure: '💀 Drogues dures', douce: '🌿 Drogues douces', dope: '🏋️ Stéroïdes anabolisants' };
 const DOSES = [
   { label: 'Petite dose', units: 1, mult: 0.5 },
   { label: 'Dose normale', units: 2, mult: 1 },
@@ -270,28 +404,28 @@ const DOSES = [
 ];
 
 const CITIES = {
-  marseille: { name: 'Marseille', country: 'France', flag: '🇫🇷', region: 'eu', police: 1.0, customs: 1.0, names: 'fr', cops: 'BAC',
+  marseille: { name: 'Marseille', country: 'France', flag: '🇫🇷', region: 'eu', police: 1.0, customs: 1.0, names: 'fr', cops: 'BAC', club: 'Velvet',
     mult: { hash: 0.85, meth: 1.6, oxy: 1.3, lean: 1.2 }, spec: { hash: 10 },
     routes: ['Marbella → Marseille', 'Algésiras → Marseille', 'Barcelone → Marseille'], gfCargo: ['hash', 'hash', 'weed', 'coke'],
     intro: 'Tu as grandi dans une cité des quartiers nord de Marseille. À 18 ans, un grand du quartier te propose de tenir le guet sur un point de deal.' },
-  paris: { name: 'Paris', country: 'France', flag: '🇫🇷', region: 'eu', police: 1.2, customs: 1.1, names: 'fr', cops: 'BAC',
-    mult: { coke: 1.1, crack: 0.9, meth: 1.6, oxy: 1.3, lean: 1.3, keta: 1.1 }, spec: {},
+  paris: { name: 'Paris', country: 'France', flag: '🇫🇷', region: 'eu', police: 1.2, customs: 1.1, names: 'fr', cops: 'BAC', club: 'Noctambule',
+    mult: { coke: 1.1, crack: 0.9, meth: 1.6, oxy: 1.3, lean: 1.3, keta: 1.1, ster: 1.1 }, spec: {},
     routes: ['Madrid → Paris', 'Anvers → Paris', 'Perpignan → Paris'], gfCargo: ['hash', 'coke', 'coke', 'weed'],
     intro: 'Tu as grandi dans une tour de Seine-Saint-Denis, aux portes de Paris. À 18 ans, les grands du hall te proposent de faire le guetteur.' },
-  amsterdam: { name: 'Amsterdam', country: 'Pays-Bas', flag: '🇳🇱', region: 'eu', police: 0.75, customs: 0.9, names: 'nl', cops: 'Politie',
-    mult: { weed: 0.45, hash: 0.55, mdma: 0.35, keta: 0.5, coke: 0.75, meth: 1.4, lean: 1.3 }, spec: { weed: 20, mdma: 20, hash: 10, keta: 10 },
+  amsterdam: { name: 'Amsterdam', country: 'Pays-Bas', flag: '🇳🇱', region: 'eu', police: 0.75, customs: 0.9, names: 'nl', cops: 'Politie', club: 'Neon Haven',
+    mult: { weed: 0.45, hash: 0.55, mdma: 0.35, keta: 0.5, coke: 0.75, meth: 1.4, lean: 1.3, ster: 0.8 }, spec: { weed: 20, mdma: 20, hash: 10, keta: 10 },
     routes: ['Rotterdam → Anvers', 'Amsterdam → Cologne', 'Rotterdam → Lille'], gfCargo: ['mdma', 'coke', 'weed', 'keta'],
     intro: 'Tu as grandi à Amsterdam-Noord, entre les coffee shops et les docks. À 18 ans, un dealer du coin te propose de surveiller sa rue.' },
-  medellin: { name: 'Medellín', country: 'Colombie', flag: '🇨🇴', region: 'am', police: 0.8, customs: 1.4, names: 'latam', cops: 'Policía Nacional',
-    mult: { coke: 0.2, crack: 0.3, weed: 0.4, heroW: 0.8, oxy: 1.4, lean: 1.5, benzo: 1.3, mdma: 1.5, meth: 1.3 }, spec: { coke: 25, crack: 10 },
+  medellin: { name: 'Medellín', country: 'Colombie', flag: '🇨🇴', region: 'am', police: 0.8, customs: 1.4, names: 'latam', cops: 'Policía Nacional', club: 'La Fuga',
+    mult: { coke: 0.2, crack: 0.3, weed: 0.4, heroW: 0.8, oxy: 1.4, lean: 1.5, benzo: 1.3, mdma: 1.5, meth: 1.3, ster: 0.7 }, spec: { coke: 25, crack: 10 },
     routes: ['Medellín → Turbo (côte)', 'Cali → Buenaventura', 'Medellín → Carthagène'], gfCargo: ['coke', 'coke', 'weed'],
     intro: 'Tu as grandi dans une comuna accrochée aux collines de Medellín. À 18 ans, un patrón du barrio te propose de faire le « campanero », le guetteur.' },
-  culiacan: { name: 'Culiacán', country: 'Mexique', flag: '🇲🇽', region: 'am', police: 0.6, customs: 1.2, names: 'latam', cops: 'Federales',
-    mult: { meth: 0.2, heroB: 0.3, heroW: 0.4, weed: 0.35, coke: 0.45, mdma: 1.3, lean: 1.3 }, spec: { meth: 25, heroB: 15, heroW: 10 },
+  culiacan: { name: 'Culiacán', country: 'Mexique', flag: '🇲🇽', region: 'am', police: 0.6, customs: 1.2, names: 'latam', cops: 'Federales', club: 'El Toro Negro',
+    mult: { meth: 0.2, heroB: 0.3, heroW: 0.4, weed: 0.35, coke: 0.45, mdma: 1.3, lean: 1.3, ster: 0.45 }, spec: { meth: 25, heroB: 15, heroW: 10 },
     routes: ['Culiacán → Tijuana', 'Sinaloa → Nogales', 'Culiacán → Mexicali'], gfCargo: ['meth', 'heroB', 'coke', 'weed'],
     intro: 'Tu as grandi à Culiacán, au cœur du Sinaloa. À 18 ans, un « halcón » du quartier te propose de devenir guetteur pour la plaza.' },
-  miami: { name: 'Miami', country: 'USA', flag: '🇺🇸', region: 'am', police: 1.35, customs: 1.3, names: 'us', cops: 'DEA',
-    mult: { coke: 1.3, crack: 1.2, oxy: 1.8, lean: 1.7, benzo: 1.5, meth: 1.2, heroW: 1.3, weed: 1.2, hash: 1.8, rita: 1.4 }, spec: {},
+  miami: { name: 'Miami', country: 'USA', flag: '🇺🇸', region: 'am', police: 1.35, customs: 1.3, names: 'us', cops: 'DEA', club: 'Vortex',
+    mult: { coke: 1.3, crack: 1.2, oxy: 1.8, lean: 1.7, benzo: 1.5, meth: 1.2, heroW: 1.3, weed: 1.2, hash: 1.8, rita: 1.4, ster: 1.4 }, spec: {},
     routes: ['Miami → Atlanta (I-95)', 'Houston → Miami (I-10)', 'Miami → New York'], gfCargo: ['coke', 'heroW', 'meth', 'weed'],
     intro: 'Tu as grandi à Liberty City, Miami. À 18 ans, un OG du block te propose de faire le lookout pour son corner.' },
 };
@@ -313,10 +447,10 @@ const THEFTS = [
   { id: 'fourgon', name: 'Attaquer un fourgon blindé', icon: '🚚', ap: 2, base: 20, min: 250000, max: 900000, heat: 40, jail: [96, 180], armed: true, dmg: 55, rank: 3, crew: 3 },
 ];
 const ASSAULTS = [
-  { id: 'passant', name: 'Agresser un passant', icon: '🚶', ap: 1, enemy: [10, 40], cash: [20, 300], respect: 1, heat: 4, dmg: [5, 15], jail: [3, 10] },
-  { id: 'dealer', name: 'Racketter un petit dealer', icon: '🧢', ap: 1, enemy: [25, 60], cash: [200, 1500], respect: 3, heat: 3, dmg: [8, 25], jail: [4, 12], loot: true },
-  { id: 'balance', name: 'Corriger une balance', icon: '🐀', ap: 1, enemy: [15, 45], cash: [0, 0], respect: 4, heat: -12, dmg: [5, 15], jail: [6, 18] },
-  { id: 'caid', name: 'Défier un caïd rival', icon: '😈', ap: 1, enemy: [55, 115], cash: [1000, 8000], respect: 8, heat: 8, dmg: [20, 50], jail: [12, 36], lethal: true },
+  { id: 'passant', name: 'Agresser un passant', icon: '🚶', ap: 1, foe: 'passant', cash: [20, 300], respect: 1, heat: 4, jail: [3, 10] },
+  { id: 'dealer', name: 'Racketter un petit dealer', icon: '🧢', ap: 1, foe: 'dealer', cash: [200, 1500], respect: 3, heat: 3, jail: [4, 12], loot: true },
+  { id: 'balance', name: 'Corriger une balance', icon: '🐀', ap: 1, foe: 'balance', cash: [0, 0], respect: 4, heat: -12, jail: [6, 18] },
+  { id: 'caid', name: 'Défier un caïd rival', icon: '😈', ap: 1, foe: 'caid', cash: [1000, 8000], respect: 8, heat: 8, jail: [12, 36], lethal: true },
 ];
 const REHABS = [
   { id: 'na', name: 'Réunion Narcotiques Anonymes', icon: '🤝', cost: 0, ap: 1, success: 100, red: [4, 8], desc: 'Gratuit · petit effet' },
@@ -325,7 +459,6 @@ const REHABS = [
   { id: 'suisse', name: 'Clinique privée en Suisse', icon: '🇨🇭', cost: 45000, ap: 3, success: 95, red: [70, 90], hp: 10, desc: 'Le luxe, la discrétion, l\'efficacité' },
 ];
 const HEALS = [
-  { id: 'sport', name: 'Salle de sport', icon: '🏋️', cost: 40, ap: 1, hp: [3, 6], respect: 0.5, desc: 'Entretenir la machine' },
   { id: 'pharma', name: 'Automédication (pharmacie)', icon: '💊', cost: 60, ap: 1, hp: [3, 8], desc: 'Pansements, antidouleurs' },
   { id: 'rue', name: 'Médecin de rue (discret)', icon: '🩺', cost: 900, ap: 1, hp: [15, 25], fail: 15, desc: 'Ne pose pas de questions' },
   { id: 'hopital', name: 'Hôpital public', icon: '🏥', cost: 250, ap: 1, hp: [30, 45], report: true, desc: 'Efficace, mais signale les blessures par balle' },
@@ -342,26 +475,50 @@ const SURGERIES = [
 
 const SHOP = {
   clothes: { label: 'Vêtements & Style', icon: '👕', items: [
-    { id: 'zara', name: 'Zara — ensemble basique', icon: '👔', price: 180, respect: 1 },
-    { id: 'tech', name: 'Nike Tech Fleece', icon: '🧥', price: 260, respect: 2 },
-    { id: 'lacoste', name: 'Survêtement Lacoste', icon: '🐊', price: 350, respect: 2 },
-    { id: 'stone', name: 'Stone Island — veste', icon: '🧭', price: 950, respect: 3 },
-    { id: 'acne', name: 'Acne Studios — total look', icon: '🖤', price: 1900, respect: 4 },
-    { id: 'moncler', name: 'Moncler — doudoune', icon: '🧊', price: 2600, respect: 5 },
-    { id: 'balmain', name: 'Balmain — jean & veste', icon: '⚜️', price: 4800, respect: 6 },
-    { id: 'margiela', name: 'Maison Margiela — Tabi & manteau', icon: '🥼', price: 6500, respect: 7 },
-    { id: 'chrome', name: 'Chrome Hearts — hoodie & bagues', icon: '✝️', price: 14000, respect: 9 },
+    { id: 'zara_tee', slot: 'haut', name: 'T-shirt Zara', icon: '👕', price: 30, respect: 1 },
+    { id: 'tech_top', slot: 'haut', name: 'Sweat Nike Tech Fleece', icon: '👕', price: 130, respect: 2 },
+    { id: 'lacoste_polo', slot: 'haut', name: 'Polo Lacoste', icon: '🐊', price: 110, respect: 2 },
+    { id: 'acne_hoodie', slot: 'haut', name: 'Hoodie Acne Studios', icon: '🖤', price: 420, respect: 3 },
+    { id: 'margiela_top', slot: 'haut', name: 'Pull Maison Margiela (4 points)', icon: '🤍', price: 850, respect: 4 },
+    { id: 'balmain_shirt', slot: 'haut', name: 'Chemise Balmain', icon: '⚜️', price: 1300, respect: 5 },
+    { id: 'ch_hoodie', slot: 'haut', name: 'Hoodie Chrome Hearts', icon: '✝️', price: 2200, respect: 7 },
+    { id: 'zara_jog', slot: 'bas', name: 'Jogging Zara', icon: '👖', price: 40, respect: 1 },
+    { id: 'tech_bas', slot: 'bas', name: 'Pantalon Nike Tech Fleece', icon: '👖', price: 110, respect: 1 },
+    { id: 'lacoste_bas', slot: 'bas', name: 'Bas de survêtement Lacoste', icon: '🐊', price: 120, respect: 2 },
+    { id: 'acne_jean', slot: 'bas', name: 'Jean Acne Studios', icon: '👖', price: 350, respect: 2 },
+    { id: 'stone_cargo', slot: 'bas', name: 'Cargo Stone Island', icon: '🧭', price: 390, respect: 3 },
+    { id: 'margiela_pant', slot: 'bas', name: 'Pantalon Maison Margiela', icon: '👖', price: 900, respect: 4 },
+    { id: 'balmain_jean', slot: 'bas', name: 'Jean Balmain destroy', icon: '⚜️', price: 1250, respect: 5 },
+    { id: 'ch_jean', slot: 'bas', name: 'Jean Chrome Hearts à croix', icon: '✝️', price: 3200, respect: 6 },
+    { id: 'zara_shoes', slot: 'chaussures', name: 'Baskets Zara', icon: '👟', price: 50, respect: 1 },
+    { id: 'tn', slot: 'chaussures', name: 'Nike TN Air Max Plus', icon: '👟', price: 190, respect: 2 },
+    { id: 'jordan', slot: 'chaussures', name: 'Air Jordan 1', icon: '👟', price: 320, respect: 3 },
+    { id: 'replica', slot: 'chaussures', name: 'Maison Margiela Replica', icon: '👟', price: 490, respect: 3 },
+    { id: 'unicorn', slot: 'chaussures', name: 'Balmain Unicorn', icon: '👟', price: 950, respect: 4 },
+    { id: 'tabi', slot: 'chaussures', name: 'Bottes Tabi Maison Margiela', icon: '🥾', price: 1100, respect: 5 },
+    { id: 'ch_boots', slot: 'chaussures', name: 'Bottes en cuir Chrome Hearts', icon: '🥾', price: 2900, respect: 6 },
+    { id: 'tnf', slot: 'veste', name: 'Doudoune The North Face', icon: '🧥', price: 350, respect: 2 },
+    { id: 'stone_veste', slot: 'veste', name: 'Veste Stone Island', icon: '🧭', price: 950, respect: 3 },
+    { id: 'moncler', slot: 'veste', name: 'Doudoune Moncler', icon: '🧊', price: 1700, respect: 4 },
+    { id: 'margiela_coat', slot: 'veste', name: 'Manteau Maison Margiela', icon: '🥼', price: 2400, respect: 5 },
+    { id: 'ch_leather', slot: 'veste', name: 'Blouson en cuir Chrome Hearts', icon: '✝️', price: 6500, respect: 7 },
   ] },
   jewelry: { label: 'Bijoux & Montres', icon: '⌚', items: [
-    { id: 'argent', name: 'Chaîne en argent', icon: '⛓️', price: 300, respect: 1 },
-    { id: 'gourmette', name: 'Gourmette en or 18 carats', icon: '📿', price: 3500, respect: 3 },
-    { id: 'grillz', name: 'Grillz en or', icon: '😁', price: 5000, respect: 3 },
-    { id: 'chaine', name: 'Chaîne en or massif', icon: '🟡', price: 12000, respect: 5 },
-    { id: 'rolex', name: 'Rolex Submariner', icon: '⌚', price: 14000, respect: 6 },
-    { id: 'cuban', name: 'Cuban link sertie de diamants', icon: '💎', price: 65000, respect: 9 },
-    { id: 'royal', name: 'Audemars Piguet Royal Oak sertie', icon: '⌚', price: 95000, respect: 11 },
-    { id: 'rm', name: 'Richard Mille RM 011', icon: '⏱️', price: 260000, respect: 15 },
-    { id: 'pendentif', name: 'Pendentif diamants sur mesure', icon: '💠', price: 450000, respect: 18 },
+    { id: 'casio', slot: 'montre', name: 'Casio G-Shock', icon: '⌚', price: 120, respect: 1 },
+    { id: 'rolex', slot: 'montre', name: 'Rolex Submariner', icon: '⌚', price: 14000, respect: 6 },
+    { id: 'royal', slot: 'montre', name: 'Audemars Piguet Royal Oak sertie', icon: '⌚', price: 95000, respect: 10 },
+    { id: 'rm', slot: 'montre', name: 'Richard Mille RM 011', icon: '⏱️', price: 260000, respect: 12 },
+    { id: 'argent', slot: 'cou', name: 'Chaîne en argent', icon: '⛓️', price: 300, respect: 1 },
+    { id: 'chaine', slot: 'cou', name: 'Chaîne en or massif', icon: '🟡', price: 12000, respect: 5 },
+    { id: 'cuban', slot: 'cou', name: 'Cuban link sertie de diamants', icon: '💎', price: 65000, respect: 8 },
+    { id: 'croix', slot: 'pendentif', name: 'Pendentif croix en or', icon: '✝️', price: 2000, respect: 2 },
+    { id: 'pendentif', slot: 'pendentif', name: 'Pendentif diamants sur mesure', icon: '💠', price: 450000, respect: 10 },
+    { id: 'gourmette', slot: 'poignet', name: 'Gourmette en or 18 carats', icon: '📿', price: 3500, respect: 3 },
+    { id: 'tennis', slot: 'poignet', name: 'Bracelet tennis diamants', icon: '💎', price: 28000, respect: 5 },
+    { id: 'ch_rings', slot: 'doigts', name: 'Bagues Chrome Hearts', icon: '💍', price: 1200, respect: 3 },
+    { id: 'chevaliere', slot: 'doigts', name: 'Chevalière en or', icon: '💍', price: 4000, respect: 4 },
+    { id: 'grillz', slot: 'dents', name: 'Grillz en or', icon: '😁', price: 5000, respect: 3 },
+    { id: 'grillz_d', slot: 'dents', name: 'Grillz sertis de diamants', icon: '😁', price: 35000, respect: 6 },
   ] },
   vehicles: { label: 'Véhicules', icon: '🚗', items: [
     { id: 'clio', name: 'Clio 2 d\'occasion', icon: '🚗', price: 2500, respect: 0, speed: 35, disc: 85 },
@@ -396,6 +553,78 @@ const SHOP = {
   ] },
 };
 const RESALE = { clothes: 0.3, jewelry: 0.6, vehicles: 0.6, properties: 0.85, weapons: 0.4 };
+
+/* Garde-robe : un objet équipé par emplacement */
+const SLOTS = {
+  haut: { label: 'Haut', icon: '👕', cat: 'clothes' },
+  bas: { label: 'Bas', icon: '👖', cat: 'clothes' },
+  chaussures: { label: 'Chaussures', icon: '👟', cat: 'clothes' },
+  veste: { label: 'Veste / manteau', icon: '🧥', cat: 'clothes' },
+  montre: { label: 'Montre', icon: '⌚', cat: 'jewelry' },
+  cou: { label: 'Chaîne', icon: '⛓️', cat: 'jewelry' },
+  pendentif: { label: 'Pendentif', icon: '💠', cat: 'jewelry' },
+  poignet: { label: 'Bracelet', icon: '📿', cat: 'jewelry' },
+  doigts: { label: 'Bagues', icon: '💍', cat: 'jewelry' },
+  dents: { label: 'Grillz', icon: '😁', cat: 'jewelry' },
+};
+// anciennes tenues complètes (sauvegardes v1) → nouvelles pièces
+const OLD_CLOTHES = { zara: ['zara_tee', 'zara_jog', 'zara_shoes'], tech: ['tech_top', 'tech_bas'], lacoste: ['lacoste_polo', 'lacoste_bas'], stone: ['stone_veste'],
+  acne: ['acne_hoodie', 'acne_jean'], moncler: ['moncler'], balmain: ['balmain_shirt', 'balmain_jean'], margiela: ['tabi', 'margiela_coat'], chrome: ['ch_hoodie', 'ch_rings'] };
+
+/* Combat au tour par tour */
+const FISTS = { id: 'fists', name: 'Poings', icon: '👊', dmg: [4, 9], acc: 80, melee: true, verb: 'Frapper' };
+const SHIV = { id: 'surin', name: 'Surin artisanal', icon: '🗡️', dmg: [8, 15], acc: 76, melee: true, verb: 'Planter' };
+const WEAPON_STATS = {
+  couteau: { dmg: [9, 17], acc: 78, melee: true, verb: 'Poignarder' },
+  glock: { dmg: [16, 28], acc: 66 }, revolver: { dmg: [20, 34], acc: 60 }, uzi: { dmg: [18, 32], acc: 62 },
+  pompe: { dmg: [26, 44], acc: 58 }, ak: { dmg: [30, 48], acc: 62 },
+};
+const FOES = {
+  passant:    { name: 'Passant', role: 'Civil pas commode', icon: '🚶', hp: [28, 42], atk: [3, 8], acc: 55, w: 'ses poings' },
+  costaud:    { name: 'Passant costaud', role: 'Refuse de payer', icon: '🧔', hp: [40, 55], atk: [5, 11], acc: 60, w: 'ses poings' },
+  provoc:     { name: 'Provocateur', role: 'Petite frappe du quartier', icon: '😤', hp: [35, 50], atk: [4, 10], acc: 58, w: 'ses poings' },
+  fetard:     { name: 'Fêtard éméché', role: 'Client de la boîte', icon: '🥴', hp: [30, 45], atk: [4, 9], acc: 52, w: 'ses poings' },
+  videur:     { name: 'Videur', role: 'Sécurité de la boîte', icon: '🦍', hp: [60, 80], atk: [7, 14], acc: 68, w: 'ses poings' },
+  dealer:     { name: 'Petit dealer', role: 'Concurrent de rue', icon: '🧢', hp: [38, 55], atk: [6, 12], acc: 60, w: 'un couteau' },
+  balance:    { name: 'La balance', role: 'Indic de la police', icon: '🐀', hp: [28, 40], atk: [3, 8], acc: 50, w: 'ses poings' },
+  commercant: { name: 'Commerçant', role: 'Refuse de payer', icon: '🧑‍🍳', hp: [38, 52], atk: [6, 13], acc: 55, w: 'une batte de baseball' },
+  caid:       { name: 'Caïd rival', role: 'Chef de réseau', icon: '😈', hp: [70, 90], atk: [13, 24], acc: 60, w: 'un 9 mm', gun: true },
+  tueur:      { name: 'Tueur à moto', role: 'Sicaire', icon: '🏍️', hp: [55, 75], atk: [14, 27], acc: 56, w: 'un pistolet-mitrailleur', gun: true },
+  bande:      { name: 'Chef des braqueurs', role: 'Bande rivale', icon: '🔪', hp: [55, 75], atk: [8, 16], acc: 60, w: 'une machette' },
+  detenu:     { name: 'Détenu', role: 'Caïd du bâtiment', icon: '😠', hp: [50, 70], atk: [7, 14], acc: 64, w: 'ses poings' },
+  sicaire:    { name: 'Détenu infiltré', role: 'Tueur à gages', icon: '🔪', hp: [70, 90], atk: [12, 22], acc: 68, w: 'un surin' },
+};
+
+/* Vie nocturne, rue, prison */
+const CLUB_MULT = { mdma: 1.4, coke: 1.1, keta: 0.9, weed: 0.5, hash: 0.3, lean: 0.7, benzo: 0.3, rita: 0.4, oxy: 0.3, crack: 0.05, heroB: 0.05, heroW: 0.1, meth: 0.25, ster: 0.15 };
+const SHOPS_RACKET = ['Épicerie de nuit', 'Kebab du coin', 'Tabac-presse', 'Salon de coiffure', 'Boulangerie', 'Garage auto', 'Boutique de téléphones', 'Laverie du quartier'];
+const PRISON_GANGS = ['Anciens du bâtiment B', 'Gars de la buanderie', 'Braqueurs de la vieille école', 'Longues Peines'];
+const GYM = [
+  { id: 'muscu', name: 'Séance de musculation', icon: '🏋️', cost: 40, force: [2.5, 4.5], hp: [0, 2], desc: 'Force ↑↑' },
+  { id: 'cardio', name: 'Cardio & endurance', icon: '🏃', cost: 30, force: [0.3, 1], hp: [4, 7], desc: 'Santé ↑↑' },
+  { id: 'boxe', name: 'Cours de boxe / MMA', icon: '🥊', cost: 60, force: [1.5, 3], hp: [1, 3], respect: 0.5, injury: 10, desc: 'Force ↑ · respect ↑ · risque de blessure' },
+];
+
+/* Mini-jeux de consommation (séquences animées) */
+const RITUALS = {
+  pill: { cls: 'st-pill', fails: ['Le carton se déchire de travers… Réessaie.', 'Tes doigts glissent sur l\'emballage. Recommence.'], steps: [
+    { btn: '📦 Ouvrir la boîte', cap: (b) => `Tu ouvres la boîte (${b}) et fais glisser le blister…`, dur: 1400 },
+    { btn: '💊 Prendre le comprimé', cap: () => 'Tu extrais un comprimé du blister et l\'avales.', dur: 1200 },
+  ] },
+  syrup: { cls: 'st-syrup', fails: ['Le bouchon de sécurité résiste… Appuie et tourne encore.'], steps: [
+    { btn: '🔄 Dévisser le bouchon', cap: (b) => `Tu dévisses le flacon (${b}). Le sirop violet coule lentement dans le double cup…`, dur: 2300 },
+    { btn: '🥤 Consommer', cap: () => 'Tu sirotes le gobelet, doucement…', dur: 1500 },
+  ] },
+  joint: { cls: 'st-joint', fails: ['La feuille se déchire ! Prends-en une autre.', 'Tu en mets partout… Recommence.'], steps: [
+    { btn: '🤏 Effriter', cap: (b) => `Tu effrites un peu ${U.de(b)} au-dessus d'une pochette de CD…`, dur: 1100 },
+    { btn: '📜 Déposer dans la feuille', cap: () => 'Tu déposes le tout dans la feuille… puis tu roules avec précision.', dur: 2100 },
+    { btn: '🔥 Allumer', cap: () => 'Clic du briquet. Première taffe…', dur: 1800 },
+  ] },
+  powder: { cls: 'st-powder', fails: ['Tes mains tremblent… Recommence.'], steps: [
+    { btn: '💳 Préparer la dose', cap: (b, n) => `Tu prépares une dose ${U.de(n)} sur le miroir…`, dur: 1300 },
+    { btn: '😶‍🌫️ Consommer', cap: () => 'Ça y est. L\'effet monte déjà…', dur: 1100 },
+  ] },
+};
 
 const LABS = {
   serre:  { name: 'Serre indoor (cannabis)', icon: '🌱', drug: 'weed', price: 15000, out: 350, q: [55, 85], upkeep: 900, rank: 1, risk: 1.5 },
@@ -458,14 +687,14 @@ const AVATARS = ['🧑🏽', '👨🏻', '👨🏾', '👩🏽', '👩🏻', '�
 const PlayerData = {
   blank(name = 'Inconnu', avatar = '🧑🏽', city = 'marseille') {
     return {
-      v: 1, name, avatar, city, ageMonths: 216, cash: 250, bank: 0,
-      health: 88, respect: 5, addiction: 0, heat: 0, ap: 4,
+      v: 2, name, avatar, city, ageMonths: 216, cash: 250, bank: 0,
+      health: 88, respect: 5, addiction: 0, heat: 0, ap: 4, force: U.ri(15, 30), roids: 0, trained: false,
       rank: 0, earned: 0, record: 0, jail: 0, wounded: false, territories: 0,
       launderTarget: null, deposit: 0, unpaid: 0,
-      stock: {}, owned: { clothes: [], jewelry: [], vehicles: [], properties: [], weapons: [] },
+      stock: {}, owned: { clothes: [], jewelry: [], vehicles: [], properties: [], weapons: [] }, equip: {}, rackets: [], prison: null,
       crew: [], candidates: [], labs: [], businesses: [], imports: [], gofasts: [], debts: [], buffs: [], used: {}, surgeries: [],
       rivals: [], market: null,
-      stats: { crimes: 0, arrests: 0, jailMonths: 0, kills: 0, doses: 0, ods: 0, maxWorth: 0, sold: 0, bought: 0, wars: 0 },
+      stats: { crimes: 0, arrests: 0, jailMonths: 0, kills: 0, doses: 0, ods: 0, maxWorth: 0, sold: 0, bought: 0, wars: 0, fights: 0, fightsWon: 0 },
       log: [], logSeq: 0, alive: true, death: null,
     };
   },
@@ -488,12 +717,22 @@ const PlayerData = {
     const c = Math.min(S.cash, rest); S.cash -= c; rest -= c; return rest;
   },
   items(cat) { return S.owned[cat].map((id) => SHOP[cat].items.find((i) => i.id === id)).filter(Boolean); },
-  possessionRespect() {
-    let r = 0;
-    for (const cat in SHOP) for (const it of this.items(cat)) r += it.respect || 0;
-    for (const b of S.businesses) r += BUSINESSES[b.type].respect || 0;
-    return Math.min(40, r);
+  equipped(slot) {
+    const id = S.equip[slot], cat = SLOTS[slot].cat;
+    if (!id || !S.owned[cat].includes(id)) return null;
+    return SHOP[cat].items.find((i) => i.id === id) || null;
   },
+  // Respect apporté par la tenue portée, les accessoires, le meilleur véhicule, le logement et les commerces
+  styleBreakdown() {
+    let tenue = 0, acc = 0;
+    for (const s in SLOTS) { const it = this.equipped(s); if (it) { if (SLOTS[s].cat === 'clothes') tenue += it.respect; else acc += it.respect; } }
+    const veh = Math.max(0, ...this.items('vehicles').map((v) => v.respect));
+    const home = Math.max(0, ...this.items('properties').map((p) => p.respect));
+    const biz = S.businesses.reduce((a, b) => a + (BUSINESSES[b.type].respect || 0), 0);
+    const raw = tenue + acc + veh + home + biz;
+    return { tenue, acc, veh, home, biz, raw, total: Math.min(40, raw) };
+  },
+  possessionRespect() { return this.styleBreakdown().total; },
   respect() { return U.clamp(Math.round(S.respect + this.possessionRespect()), 0, 100); },
   firepower() {
     const ws = this.items('weapons').filter((w) => w.power).map((w) => w.power).sort((a, b) => b - a);
@@ -516,11 +755,11 @@ const PlayerData = {
   },
   soldiers() { return S.crew.filter((c) => c.role === 'soldier'); },
   dealers() { return S.crew.filter((c) => c.role === 'dealer'); },
-  combatPower() { return S.health * 0.35 + this.firepower() * 0.7 + this.armor() * 0.25 + this.respect() * 0.2 + this.crimeBuff(); },
+  combatPower() { return S.health * 0.35 + S.force * 0.3 + this.firepower() * 0.7 + this.armor() * 0.25 + this.respect() * 0.2 + this.crimeBuff(); },
   warPower() {
     return Math.round(20 + this.firepower() * 1.2 + this.armor() * 0.3
       + this.soldiers().reduce((a, c) => a + c.skill * (c.trait === 'violent' ? 1.35 : 0.9), 0)
-      + this.dealers().reduce((a, c) => a + c.skill * 0.2, 0) + this.respect() * 0.4 + this.crimeBuff());
+      + this.dealers().reduce((a, c) => a + c.skill * 0.2, 0) + this.respect() * 0.4 + S.force * 0.3 + this.crimeBuff());
   },
   netWorth() {
     let w = S.cash + S.bank + Inventory.value();
@@ -580,12 +819,13 @@ const Inventory = {
   qty: (d) => (S.stock[d] ? S.stock[d].qty : 0),
   q: (d) => (S.stock[d] ? S.stock[d].q : 0),
   list: () => Object.keys(S.stock).filter((d) => S.stock[d].qty > 0),
-  add(d, n, q) {
+  add(d, n, q, b) {
     n = Math.floor(n); if (n <= 0) return;
     const s = S.stock[d] || { qty: 0, q };
     s.q = Math.round((s.q * s.qty + q * n) / (s.qty + n));
-    s.qty += n; S.stock[d] = s;
+    s.qty += n; if (b) s.b = b; S.stock[d] = s;
   },
+  brand: (d) => (S.stock[d] && S.stock[d].b) || DRUGS[d].brands[0],
   remove(d, n) {
     const s = S.stock[d]; if (!s) return 0;
     const r = Math.min(Math.floor(n), s.qty); s.qty -= r;
@@ -638,11 +878,11 @@ const Actions = {
       return;
     }
     const m = Math.max(1, Math.round(base * U.rand(mult[0], mult[1])));
-    S.jail = m; S.record++;
+    S.jail = m; S.record++; Prison.enter(); S.ap = Math.min(S.ap, PlayerData.apMax());
     PlayerData.mod('heat', -30);
     S.crew.forEach((c) => { c.loyalty = U.clamp(c.loyalty - 5, 0, 100); });
     log('⛓️', `Condamnation : <b>${U.dur(m)}</b> de prison ferme.`, 'bad');
-    UI.result('⛓️', 'Condamnation', `${note ? note + '<br>' : ''}Le juge te condamne à <b>${U.dur(m)}</b> de prison ferme. Ton organisation devra tourner sans toi.`, 'bad');
+    UI.result('⛓️', 'Condamnation', `${note ? note + '<br>' : ''}Le juge te condamne à <b>${U.dur(m)}</b> de prison ferme. Direction la maison d\'arrêt : ton organisation devra tourner sans toi.`, 'bad');
   },
 
   /* ----- Crimes ----- */
@@ -681,43 +921,34 @@ const Actions = {
       UI.result('🏃', 'Raté !', 'Le coup a foiré, mais tu as réussi à prendre la fuite.', 'bad');
     }
   },
-  fightChance(a) {
-    // estimation par simulation rapide
-    let w = 0; const my = PlayerData.combatPower();
-    for (let i = 0; i < 300; i++) if (my + U.rand(0, 40) >= U.ri(a.enemy[0], a.enemy[1]) + U.rand(0, 30)) w++;
-    return Math.round(w / 3);
-  },
   assault(id) {
     const a = ASSAULTS.find((x) => x.id === id);
     if (!PlayerData.useAP(a.ap)) return;
     S.stats.crimes++;
-    const win = PlayerData.combatPower() + U.rand(0, 40) >= U.ri(a.enemy[0], a.enemy[1]) + U.rand(0, 30);
-    if (win) {
-      const cash = U.ri(a.cash[0], a.cash[1]);
-      if (cash) PlayerData.earn(cash);
-      PlayerData.mod('respect', a.respect); PlayerData.mod('heat', a.heat);
-      let extra = '';
-      if (a.loot) {
-        const d = U.pick(['weed', 'hash', 'coke', 'crack', 'benzo', 'mdma']); const n = U.ri(5, 30);
-        Inventory.add(d, n, U.ri(25, 65)); extra = ` + ${n} ${DRUGS[d].unit} ${U.de(DRUGS[d].name)}`;
-      }
-      if (a.id === 'caid' && U.chance(30)) S.stats.kills++;
-      const txt = a.id === 'balance' ? 'La balance a compris le message et retire sa déposition.' : `Victoire ! ${cash ? `Tu récupères ${U.money(cash)}` : ''}${extra}.`;
-      log('👊', `${a.name} : ${txt} (+${a.respect} 👑)`, 'good');
-      UI.result(a.icon, 'Victoire', `${txt}<br><small class="m">+${a.respect} respect · ${a.heat >= 0 ? '+' : ''}${a.heat} 🚨</small>`, 'good');
-    } else {
-      const dmg = Math.round(U.ri(a.dmg[0], a.dmg[1]) * (1 - PlayerData.armor() / 150));
-      PlayerData.mod('respect', -2);
-      if (a.lethal) S.wounded = true;
-      log('🤕', `${a.name} : tu t'es fait défoncer (−${dmg} ❤️).`, 'bad');
-      PlayerData.hurt(dmg, a.lethal ? 'Abattu par un caïd rival' : 'Tué dans une bagarre de rue');
-      if (!S.alive) return;
-      UI.result('🤕', 'Défaite', `Ton adversaire était plus fort. <b>−${dmg} ❤️</b>, −2 respect.`, 'bad');
-    }
-    if (S.alive && U.chance(12 * CITIES[S.city].police)) {
-      log('🚓', 'Des témoins ont appelé la police…', 'bad');
-      this.arrest({ charge: 'Violences volontaires', months: U.ri(a.jail[0], a.jail[1]) });
-    }
+    Combat.start({ foe: a.foe, ctx: { arms: 'all', lethal: !!a.lethal, flee: 50, place: a.name, cause: a.lethal ? 'Abattu par un caïd rival' : 'Tué dans une bagarre de rue' },
+      onEnd: (res) => {
+        if (res === 'win') {
+          const cash = U.ri(a.cash[0], a.cash[1]);
+          if (cash) PlayerData.earn(cash);
+          PlayerData.mod('respect', a.respect); PlayerData.mod('heat', a.heat);
+          let extra = '';
+          if (a.loot) {
+            const d = U.pick(['weed', 'hash', 'coke', 'crack', 'benzo', 'mdma']); const n = U.ri(5, 30);
+            Inventory.add(d, n, U.ri(25, 65)); extra = ` + ${n} ${U.u(DRUGS[d], n)} ${U.de(DRUGS[d].name)}`;
+          }
+          const txt = a.id === 'balance' ? 'La balance a compris le message et retire sa déposition.' : `Victoire ! ${cash ? `Tu récupères ${U.money(cash)}` : ''}${extra}.`;
+          log('👊', `${a.name} : ${txt} (+${a.respect} 👑)`, 'good');
+          UI.result(a.icon, 'Victoire', `${txt}<br><small class="m">+${a.respect} respect · ${a.heat >= 0 ? '+' : ''}${a.heat} 🚨</small>`, 'good');
+        } else if (res === 'lose') {
+          PlayerData.mod('respect', -2);
+          log('🤕', `${a.name} : défaite, tu finis au sol (−2 👑).`, 'bad');
+          UI.result('🤕', 'Défaite', 'Ton adversaire était plus fort. Tu te réveilles sur le trottoir. −2 respect.', 'bad');
+        } else { PlayerData.mod('respect', -1); log('🏃', `${a.name} : tu prends la fuite (−1 👑).`, ''); }
+        if (S.alive && U.chance(12 * CITIES[S.city].police)) {
+          log('🚓', 'Des témoins ont appelé la police…', 'bad');
+          this.arrest({ charge: 'Violences volontaires', months: U.ri(a.jail[0], a.jail[1]) });
+        }
+      } });
   },
   lowProfile() {
     if (!PlayerData.useAP(1)) return;
@@ -731,12 +962,14 @@ const Actions = {
   fxText(D) {
     const f = D.fx, t = [];
     if (f.ap) t.push(`+${f.ap} ⚡ énergie`);
+    if (f.force) t.push(`+${f.force} force (musculature)`);
     if (f.crime) t.push(`+${f.crime} % réussite des crimes`);
     if (f.respect) t.push(`+${f.respect} respect`);
     if (f.health > 0) t.push(`+${f.health} santé (antidouleur)`);
     if (f.health < 0) t.push(`${f.health} santé`);
     if (D.opioid) t.push('⚠️ opioïde');
     if (D.benzo) t.push('⚠️ benzodiazépine');
+    if (D.roids) t.push('⚠️ agressivité, cœur & foie');
     return t.join(' · ') || 'Aucun effet notable';
   },
   odRisk(d, mult, q) {
@@ -750,18 +983,19 @@ const Actions = {
     const r = D.od * mult * (0.5 + q / 100) * combo * (1 + times * 0.4) * (S.health < 30 ? 1.6 : 1) * (1 - S.addiction / 300);
     return Math.round(U.clamp(r, 0, 95) * 10) / 10;
   },
-  consumeMenu(d) {
+  consumeMenu(d, after = null, onCancel = null) {
     const D = DRUGS[d], q = Inventory.q(d);
     const used = Object.keys(S.used);
     const combo = (D.opioid && used.some((k) => DRUGS[k].benzo)) || (D.benzo && used.some((k) => DRUGS[k].opioid));
     UI.modal({ icon: D.icon, title: D.name, cls: 'drug',
-      text: `Stock : ${U.num(Inventory.qty(d))} ${D.unit} · ${U.q(q)}<br>${this.fxText(D)}<br>Addictivité : ${'●'.repeat(Math.ceil(D.add / 2))}${combo ? '<br><b class="r">⚠️ Mélange opioïdes + benzos ce mois-ci : risque d\'overdose ×3 !</b>' : ''}`,
-      choices: DOSES.map((ds, i) => ({ label: `${ds.label} (${ds.units} ${D.unit})`, sub: `Risque d'overdose ~${this.odRisk(d, ds.mult, q)} %`, dis: Inventory.qty(d) < ds.units, cls: i === 2 ? 'danger' : '', fn: () => this.consume(d, i) }))
-        .concat([{ label: 'Annuler', cls: 'ghost' }]) });
+      text: `${U.esc(Inventory.brand(d))} · stock ${U.num(Inventory.qty(d))} ${U.u(D, U.num(Inventory.qty(d)))} · ${U.q(q)}<br>${this.fxText(D)}<br>Addictivité : ${'●'.repeat(Math.ceil(D.add / 2))}${combo ? '<br><b class="r">⚠️ Mélange opioïdes + benzos ce mois-ci : risque d\'overdose ×3 !</b>' : ''}`,
+      choices: DOSES.map((ds, i) => ({ label: `${ds.label} (${ds.units} ${U.u(D, ds.units)})`, sub: `Risque d'overdose ~${this.odRisk(d, ds.mult, q)} %`, dis: Inventory.qty(d) < ds.units, cls: i === 2 ? 'danger' : '', fn: () => Ritual.start(d, i, false, after) }))
+        .concat([{ label: 'Annuler', cls: 'ghost', fn: onCancel || undefined }]) });
   },
-  consume(d, di, free = false) {
+  consume(d, di, free = false, after = null) {
     const D = DRUGS[d], ds = DOSES[di];
-    if (!free && Inventory.qty(d) < ds.units) return UI.toast('Pas assez de produit.');
+    const done = () => { if (after && S.alive && !S.jail) after(); };
+    if (!free && Inventory.qty(d) < ds.units) { UI.toast('Pas assez de produit.'); return done(); }
     const q = free ? U.ri(40, 80) : Inventory.q(d);
     const risk = this.odRisk(d, ds.mult, q);
     if (!free) Inventory.remove(d, ds.units);
@@ -770,17 +1004,20 @@ const Actions = {
     S.stats.doses++;
     const addGain = D.add * ds.mult * (0.7 + q / 150);
     PlayerData.mod('addiction', addGain);
-    if (U.chance(risk)) return this.overdose(d, ds.mult);
+    if (D.roids) S.roids = Math.min(100, (S.roids || 0) + D.roids * ds.mult);
+    if (U.chance(risk)) { this.overdose(d, ds.mult); if (Night.st) Night.end('Tu finis la nuit aux urgences.'); return; }
     const tol = U.clamp(1 - S.addiction / 200, 0.4, 1);
     const fx = [], E = D.fx;
     if (E.health > 0) { const h = E.health * ds.mult * tol; PlayerData.heal(h); fx.push(`+${Math.round(h)} ❤️`); }
     if (E.health < 0) { const h = -E.health * ds.mult; fx.push(`−${Math.round(h)} ❤️`); PlayerData.hurt(h, `Arrêt cardiaque (${D.name})`); if (!S.alive) return; }
+    if (E.force) { const f = E.force * ds.mult * (1 - S.force / 130); PlayerData.mod('force', f); fx.push(`+${f.toFixed(1).replace('.', ',')} 💪`); }
     if (E.ap && first) { S.ap += E.ap; fx.push(`+${E.ap} ⚡`); }
     if (E.crime) { const v = Math.round(E.crime * tol * (ds.mult >= 1 ? 1.3 : 1)); PlayerData.buff('crime', v, 1); fx.push(`+${v} % réussite crimes`); }
     if (E.respect && first) { PlayerData.mod('respect', E.respect); fx.push(`+${E.respect} 👑`); }
     fx.push(`+${Math.round(addGain)} 💉 addiction`);
-    log(D.icon, `Tu consommes ${ds.units} ${D.unit} ${U.de(D.name)} (Q${q}). ${D.txt}`, 'drug');
+    log(D.icon, `Tu consommes ${ds.units} ${U.u(D, ds.units)} ${U.de(D.name)} (Q${q}). ${D.txt}`, 'drug');
     UI.result(D.icon, D.name, `${D.txt}<br><br><b>${fx.join(' · ')}</b>`, 'drug');
+    done();
   },
   overdose(d, mult) {
     S.stats.ods++;
@@ -865,18 +1102,29 @@ const Actions = {
   prison(id) {
     if (id === 'muscu') {
       if (!PlayerData.useAP(1)) return;
-      PlayerData.heal(3); PlayerData.mod('respect', 1);
-      log('💪', 'Pompes, tractions, dips : +3 ❤️, +1 👑.', 'good'); UI.toast('💪 +3 santé · +1 respect');
+      const f = Gym.gain([1.5, 3]); S.trained = true;
+      PlayerData.mod('force', f); PlayerData.heal(2); PlayerData.mod('respect', 1);
+      log('💪', `Pompes, tractions, dips en cellule : +${f.toFixed(1).replace('.', ',')} 💪, +2 ❤️, +1 👑.`, 'jail'); UI.toast('💪 Force en hausse');
     } else if (id === 'bagarre') {
       if (!PlayerData.useAP(1)) return;
-      if (PlayerData.combatPower() + U.rand(0, 40) > U.rand(25, 75)) {
-        PlayerData.mod('respect', 4); log('👊', 'Bagarre dans la cour : tu imposes ta loi. +4 👑', 'good');
-        UI.result('👊', 'Respect gagné', 'Tout le bâtiment a vu ce que tu vaux.', 'good');
-      } else {
-        const d = U.ri(8, 20); log('🤕', `Bagarre dans la cour : tu te fais planter avec une brosse à dents taillée (−${d} ❤️).`, 'bad');
-        PlayerData.hurt(d, 'Poignardé en détention');
-        if (S.alive) UI.result('🤕', 'Défaite', `−${d} ❤️`, 'bad');
-      }
+      Combat.start({ foe: 'detenu', ctx: { arms: 'prison', flee: 40, place: 'Cour de promenade', intro: 'Tu provoques le caïd du bâtiment devant tout le monde.' }, onEnd: (res) => {
+        if (res === 'win') { PlayerData.mod('respect', 4); log('👊', 'Bagarre dans la cour : tu imposes ta loi. +4 👑', 'good'); UI.result('👊', 'Respect gagné', 'Tout le bâtiment a vu ce que tu vaux. +4 👑', 'good'); }
+        else if (res === 'lose') { PlayerData.mod('respect', -2); log('🤕', 'Bagarre dans la cour : tu finis à l\'infirmerie (−2 👑).', 'bad'); }
+        else log('🏃', 'Tu recules avant que les surveillants n\'interviennent.', 'jail');
+      } });
+    } else if (id === 'surin') {
+      const p = Prison.ensure();
+      if (p.shank) return UI.toast('🔪 Tu as déjà un surin planqué.');
+      if (!PlayerData.useAP(1)) return;
+      if (U.chance(80)) { p.shank = true; log('🔪', 'Tu affûtes une brosse à dents contre le béton : te voilà avec un surin artisanal.', 'jail'); UI.toast('🔪 Surin fabriqué'); }
+      else { S.jail += 2; log('🚨', 'Fouille de cellule : ton surin en cours de fabrication est découvert (+2 mois).', 'bad'); UI.result('🚨', 'Fouille !', 'Arme artisanale confisquée. +2 mois.', 'bad'); }
+    } else if (id === 'protection') {
+      const p = Prison.ensure(), cost = 2500 * (1 + S.rank);
+      if (!PlayerData.can(cost)) return UI.toast(`Il te faut ${U.money(cost)}.`);
+      if (!PlayerData.useAP(1)) return;
+      PlayerData.pay(cost); p.ally = U.pick(PRISON_GANGS); p.protection = Math.max(p.protection, 12); p.hunted = false;
+      log('🛡️', `Les ${p.ally} te prennent sous leur aile contre ${U.money(cost)} : protection pendant 12 mois.`, 'good');
+      UI.result('🛡️', 'Protection achetée', `Les ${p.ally} veillent sur toi pendant 12 mois.`, 'good');
     } else if (id === 'trafic') {
       if (!PlayerData.useAP(1)) return;
       if (U.chance(75)) { const g = U.ri(200, 1500); PlayerData.earn(g); log('📦', `Trafic en détention (téléphones, shit) : +${U.money(g)}.`, 'money'); UI.toast(`📦 +${U.money(g)}`); }
@@ -892,7 +1140,7 @@ const Actions = {
       if (!PlayerData.useAP(2)) return;
       const p = U.clamp(10 + PlayerData.respect() / 8 + PlayerData.soldiers().length * 2, 5, 40);
       if (U.chance(p)) {
-        S.jail = 0; PlayerData.mod('heat', 60); PlayerData.mod('respect', 10);
+        S.jail = 0; S.prison = null; PlayerData.mod('heat', 60); PlayerData.mod('respect', 10);
         log('🪢', '<b>ÉVASION RÉUSSIE !</b> Tu fais la une des journaux. (+60 🚨, +10 👑)', 'good');
         UI.result('🪢', 'Évasion !', 'Draps noués, complice à l\'extérieur… Tu es dehors. Toutes les polices te cherchent.', 'good');
       } else {
@@ -903,7 +1151,7 @@ const Actions = {
       }
     }
   },
-  release() { log('🔓', '<b>Libération !</b> Tu retrouves l\'air libre.', 'good'); },
+  release() { S.prison = null; log('🔓', '<b>Libération !</b> Tu retrouves l\'air libre.', 'good'); },
 
   /* ----- Marché ----- */
   buy(d) {
@@ -920,9 +1168,9 @@ const Actions = {
         const cost = Math.round(MarketData.buyCost(c, d, n));
         if (cost > S.cash) return UI.toast('Pas assez de liquide.');
         S.cash -= cost; S.stats.bought += cost;
-        Inventory.add(d, n, q); MarketData.impact(c, d, n, 1);
+        Inventory.add(d, n, q, MarketData.brand(c, d)); MarketData.impact(c, d, n, 1);
         PlayerData.mod('heat', Math.min(5, n * D.bulk / 800));
-        log('🛒', `Achat en gros : ${U.num(n)} ${D.unit} ${U.de(D.name)} (${MarketData.brand(c, d)}, Q${q}) → −${U.money(cost)}.`, 'money');
+        log('🛒', `Achat en gros : ${U.num(n)} ${U.u(D, U.num(n))} ${U.de(D.name)} (${MarketData.brand(c, d)}, Q${q}) → −${U.money(cost)}.`, 'money');
       } });
   },
   retailRisk(d, n) {
@@ -934,7 +1182,7 @@ const Actions = {
     if (!have) return UI.toast('Tu n\'as pas ce produit.');
     if (left < 1) return UI.toast(`Plus de clients pour ${D.name} ce mois-ci.`);
     const q = Inventory.q(d), unit = MarketData.retail(S.city, d, q), max = Math.min(have, left);
-    UI.qty({ icon: D.icon, title: `Vente de rue — ${D.name}`, text: `Prix de rue : <b>${U.unitPrice(unit)}</b> / ${D.unit} (${U.q(q)})<br>Clients restants ce mois : ${U.num(left)} ${D.unit}`,
+    UI.qty({ icon: D.icon, title: `Vente de rue — ${D.name}`, text: `Prix de rue : <b>${U.unitPrice(unit)}</b> / ${D.unit} (${U.q(q)})<br>Clients restants ce mois : ${U.num(left)} ${U.u(D, U.num(left))}`,
       max, init: max, unit: D.unit,
       info: (n) => `Recette : <b class="g">${U.money(n * unit)}</b><br>Risque d'interpellation : ${U.risk(this.retailRisk(d, n))}`,
       confirm: '🏪 Vendre', onConfirm: (n) => this.doRetail(d, n) });
@@ -951,17 +1199,17 @@ const Actions = {
     if (q < 25) { PlayerData.mod('respect', -1); extra = ' Les clients se plaignent de ta came coupée (−1 👑).'; }
     else if (q >= 80) { PlayerData.mod('respect', 0.6); extra = ' Ta came de qualité fait parler d\'elle.'; }
     else PlayerData.mod('respect', 0.25);
-    log('🏪', `Vente de rue : ${U.num(n)} ${D.unit} ${U.de(D.name)} → <b>+${U.money(rev)}</b>.${extra}`, 'money');
+    log('🏪', `Vente de rue : ${U.num(n)} ${U.u(D, U.num(n))} ${U.de(D.name)} → <b>+${U.money(rev)}</b>.${extra}`, 'money');
   },
   retailBust(d, n) {
     const D = DRUGS[d], value = Inventory.streetValue(d, n), cops = CITIES[S.city].cops;
     const bribe = Math.round(500 + value * 0.6);
     const pFlee = Math.round(U.clamp(40 + (S.owned.vehicles.includes('tmax') ? 15 : 0) + S.health * 0.2 - S.addiction * 0.15, 10, 85));
-    UI.modal({ icon: '🚓', title: 'Flagrant délit !', cls: 'bad', text: `Une patrouille de police (${cops}) déboule pendant que tu vends ${U.num(n)} ${D.unit} ${U.de(D.name)}.`,
+    UI.modal({ icon: '🚓', title: 'Flagrant délit !', cls: 'bad', text: `Une patrouille de police (${cops}) déboule pendant que tu vends ${U.num(n)} ${U.u(D, U.num(n))} ${U.de(D.name)}.`,
       choices: [
         { label: '🏃 Prendre la fuite', sub: `Chance ~${pFlee} % · tu lâches la marchandise`, fn: () => {
           Inventory.remove(d, n);
-          if (U.chance(pFlee)) { PlayerData.mod('heat', 8); log('🏃', `Tu sèmes les policiers mais tu perds ${U.num(n)} ${D.unit} ${U.de(D.name)}.`, 'bad'); UI.result('🏃', 'Semés !', 'Tu as pris la fuite par les toits. La marchandise est perdue.', 'bad'); }
+          if (U.chance(pFlee)) { PlayerData.mod('heat', 8); log('🏃', `Tu sèmes les policiers mais tu perds ${U.num(n)} ${U.u(D, U.num(n))} ${U.de(D.name)}.`, 'bad'); UI.result('🏃', 'Semés !', 'Tu as pris la fuite par les toits. La marchandise est perdue.', 'bad'); }
           else { log('🚔', `Les policiers (${cops}) te rattrapent au bout de la rue.`, 'bad'); this.arrest({ charge: 'Trafic de stupéfiants (flagrant délit) et rébellion', months: this.drugMonths(value) + 3 }); }
         } },
         { label: `💶 Glisser un billet (${U.money(bribe)})`, sub: 'Chance ~50 %', dis: S.cash < bribe, fn: () => {
@@ -990,18 +1238,18 @@ const Actions = {
         const rev = Math.round(MarketData.sellValue(c, d, q, n));
         Inventory.remove(d, n); PlayerData.earn(rev); MarketData.impact(c, d, n, -1);
         S.stats.sold += rev; PlayerData.mod('heat', Math.min(8, n * D.bulk / 500)); PlayerData.mod('respect', Math.min(3, rev / 50000));
-        log('🏭', `Vente en gros : ${U.num(n)} ${D.unit} ${U.de(D.name)} → <b>+${U.money(rev)}</b>.`, 'money');
+        log('🏭', `Vente en gros : ${U.num(n)} ${U.u(D, U.num(n))} ${U.de(D.name)} → <b>+${U.money(rev)}</b>.`, 'money');
       } });
   },
   stockMenu(d) {
     const D = DRUGS[d];
-    UI.modal({ icon: D.icon, title: D.name, text: `${U.num(Inventory.qty(d))} ${D.unit} · ${U.q(Inventory.q(d))}<br>Valeur de rue ~${U.money(Inventory.streetValue(d, Inventory.qty(d)))}`,
+    UI.modal({ icon: D.icon, title: D.name, text: `${U.num(Inventory.qty(d))} ${U.u(D, U.num(Inventory.qty(d)))} · ${U.q(Inventory.q(d))}<br>Valeur de rue ~${U.money(Inventory.streetValue(d, Inventory.qty(d)))}`,
       choices: [
         { label: '🏪 Vendre au détail', fn: () => this.sellRetail(d) },
         { label: '🏭 Vendre en gros', fn: () => this.sellBulk(d) },
         { label: '💉 Consommer', fn: () => this.consumeMenu(d) },
         { label: '✂️ Couper la marchandise', sub: '+30 % de quantité · −28 % de qualité', fn: () => this.cut(d) },
-        { label: '🚽 Tout jeter', sub: 'Se débarrasser des preuves (−3 🚨)', cls: 'danger', fn: () => { const n = Inventory.remove(d, Inventory.qty(d)); PlayerData.mod('heat', -3); log('🚽', `Tu te débarrasses de ${U.num(n)} ${D.unit} ${U.de(D.name)}.`, ''); } },
+        { label: '🚽 Tout jeter', sub: 'Se débarrasser des preuves (−3 🚨)', cls: 'danger', fn: () => { const n = Inventory.remove(d, Inventory.qty(d)); PlayerData.mod('heat', -3); log('🚽', `Tu te débarrasses de ${U.num(n)} ${U.u(D, U.num(n))} ${U.de(D.name)}.`, ''); } },
         { label: 'Fermer', cls: 'ghost' },
       ] });
   },
@@ -1009,7 +1257,7 @@ const Actions = {
     const D = DRUGS[d], s = S.stock[d]; if (!s) return;
     UI.confirm('✂️', 'Couper la marchandise', `Mélanger ton stock ${U.de(D.name)} avec des produits de coupe : <b>+30 % de quantité</b> mais <b>−28 % de qualité</b>.<br>Qualité actuelle : ${U.q(s.q)}`, '✂️ Couper', () => {
       const add = Math.floor(s.qty * 0.3); s.qty += add; s.q = Math.max(1, Math.round(s.q * 0.72));
-      log('✂️', `Tu coupes ton stock ${U.de(D.name)} : +${U.num(add)} ${D.unit}, qualité ${s.q} %.`, 'drug');
+      log('✂️', `Tu coupes ton stock ${U.de(D.name)} : +${U.num(add)} ${U.u(D, U.num(add))}, qualité ${s.q} %.`, 'drug');
     });
   },
 
@@ -1069,8 +1317,8 @@ const Actions = {
         const total = Math.round(cost(n)); if (total > S.cash) return UI.toast('Pas assez de liquide.');
         S.cash -= total; S.stats.bought += total;
         MarketData.impact(from, d, n, 1);
-        S.imports.push({ id: U.uid(), d, qty: n, q, from, method: m.id, arrive: S.ageMonths + m.months, risk });
-        log(m.icon, `Importation lancée : ${U.num(n)} ${D.unit} ${U.de(D.name)} depuis ${CITIES[from].name} (${m.name}, arrivée dans ${m.months} mois) → −${U.money(total)}.`, 'money');
+        S.imports.push({ id: U.uid(), d, qty: n, q, b: MarketData.brand(from, d), from, method: m.id, arrive: S.ageMonths + m.months, risk });
+        log(m.icon, `Importation lancée : ${U.num(n)} ${U.u(D, U.num(n))} ${U.de(D.name)} depuis ${CITIES[from].name} (${m.name}, arrivée dans ${m.months} mois) → −${U.money(total)}.`, 'money');
       } });
   },
 
@@ -1079,13 +1327,13 @@ const Actions = {
     const L = LABS[type];
     if (S.jail) return;
     if (S.rank < L.rank) return UI.toast(`🔒 Grade requis : ${RANKS[L.rank].name}`);
-    UI.pay({ icon: L.icon, title: L.name, text: `Production : ${U.num(L.out)} ${DRUGS[L.drug].unit}/mois ${U.de(DRUGS[L.drug].name)}<br>Frais mensuels : ${U.money(L.upkeep)}`, price: L.price,
+    UI.pay({ icon: L.icon, title: L.name, text: `Production : ${U.num(L.out)} ${U.u(DRUGS[L.drug], U.num(L.out))}/mois ${U.de(DRUGS[L.drug].name)}<br>Frais mensuels : ${U.money(L.upkeep)}`, price: L.price,
       onPay: () => { S.labs.push({ id: U.uid(), type, level: 1 }); log(L.icon, `Tu montes un nouveau laboratoire : <b>${L.name}</b>.`, 'good'); } });
   },
   labMenu(id) {
     const l = S.labs.find((x) => x.id === id); if (!l) return;
     const L = LABS[l.type], up = Math.round(L.price * 0.7 * l.level);
-    UI.modal({ icon: L.icon, title: `${L.name} (niv. ${l.level})`, text: `Production : ~${U.num(L.out * LAB_MULT[l.level - 1])} ${DRUGS[L.drug].unit}/mois<br>Frais : ${U.money(L.upkeep * (1 + (l.level - 1) * 0.5))}/mois`,
+    UI.modal({ icon: L.icon, title: `${L.name} (niv. ${l.level})`, text: `Production : ~${U.num(L.out * LAB_MULT[l.level - 1])} ${U.u(DRUGS[L.drug], U.num(L.out * LAB_MULT[l.level - 1]))}/mois<br>Frais : ${U.money(L.upkeep * (1 + (l.level - 1) * 0.5))}/mois`,
       choices: [
         { label: `⬆️ Améliorer (${U.money(up)})`, sub: l.level >= 3 ? 'Niveau maximum' : '+60 % de production, +8 qualité', dis: l.level >= 3 || !PlayerData.can(up),
           fn: () => { PlayerData.pay(up); l.level++; log('⬆️', `Amélioration terminée : ${L.name} (niveau ${l.level}).`, 'good'); } },
@@ -1128,8 +1376,8 @@ const Actions = {
         S.territories++; r.terr--; PlayerData.earn(loot); PlayerData.mod('respect', 6); PlayerData.mod('heat', 15);
         S.stats.kills += U.ri(1, 4);
         PlayerData.soldiers().forEach((c) => { c.skill = Math.min(99, c.skill + 2); c.loyalty = Math.min(100, c.loyalty + 5); });
-        let txt = `Tu prends un territoire à ${r.name} et récupères ${U.money(loot)}.`;
-        if (r.terr <= 0) { S.rivals = S.rivals.filter((x) => x !== r); txt += ` <b>${r.name} est anéanti !</b>`; PlayerData.mod('respect', 5); }
+        let txt = `Tu prends un territoire ${U.aN(r.name)} et récupères ${U.money(loot)}.`;
+        if (r.terr <= 0) { S.rivals = S.rivals.filter((x) => x !== r); txt += ` <b>${r.name}</b> : gang anéanti !`; PlayerData.mod('respect', 5); }
         log('⚔️', `Guerre de territoire : ${txt}`, 'good');
         UI.result('🏴', 'Victoire !', txt, 'good');
       } else {
@@ -1381,18 +1629,33 @@ const Shop = {
     if (cat === 'vehicles') return `⚡ Vitesse ${it.speed} · 🕶️ Discrétion ${it.disc} · +${it.respect} 👑 · ${U.money(it.price * 0.004)}/mois`;
     if (cat === 'properties') return `📦 Planque ${U.num(it.cap)} · 🛡️ Sécurité ${it.sec} · +${it.respect} 👑 · charges ${U.money(it.upkeep)}/mois`;
     if (cat === 'weapons') return it.power ? `💥 Puissance de feu ${it.power}` : `🛡️ Protection ${it.armor}`;
+    if (it.slot) return `${SLOTS[it.slot].icon} ${SLOTS[it.slot].label} · +${it.respect} respect`;
     return `+${it.respect} respect`;
+  },
+  isEquipped: (it) => !!it.slot && S.equip[it.slot] === it.id,
+  equip(it) { S.equip[it.slot] = it.id; },
+  bestFor(slot) { return PlayerData.items(SLOTS[slot].cat).filter((i) => i.slot === slot).sort((a, b) => b.respect - a.respect)[0] || null; },
+  autoEquip(it) { const cur = PlayerData.equipped(it.slot); if (!cur || cur.respect <= it.respect) this.equip(it); },
+  ownedMenu(cat, it) {
+    if (!it.slot) return this.sell(cat, it);
+    const eq = this.isEquipped(it);
+    UI.modal({ icon: it.icon, title: it.name, text: `${this.statLine(cat, it)}${eq ? '<br><b class="g">✔ Porté actuellement</b>' : ''}`, choices: [
+      { label: eq ? '🚫 Retirer' : '🪞 Porter', cls: 'primary', fn: () => { if (eq) delete S.equip[it.slot]; else this.equip(it); UI.toast(eq ? 'Retiré' : `${it.icon} Tu portes : ${it.name}`); } },
+      { label: `💰 Revendre (${U.money(it.price * RESALE[cat])})`, cls: 'danger', fn: () => this.sell(cat, it) },
+      { label: 'Fermer', cls: 'ghost' },
+    ] });
   },
   buy(cat, it) {
     if (S.jail) return UI.toast('⛓️ Impossible depuis ta cellule.');
     const C = SHOP[cat];
     UI.pay({ icon: it.icon, title: it.name, text: this.statLine(cat, it), price: it.price, cashOnly: !!C.cashOnly,
-      onPay: () => { S.owned[cat].push(it.id); log(it.icon, `Achat : <b>${it.name}</b> (${U.money(it.price)}).`, 'money'); UI.toast(`${it.icon} ${it.name} acheté !`); } });
+      onPay: () => { S.owned[cat].push(it.id); if (it.slot) this.autoEquip(it); log(it.icon, `Achat : <b>${it.name}</b> (${U.money(it.price)}).`, 'money'); UI.toast(`${it.icon} ${it.name}${this.isEquipped(it) ? ' — porté' : ''}`); } });
   },
   sell(cat, it) {
     const v = Math.round(it.price * RESALE[cat]), toBank = cat === 'vehicles' || cat === 'properties';
     UI.confirm(it.icon, `Revendre ${it.name} ?`, `Prix de revente : <b>${U.money(v)}</b>${toBank ? ' (versé en banque)' : ' (en liquide)'}`, '💰 Revendre', () => {
       S.owned[cat] = S.owned[cat].filter((x) => x !== it.id);
+      if (this.isEquipped(it)) { delete S.equip[it.slot]; const nb = this.bestFor(it.slot); if (nb) this.equip(nb); }
       if (toBank) S.bank += v; else S.cash += v;
       log('💰', `Tu revends ${it.name} pour ${U.money(v)}.`, 'money');
     }, 'danger');
@@ -1404,7 +1667,17 @@ const Monthly = {
   jail() {
     if (S.jail <= 0) return;
     S.jail--; S.stats.jailMonths++; PlayerData.mod('heat', -5);
-    if (S.jail === 0) Actions.release();
+    if (S.jail === 0) Actions.release(); else Prison.monthly();
+  },
+  fitness() {
+    if (!S.trained && S.force > 5) PlayerData.mod('force', -(S.roids > 0 ? 0.3 : 0.8));
+    S.trained = false;
+    if (S.roids > 0) {
+      const dmg = S.roids / 15;
+      if (dmg >= 1 && U.chance(35)) log('💔', 'Les stéroïdes abîment ton cœur et ton foie…', 'drug');
+      PlayerData.hurt(dmg, 'Crise cardiaque (abus de stéroïdes)');
+      S.roids = Math.max(0, S.roids - 8);
+    }
   },
   addiction(consumed) {
     const a = S.addiction;
@@ -1437,6 +1710,14 @@ const Monthly = {
       PlayerData.earn(t);
       log('🏴', `Tes ${S.territories} territoire(s) rapportent <b>${U.money(t)}</b> (racket & points de deal).`, 'money');
     }
+    if (S.rackets.length) {
+      let tot = 0;
+      for (const r of [...S.rackets]) {
+        if (U.chance(4)) { S.rackets = S.rackets.filter((x) => x !== r); PlayerData.mod('heat', 8); log('📞', `Le commerce « ${r.name} » porte plainte pour racket et cesse de payer (+8 🚨).`, 'bad'); continue; }
+        tot += r.amount;
+      }
+      if (tot) { PlayerData.earn(tot); log('🏪', `« Protection » versée par ${S.rackets.length} commerçant(s) : <b>+${U.money(tot)}</b>.`, 'money'); }
+    }
   },
   crew() {
     if (!S.crew.length) return;
@@ -1456,7 +1737,7 @@ const Monthly = {
         const n = Inventory.remove(m.drug, cap);
         if (m.loyalty < 20 && U.chance(35)) {
           this.crewLeave(m); PlayerData.mod('respect', -3);
-          log('💸', `<b>${m.name}</b> a disparu avec la marchandise et la recette (${U.num(n)} ${D.unit} ${U.de(D.name)}) !`, 'bad');
+          log('💸', `<b>${m.name}</b> a disparu avec la marchandise et la recette (${U.num(n)} ${U.u(D, U.num(n))} ${U.de(D.name)}) !`, 'bad');
           continue;
         }
         rev += Math.round(n * MarketData.retail(S.city, m.drug, q) * 0.65); sold += n;
@@ -1485,13 +1766,13 @@ const Monthly = {
       if (!PlayerData.pay(Math.round(L.upkeep * (1 + (l.level - 1) * 0.5)))) { out.push(`${L.icon} à l'arrêt (frais impayés)`); continue; }
       if (L.input) {
         const need = Math.round(L.input.qty * mult);
-        if (Inventory.qty(L.input.drug) < need) { out.push(`${L.icon} en attente de ${need} ${DRUGS[L.input.drug].unit} ${U.de(DRUGS[L.input.drug].name)}`); continue; }
+        if (Inventory.qty(L.input.drug) < need) { out.push(`${L.icon} en attente de ${need} ${U.u(DRUGS[L.input.drug], need)} ${U.de(DRUGS[L.input.drug].name)}`); continue; }
         Inventory.remove(L.input.drug, need);
       }
       const n = Math.round(L.out * mult * U.rand(0.85, 1.15));
       const q = U.clamp(U.ri(L.q[0], L.q[1]) + (l.level - 1) * 8, 1, 100);
-      Inventory.add(L.drug, n, q);
-      out.push(`${L.icon} +${U.num(n)} ${DRUGS[L.drug].unit} (Q${q})`);
+      Inventory.add(L.drug, n, q, 'Production maison');
+      out.push(`${L.icon} +${U.num(n)} ${U.u(DRUGS[L.drug], U.num(n))} (Q${q})`);
       if (L.boom && U.chance(L.boom)) { S.labs = S.labs.filter((x) => x !== l); PlayerData.mod('heat', 10); log('💥', `EXPLOSION ! Ton laboratoire (${L.name}) est parti en fumée.`, 'bad'); continue; }
       if (U.chance(L.risk * (1 + S.heat / 40) * CITIES[S.city].police)) { S.labs = S.labs.filter((x) => x !== l); PlayerData.mod('heat', 12); log('🚨', `La police a démantelé ton laboratoire : ${L.name} !`, 'bad'); }
     }
@@ -1527,8 +1808,8 @@ const Monthly = {
       if (im.arrive > S.ageMonths) continue;
       S.imports = S.imports.filter((x) => x !== im);
       const D = DRUGS[im.d], F = CITIES[im.from];
-      if (U.chance(im.risk)) { PlayerData.mod('heat', 8); log('🛃', `Saisie douanière ! Ta cargaison de ${U.num(im.qty)} ${D.unit} ${U.de(D.name)} en provenance de ${F.name} a été interceptée.`, 'bad'); }
-      else { Inventory.add(im.d, im.qty, im.q); log('📦', `Livraison reçue : <b>${U.num(im.qty)} ${D.unit}</b> ${U.de(D.name)} (Q${im.q}) depuis ${F.flag} ${F.name}.`, 'good'); }
+      if (U.chance(im.risk)) { PlayerData.mod('heat', 8); log('🛃', `Saisie douanière ! Ta cargaison de ${U.num(im.qty)} ${U.u(D, U.num(im.qty))} ${U.de(D.name)} en provenance de ${F.name} a été interceptée.`, 'bad'); }
+      else { Inventory.add(im.d, im.qty, im.q, im.b); log('📦', `Livraison reçue : <b>${U.num(im.qty)} ${U.u(D, U.num(im.qty))}</b> ${U.de(D.name)} (Q${im.q}) depuis ${F.flag} ${F.name}.`, 'good'); }
     }
   },
   debts() {
@@ -1576,7 +1857,7 @@ const Monthly = {
 /* =============================== EVENTS =============================== */
 const Events = {
   monthly() {
-    if (S.jail > 0) { if (U.chance(30)) this.prisonEvent(); return; }
+    if (S.jail > 0) { if (U.chance(65)) Prison.event(); return; }
     if (this.raidCheck()) return;
     if (!U.chance(60)) return;
     const pool = this.pool.filter((e) => !e.cond || e.cond());
@@ -1604,13 +1885,6 @@ const Events = {
       text: `6 h du matin. La porte vole en éclats. ${value > 0 ? `Les enquêteurs saisissent ta marchandise (~${U.money(value)})` : 'Ils retournent tout l\'appartement'} et ${U.money(cashLoss)} en liquide.${guns}`,
       choices: [{ label: 'Encaisser le coup', fn: () => { if (U.chance(arrestP)) Actions.arrest({ charge: 'Détention et trafic de stupéfiants', months: Actions.drugMonths(value) + 2 }); else log('😮‍💨', 'Garde à vue de 48 h… puis libération faute de preuves suffisantes.', ''); } }] });
   },
-  prisonEvent() {
-    U.pick([
-      () => { if (PlayerData.combatPower() + U.rand(0, 40) > U.rand(20, 80)) { PlayerData.mod('respect', 3); log('👊', 'Un détenu te cherche en promenade : tu le remets à sa place. +3 👑', 'good'); } else { const d = U.ri(6, 15); log('🤕', `Agression en promenade (−${d} ❤️).`, 'bad'); PlayerData.hurt(d, 'Poignardé en détention'); } },
-      () => { S.crew.forEach((c) => { c.loyalty = Math.min(100, c.loyalty + 4); }); log('📞', 'Tu donnes tes ordres à ton équipe depuis un téléphone passé en douce. Loyauté +4.', 'info'); },
-      () => { log('📚', 'Tu passes tes journées à lire et à réfléchir. Le temps passe lentement.', ''); PlayerData.mod('addiction', -3); },
-    ])();
-  },
   pool: [
     { w: 10, run: () => Events.altercation() },
     { w: 8, run: () => Events.marketShock() },
@@ -1630,14 +1904,17 @@ const Events = {
     { w: 3, cond: () => S.rank >= 2, run: () => Events.cartelOffer() },
     { w: 4, cond: () => PlayerData.dealers().some((c) => c.drug), run: () => Events.dealerRobbed() },
     { w: 5, cond: () => PlayerData.items('vehicles').length > 0 && Inventory.bulk() > 30, run: () => Events.roadCheck() },
+    { w: () => 3 + S.roids / 10, cond: () => S.roids > 25, run: () => Events.roidRage() },
   ],
   altercation() {
     const why = U.pick(['te bouscule devant le kebab', 'te traite de balance devant tout le quartier', 'te fixe avec un sourire provocateur', 'crache sur tes baskets neuves']);
     UI.modal({ icon: '😤', title: 'Altercation de rue', text: `Un type ${why} et te cherche ouvertement.`, choices: [
-      { label: '👊 Lui mettre une droite', fn: () => {
-        if (PlayerData.combatPower() + U.rand(0, 40) > U.rand(20, 75)) { PlayerData.mod('respect', 3); log('👊', 'Altercation : tu le mets au sol en deux coups. Le quartier a vu.', 'good'); UI.result('👊', 'Victoire', 'Il finit au sol. Ton respect grimpe (+3).', 'good'); }
-        else { const d = U.ri(6, 16); PlayerData.mod('respect', -2); log('🤕', `Altercation : tu te prends une raclée (−${d} ❤️).`, 'bad'); PlayerData.hurt(d, 'Mort dans une bagarre de rue'); if (S.alive) UI.result('🤕', 'Défaite', `Il était plus costaud que prévu. −${d} ❤️`, 'bad'); }
-      } },
+      { label: '👊 Lui mettre une droite', sub: `Combat à mains nues · victoire ~${Combat.estimate('provoc', { arms: 'fists' })} %`, fn: () => Combat.start({ foe: 'provoc', ctx: { arms: 'fists', flee: 55, place: 'Altercation de rue', intro: '« Vas-y, montre-moi ce que tu vaux ! »' },
+        onEnd: (res) => {
+          if (res === 'win') { PlayerData.mod('respect', 3); log('👊', 'Altercation : tu mets le provocateur au sol. Le quartier a vu (+3 👑).', 'good'); }
+          else if (res === 'lose') { PlayerData.mod('respect', -2); log('🤕', 'Altercation : tu te prends une raclée devant tout le monde (−2 👑).', 'bad'); }
+          else { PlayerData.mod('respect', -1); log('🏃', 'Altercation : tu battes en retraite (−1 👑).', ''); }
+        } }) },
       { label: '🔫 Sortir ton arme', dis: PlayerData.firepower() < 15, sub: PlayerData.firepower() < 15 ? 'Il te faut une arme à feu' : '+5 respect, +8 🚨', fn: () => {
         PlayerData.mod('respect', 5); PlayerData.mod('heat', 8);
         log('🔫', 'Tu sors ton arme : le type détale en courant. (+5 👑, +8 🚨)', 'good');
@@ -1647,20 +1924,20 @@ const Events = {
     ] });
   },
   hit() {
-    const rv = S.rivals.length ? U.pick(S.rivals).name : 'des inconnus';
+    const rv = S.rivals.length ? U.pick(S.rivals).name : 'des inconnus', armed = PlayerData.firepower() >= 15;
     UI.modal({ icon: '🏍️', title: 'Règlement de compte !', cls: 'bad', text: `Deux hommes cagoulés sur une moto ralentissent à ta hauteur… Envoyés par <b>${rv}</b>. Des coups de feu éclatent !`, choices: [
-      { label: '🔫 Riposter', dis: PlayerData.firepower() < 15, sub: PlayerData.firepower() < 15 ? 'Il te faut une arme à feu' : '', fn: () => this.hitResolve(true, rv) },
-      { label: '🏃 Plonger et fuir', fn: () => this.hitResolve(false, rv) },
+      { label: '🔫 Riposter', dis: !armed, sub: armed ? `Combat armé à mort · victoire ~${Combat.estimate('tueur', { arms: 'all' })} %` : 'Il te faut une arme à feu', fn: () => Combat.start({ foe: 'tueur', over: { role: `Sicaire (${rv})` },
+        ctx: { arms: 'all', lethal: true, flee: 40, place: 'Règlement de compte', cause: `Abattu lors d'un règlement de compte (${rv})`, intro: 'Le passager de la moto braque son arme sur toi. Tu dégaines à ton tour.' },
+        onEnd: (res) => {
+          if (res === 'win') { PlayerData.mod('respect', 6); log('🔫', `Règlement de compte : tu abats le tueur envoyé par ${rv} (+6 👑).`, 'good'); UI.result('🔫', 'Riposte', 'Le tueur gît sur le bitume. Le quartier ne parle que de toi. +6 👑', 'good'); }
+          else if (res === 'fled') log('🏃', 'Règlement de compte : tu parviens à t\'échapper entre les voitures.', '');
+        } }) },
+      { label: '🏃 Plonger et fuir', sub: `~${Math.min(95, 45 + PlayerData.soldiers().length * 4)} % de s'en sortir indemne`, fn: () => this.hitResolve(rv) },
     ] });
   },
-  hitResolve(fight, rv) {
+  hitResolve(rv) {
     const prot = PlayerData.soldiers().length * 4;
-    if (fight && PlayerData.combatPower() + prot + U.rand(0, 40) > U.rand(40, 110)) {
-      PlayerData.mod('respect', 6); PlayerData.mod('heat', 12); if (U.chance(50)) S.stats.kills++;
-      log('🔫', `Règlement de compte : tu ripostes et mets les tueurs de ${rv} en fuite. (+6 👑)`, 'good');
-      UI.result('🔫', 'Riposte', 'Les tireurs prennent la fuite sous ton feu. Le quartier parle de toi.', 'good'); return;
-    }
-    if (!fight && U.chance(45 + prot)) { log('🏃', 'Règlement de compte : tu échappes aux balles de justesse.', ''); UI.result('🏃', 'Sauvé', 'Tu plonges derrière une voiture. Les balles sifflent… mais aucune ne te touche.', 'good'); return; }
+    if (U.chance(45 + prot)) { log('🏃', 'Règlement de compte : tu échappes aux balles de justesse.', ''); UI.result('🏃', 'Sauvé', 'Tu plonges derrière une voiture. Les balles sifflent… mais aucune ne te touche.', 'good'); return; }
     const dmg = Math.round(U.ri(20, 65) * (1 - PlayerData.armor() / 130));
     S.wounded = true;
     log('🩸', `Règlement de compte : touché par balle (−${dmg} ❤️).`, 'bad');
@@ -1698,10 +1975,10 @@ const Events = {
     const qty = Math.max(5, Math.round(D.demand * U.rand(0.5, 1.5)));
     const price = Math.round(MarketData.buyUnit(S.city, d) * qty * 0.5), q = U.ri(5, 95);
     const fits = Inventory.bulk() + qty * D.bulk <= PlayerData.capacity();
-    UI.modal({ icon: '🤝', title: 'Le plan d\'un vieux pote', text: `Un ami d'enfance te propose <b>${qty} ${D.unit}</b> ${U.de(D.name)} pour <b>${U.money(price)}</b> (moitié prix). Qualité inconnue…`, choices: [
+    UI.modal({ icon: '🤝', title: 'Le plan d\'un vieux pote', text: `Un ami d'enfance te propose <b>${qty} ${U.u(D, qty)}</b> ${U.de(D.name)} pour <b>${U.money(price)}</b> (moitié prix). Qualité inconnue…`, choices: [
       { label: '💵 Acheter le lot', sub: !fits ? 'Planque trop petite' : '', dis: S.cash < price || !fits, fn: () => {
         S.cash -= price; Inventory.add(d, qty, q);
-        log('🤝', `Tu achètes le lot de ton pote : ${qty} ${D.unit} ${U.de(D.name)}. Qualité réelle : ${q} %${q < 30 ? ' — une arnaque !' : q > 75 ? ' — une pépite !' : '.'}`, q < 30 ? 'bad' : 'good');
+        log('🤝', `Tu achètes le lot de ton pote : ${qty} ${U.u(D, qty)} ${U.de(D.name)}. Qualité réelle : ${q} %${q < 30 ? ' — une arnaque !' : q > 75 ? ' — une pépite !' : '.'}`, q < 30 ? 'bad' : 'good');
       } },
       { label: '🙅 Refuser', fn: () => log('🙅', 'Tu déclines l\'offre de ton pote.', '') },
     ] });
@@ -1737,15 +2014,16 @@ const Events = {
   },
   sick() { const d = U.ri(5, 15); log('🤒', `Tu tombes malade : grosse grippe, fièvre et courbatures (−${d} ❤️).`, 'bad'); PlayerData.hurt(d, 'Maladie'); },
   party() {
-    UI.modal({ icon: '🪩', title: 'Soirée VIP', text: 'Un promoteur t\'invite dans le carré VIP de la boîte la plus chaude de la ville. Bouteilles, jolies personnes, rappeurs…', choices: [
-      { label: '🍾 Y aller (1 500 €)', fn: () => {
-        S.cash -= 1500; PlayerData.mod('respect', 3); log('🍾', 'Tu flambes 1 500 € en carré VIP. On parle de toi (+3 👑).', 'money');
-        UI.modal({ icon: '❄️', title: 'On te tend un plateau…', text: 'Au fond du carré, quelqu\'un te tend un plateau avec des traces de cocaïne.', choices: [
-          { label: '👃 Accepter', fn: () => Actions.consume('coke', 1, true) },
-          { label: '🙅 Refuser poliment', fn: () => log('🙅', 'Tu refuses le plateau. Tête froide.', '') },
-        ] });
-      } },
+    UI.modal({ icon: '🪩', title: 'Soirée VIP', text: `Un promoteur t'invite dans le carré VIP du ${CITIES[S.city].club}. Bouteilles, jolies personnes, rappeurs…`, choices: [
+      { label: '🍾 Y aller (1 500 €)', dis: S.cash < 1500, sub: 'Soirée en carré VIP, sans dépenser d\'énergie', fn: () => { S.cash -= 1500; Night.start(true, true); } },
       { label: '🏠 Rester tranquille', fn: () => log('🏠', 'Tu déclines l\'invitation et restes discret.', '') },
+    ] });
+  },
+  roidRage() {
+    UI.modal({ icon: '🧬', title: 'Rage de stéroïdes', cls: 'bad', text: 'Un type te bouscule à la salle. Ton sang ne fait qu\'un tour, tes poings se serrent tout seuls…', choices: [
+      { label: '😡 Lui sauter dessus', sub: `Victoire ~${Combat.estimate('costaud', { arms: 'fists' })} %`, fn: () => Combat.start({ foe: 'costaud', over: { name: 'Habitué de la salle', role: 'Culturiste' }, ctx: { arms: 'fists', flee: 50, place: 'Salle de sport' },
+        onEnd: (res) => { if (res === 'win') { PlayerData.mod('respect', 2); log('😡', 'Rage de stéroïdes : tu démolis un habitué de la salle. On t\'évite désormais (+2 👑).', 'good'); } else if (res === 'lose') log('🤕', 'Rage de stéroïdes : tu t\'es fait corriger.', 'bad'); } }) },
+      { label: '🧘 Respirer et se calmer', sub: 'Chance ~50 %', fn: () => { if (U.chance(50)) log('🧘', 'Tu arrives à te maîtriser. De justesse.', ''); else { PlayerData.mod('heat', 4); log('💢', 'Tu exploses quand même : matériel cassé, bannissement de la salle (+4 🚨).', 'bad'); } } },
     ] });
   },
   burglary() {
@@ -1765,19 +2043,20 @@ const Events = {
     const d = U.pick(['coke', 'heroW', 'meth']), D = DRUGS[d];
     const qty = U.ri(300, 2000), price = Math.round(MarketData.buyUnit(S.city, d) * qty * 0.6), q = U.ri(75, 95);
     const fits = Inventory.bulk() + qty * D.bulk <= PlayerData.capacity();
-    UI.modal({ icon: '🤝', title: 'Offre d\'un cartel', text: `Un émissaire te propose <b>${U.num(qty)} ${D.unit}</b> ${U.de(D.name)} (Q${q}) pour <b>${U.money(price)}</b> (−40 %).`, choices: [
-      { label: '💵 Accepter le deal', sub: !fits ? 'Planque trop petite' : '', dis: S.cash < price || !fits, fn: () => { S.cash -= price; Inventory.add(d, qty, q); PlayerData.mod('respect', 2); log('🤝', `Deal avec le cartel : ${U.num(qty)} ${D.unit} ${U.de(D.name)} pour ${U.money(price)}.`, 'money'); } },
+    UI.modal({ icon: '🤝', title: 'Offre d\'un cartel', text: `Un émissaire te propose <b>${U.num(qty)} ${U.u(D, U.num(qty))}</b> ${U.de(D.name)} (Q${q}) pour <b>${U.money(price)}</b> (−40 %).`, choices: [
+      { label: '💵 Accepter le deal', sub: !fits ? 'Planque trop petite' : '', dis: S.cash < price || !fits, fn: () => { S.cash -= price; Inventory.add(d, qty, q); PlayerData.mod('respect', 2); log('🤝', `Deal avec le cartel : ${U.num(qty)} ${U.u(D, U.num(qty))} ${U.de(D.name)} pour ${U.money(price)}.`, 'money'); } },
       { label: '🙅 Décliner', fn: () => { PlayerData.mod('respect', -1); log('🙅', 'Tu déclines l\'offre du cartel. Ils s\'en souviendront.', ''); } },
     ] });
   },
   dealerRobbed() {
     const m = U.pick(PlayerData.dealers().filter((c) => c.drug)), D = DRUGS[m.drug];
     const lost = Inventory.remove(m.drug, Math.floor(Inventory.qty(m.drug) * U.rand(0.1, 0.3)));
-    UI.modal({ icon: '🔪', title: 'Dealeur braqué', text: `<b>${m.name}</b> s'est fait braquer par une bande rivale : ${U.num(lost)} ${D.unit} ${U.de(D.name)} envolés.`, choices: [
-      { label: '⚔️ Venger l\'affront', fn: () => {
-        if (PlayerData.combatPower() + PlayerData.soldiers().length * 5 + U.rand(0, 40) > U.rand(35, 95)) { PlayerData.mod('respect', 5); PlayerData.mod('heat', 8); m.loyalty = Math.min(100, m.loyalty + 15); log('⚔️', `Vengeance accomplie pour ${m.name}. (+5 👑)`, 'good'); UI.result('⚔️', 'Vengé', 'La bande rivale a payé. Ton équipe te voue une loyauté sans faille.', 'good'); }
-        else { const d = U.ri(10, 25); log('🤕', `Vengeance ratée (−${d} ❤️).`, 'bad'); PlayerData.hurt(d, 'Tué en voulant venger un de ses dealeurs'); if (S.alive) UI.result('🤕', 'Échec', `Ils étaient plus nombreux. −${d} ❤️`, 'bad'); }
-      } },
+    UI.modal({ icon: '🔪', title: 'Dealeur braqué', text: `<b>${m.name}</b> s'est fait braquer par une bande rivale : ${U.num(lost)} ${U.u(D, U.num(lost))} ${U.de(D.name)} envolés.`, choices: [
+      { label: '⚔️ Venger l\'affront', sub: `Combat à mort · victoire ~${Combat.estimate('bande', { arms: 'all' })} %`, fn: () => Combat.start({ foe: 'bande', ctx: { arms: 'all', lethal: true, flee: 50, place: 'Vengeance', cause: 'Tué en voulant venger un de ses dealeurs', intro: `Tu retrouves les braqueurs de ${m.name} dans un hall d'immeuble.` },
+        onEnd: (res) => {
+          if (res === 'win') { PlayerData.mod('respect', 5); PlayerData.mod('heat', 8); m.loyalty = Math.min(100, m.loyalty + 15); log('⚔️', `Vengeance accomplie pour ${m.name} (+5 👑).`, 'good'); UI.result('⚔️', 'Vengé', 'La bande rivale a payé. Ton équipe te voue une loyauté sans faille.', 'good'); }
+          else if (res === 'fled') { PlayerData.mod('respect', -1); log('🏃', 'Vengeance avortée : tu te replies.', ''); }
+        } }) },
       { label: '🤷 Laisser tomber', fn: () => { PlayerData.mod('respect', -3); m.loyalty = Math.max(0, m.loyalty - 10); log('🤷', 'Tu laisses passer. Ton équipe doute de toi (−3 👑).', 'bad'); } },
     ] });
   },
@@ -1798,6 +2077,555 @@ const Events = {
         if (U.chance(60)) log('💶', 'Les policiers empochent le billet et te souhaitent bonne route.', '');
         else { const v = Inventory.seize(1); log('🚔', 'Tentative de corruption refusée : fouille et saisie.', 'bad'); Actions.arrest({ charge: 'Transport de stupéfiants et corruption', months: Actions.drugMonths(v) + 6 }); }
       } },
+    ] });
+  },
+};
+
+/* ============================== COMBAT ============================== */
+// Combat au tour par tour : PV du joueur = santé ; l'arme et la musculature modulent les dégâts.
+const Combat = {
+  weapon(arms = 'all') {
+    if (arms === 'fists') return FISTS;
+    if (arms === 'prison') return S.prison && S.prison.shank ? SHIV : FISTS;
+    let best = null;
+    for (const w of PlayerData.items('weapons')) {
+      const st = WEAPON_STATS[w.id]; if (!st) continue;
+      if (arms === 'melee' && !st.melee) continue;
+      if (!best || w.power > best.power) best = { id: w.id, name: w.name, icon: w.icon, power: w.power, ...st };
+    }
+    return best || FISTS;
+  },
+  hitChance(w) { return Math.round(U.clamp(w.acc + S.force * 0.08 + PlayerData.crimeBuff() * 0.5 - S.addiction * 0.1, 20, 95)); },
+  dmgRoll(w) { return U.rand(w.dmg[0], w.dmg[1]) * (w.melee ? 1 + S.force / 90 : 1 + S.force / 400) * (1 + PlayerData.crimeBuff() / 100); },
+  taken(f, raw) { return raw * (f.gun ? 1 - PlayerData.armor() / 140 : (1 - S.force / 250) * (1 - PlayerData.armor() / 400)); },
+  // Estimation des chances de victoire (simulation : attaquer à chaque tour)
+  estimate(key, ctx = {}) {
+    const w = this.weapon(ctx.arms), F = FOES[key], hc = this.hitChance(w), N = 200;
+    let wins = 0;
+    for (let i = 0; i < N; i++) {
+      let hp = S.health, fh = U.ri(F.hp[0], F.hp[1]);
+      for (let t = 0; t < 40 && hp > 0 && fh > 0; t++) {
+        if (U.chance(hc)) fh -= this.dmgRoll(w) * (U.chance(12) ? 1.6 : 1);
+        if (fh > 0 && U.chance(F.acc)) hp -= this.taken(F, U.rand(F.atk[0], F.atk[1]));
+      }
+      if (fh <= 0) wins++;
+    }
+    return Math.round(wins / N * 100);
+  },
+  start({ foe, over = {}, ctx = {}, onEnd = null }) {
+    const F = { ...FOES[foe], ...over }, hp = U.ri(F.hp[0], F.hp[1]);
+    const st = { f: { ...F, hp, max: hp }, w: this.weapon(ctx.arms || 'all'), onEnd, lines: [], busy: false, done: null, turn: 1, hp0: S.health, el: null,
+      ctx: { lethal: false, flee: 45, place: '', cause: 'Tué au combat', ...ctx } };
+    st.lines.push([ctx.intro || `${U.the(F.name)} te fait face, ${F.w} en avant.`, 'sys']);
+    if (st.ctx.lethal) st.lines.push(['☠️ Combat à mort : pas de quartier.', 'sys']);
+    UI.modal({ cls: 'combat bad', html: '<div class="cbw"></div>', choices: [], onShow: (root) => {
+      st.el = root.querySelector('.cbw');
+      st.el.addEventListener('click', (e) => { const b = e.target.closest('[data-ca]'); if (b && !b.disabled) this.act(st, b.dataset.ca); });
+      this.draw(st);
+    } });
+  },
+  fleeChance(st) { return Math.round(U.clamp(st.ctx.flee + (S.health - 50) * 0.25 - (st.f.gun ? 12 : 0) - (st.f.hp / st.f.max) * 10 + 10, 5, 90)); },
+  draw(st) {
+    if (!st.el) return;
+    const { f, w } = st, php = Math.max(0, S.health), fhp = Math.max(0, f.hp);
+    st.el.innerHTML = `<div class="cb-head">⚔️ ${st.ctx.place || 'Combat'} · tour ${st.turn}</div>
+      <div class="cb-arena">
+        <div class="cb-f me"><div class="ic">${S.avatar}</div><b>${U.esc(S.name)}</b><small>${w.icon} ${w.name} · 💪 ${Math.round(S.force)}</small>
+          <div class="hpbar"><i style="width:${php}%"></i></div><div class="hpnum">${Math.round(php)} / 100 PV</div></div>
+        <div class="cb-vs">VS</div>
+        <div class="cb-f foe"><div class="ic">${f.icon}</div><b>${f.name}</b><small>${f.role}</small>
+          <div class="hpbar"><i style="width:${fhp / f.max * 100}%"></i></div><div class="hpnum">${Math.round(fhp)} / ${f.max} PV</div></div>
+      </div>
+      <div class="cb-log">${st.lines.map(([t, c]) => `<p class="${c}">${t}</p>`).join('')}</div>
+      <div class="cb-acts">${st.done ? '<button class="mbtn primary full" data-ca="end">Continuer ▶</button>'
+        : `<button class="mbtn primary" data-ca="atk" ${st.busy ? 'disabled' : ''}>${w.melee ? '👊' : '🔫'} ${w.melee ? w.verb : 'Tirer'}<small>${this.hitChance(w)} % de toucher</small></button>
+           <button class="mbtn" data-ca="flee" ${st.busy ? 'disabled' : ''}>🏃 S'enfuir<small>~${this.fleeChance(st)} % de réussite</small></button>`}</div>`;
+    const lg = st.el.querySelector('.cb-log'); lg.scrollTop = lg.scrollHeight;
+  },
+  shake(st, who) { const e = st.el && st.el.querySelector(who === 'me' ? '.cb-f.me' : '.cb-f.foe'); if (e) e.classList.add('hit'); },
+  act(st, a) {
+    if (a === 'end') return this.finish(st);
+    if (st.busy || st.done) return;
+    const { f, w } = st;
+    if (a === 'atk') {
+      if (U.chance(this.hitChance(w))) {
+        const crit = U.chance(12), d = Math.max(1, Math.round(this.dmgRoll(w) * (crit ? 1.6 : 1)));
+        f.hp -= d;
+        st.lines.push([`${crit ? '💥 COUP CRITIQUE ! ' : ''}${this.myLine(w)} (−${d} PV)`, 'me']);
+        if (f.hp <= 0) return this.over(st, 'win');
+        this.draw(st); this.shake(st, 'foe');
+      } else st.lines.push([this.missLine(w), 'me']);
+    } else if (a === 'flee') {
+      if (U.chance(this.fleeChance(st))) { st.lines.push(['🏃 Tu profites d\'une ouverture et prends la fuite !', 'sys']); return this.over(st, 'fled'); }
+      st.lines.push(['🏃 Tu tentes de fuir… mais ton adversaire te barre la route !', 'me']);
+    }
+    st.busy = true; this.draw(st); if (a === 'atk') this.shake(st, 'foe');
+    setTimeout(() => this.foeTurn(st), 650 * CONFIG.anim);
+  },
+  foeTurn(st) {
+    if (st.done || !st.el || !st.el.isConnected) return;
+    const f = st.f;
+    st.busy = false; st.turn++;
+    if (U.chance(f.acc)) {
+      const d = Math.max(1, Math.round(this.taken(f, U.rand(f.atk[0], f.atk[1]))));
+      S.health = Math.max(0, S.health - d);
+      if (f.gun) S.wounded = true;
+      st.lines.push([`${this.foeLine(f)} (−${d} PV)`, 'en']);
+      UI.renderHud();
+      if (S.health <= 0) return this.over(st, 'lose');
+      this.draw(st); this.shake(st, 'me');
+    } else { st.lines.push([this.foeMiss(f), 'en']); this.draw(st); }
+  },
+  over(st, res) {
+    st.done = res; st.busy = false;
+    const f = st.f;
+    if (res === 'win') st.lines.push([st.ctx.lethal ? `☠️ ${U.the(f.name)} s'effondre et ne se relève pas.` : `🏆 ${U.the(f.name)} est K.O. !`, 'sys']);
+    else if (res === 'lose') {
+      if (st.ctx.lethal) st.lines.push(['⚰️ Ta vue se brouille… tout devient noir.', 'sys']);
+      else { S.health = Math.max(S.health, 6); st.lines.push(['😵 Tu t\'effondres, K.O.', 'sys']); }
+    }
+    this.draw(st); UI.renderHud();
+  },
+  finish(st) {
+    UI.dismiss(() => {
+      S.stats.fights++;
+      if (st.done === 'lose' && st.ctx.lethal) { S.health = 0; Game.die(st.ctx.cause); return; }
+      if (st.done === 'win') { S.stats.fightsWon++; if (st.ctx.lethal) { S.stats.kills++; PlayerData.mod('heat', 10); } }
+      if (!st.w.melee) PlayerData.mod('heat', 4);
+      const lost = Math.round(st.hp0 - S.health);
+      if (lost > 0) log(st.done === 'win' ? '🩹' : '🤕', `Combat (${st.ctx.place || st.f.name}) : −${lost} ❤️.`, st.done === 'win' ? '' : 'bad');
+      if (S.health < 15) { log('⚠️', 'Santé critique ! Fais-toi soigner au plus vite (Activités → Hôpital / Soins).', 'bad'); UI.toast('⚠️ Santé critique : va te faire soigner !'); }
+      if (st.onEnd) st.onEnd(st.done, { lost, foe: st.f });
+    });
+  },
+  myLine(w) {
+    if (w.id === 'fists') return U.pick(['👊 Crochet du droit en pleine mâchoire', '👊 Uppercut : la tête de ton adversaire part en arrière', '🦵 Coup de genou dans le ventre', '👊 Direct du gauche puis enchaînement au corps', '🤜 Coup de tête sec sur l\'arcade']);
+    if (w.melee) return U.pick(['🔪 Ta lame entaille le bras de ton adversaire', `🔪 Tu frappes au flanc (${w.name.toLowerCase()})`, '🔪 Un coup rapide : ton adversaire recule en saignant']);
+    return U.pick(['🔫 BANG ! Ta balle touche l\'épaule', '🔫 Deux tirs rapides, l\'un fait mouche', '🔫 Tu tires en te déplaçant : touché à la jambe', `💥 Ton ${w.name} crache le feu : touché`]);
+  },
+  missLine(w) { return w.melee ? U.pick(['💨 Ton coup fend l\'air : esquivé', '💨 Ton adversaire bloque avec l\'avant-bras', '💨 Tu glisses et rates ta cible']) : U.pick(['💨 Ta balle ricoche sur une carrosserie', '💨 Raté ! Le tir part dans le décor', '💨 Ton arme s\'enraye une seconde']); },
+  foeLine(f) {
+    if (f.gun) return U.pick([`🔫 ${U.the(f.name)} ouvre le feu : une balle t'érafle`, '🔫 Une rafale t\'atteint au flanc', `🔫 ${U.the(f.name)} tire à bout portant : tu encaisses`]);
+    if (!/poings/.test(f.w)) return U.pick([`🔪 ${U.the(f.name)} te frappe avec ${f.w}`, `🔪 ${U.the(f.name)} t'atteint avec ${f.w}`, `⚔️ ${U.the(f.name)} fonce et frappe avec ${f.w}`]);
+    return U.pick([`👊 ${U.the(f.name)} te colle une droite`, `🤜 ${U.the(f.name)} t'attrape par le col et te met un coup de tête`, `🦵 ${U.the(f.name)} t'envoie un coup de pied dans les côtes`, `👊 ${U.the(f.name)} enchaîne deux crochets`]);
+  },
+  foeMiss(f) { return U.pick([`💨 ${U.the(f.name)} te rate de peu`, '🛡️ Tu esquives l\'attaque au dernier moment', `💨 ${U.the(f.name)} frappe dans le vide`]); },
+};
+
+/* ============================== RITUELS ============================== */
+// Mini-jeux de consommation : chaque étape est un bouton suivi d'une animation CSS.
+const Ritual = {
+  start(d, di, free = false, after = null) {
+    const D = DRUGS[d], R = RITUALS[D.form] || RITUALS.powder, ds = DOSES[di];
+    const brand = free ? U.pick(D.brands) : Inventory.brand(d);
+    const st = { d, di, free, after, step: 0, R, brand, busy: false, el: null };
+    UI.modal({ title: `${D.icon} ${D.name}`, cls: 'drug', text: `${U.esc(brand)} · ${ds.label.toLowerCase()} (${ds.units} ${U.u(D, ds.units)})`, html: '<div class="ritw"></div>', choices: [], onShow: (root) => {
+      st.el = root.querySelector('.ritw');
+      st.el.innerHTML = `<div class="stage ${R.cls}">${this.stage(D.form, brand)}</div><div class="r-cap">Prépare-toi…</div>
+        <div class="r-steps">${R.steps.map(() => '<i></i>').join('')}</div><div class="m-choices"></div>`;
+      st.el.addEventListener('click', (e) => { const b = e.target.closest('[data-ra]'); if (b && !b.disabled) this.act(st, b.dataset.ra); });
+      this.buttons(st);
+    } });
+  },
+  stage(form, brand) {
+    const b = U.esc(brand);
+    if (form === 'pill') return `<div class="mouth">👄</div><div class="lid"></div><div class="blister">${'<i></i>'.repeat(8)}</div><div class="box"><span>${b}</span></div><div class="pill"></div>`;
+    if (form === 'syrup') return `<div class="cap"></div><div class="bottle"><div class="liq"></div><div class="lbl">${b}</div></div><div class="stream"></div><div class="cup"><div class="liq"></div></div>`;
+    if (form === 'joint') return `<div class="bud">🌿</div>${[...Array(9)].map((_, i) => `<i class="crumb" style="--x:${U.ri(-60, 60)}px;--y:${U.ri(-22, 30)}px;--px:${-56 + i * 14}px"></i>`).join('')}<div class="paper"></div><div class="tip"></div><i class="smoke"></i><i class="smoke"></i><i class="smoke"></i>`;
+    return '<div class="mirror"></div><div class="pile"></div><div class="line"></div><div class="card"></div>';
+  },
+  buttons(st, retry = false) {
+    const s = st.R.steps[st.step];
+    st.el.querySelectorAll('.r-steps i').forEach((x, i) => x.classList.toggle('on', i < st.step));
+    st.el.querySelector('.m-choices').innerHTML = s ? `<button class="mbtn primary" data-ra="next" ${st.busy ? 'disabled' : ''}>${retry ? '🔁 ' : ''}${s.btn}</button><button class="mbtn ghost" data-ra="cancel" ${st.busy ? 'disabled' : ''}>Renoncer</button>` : '';
+  },
+  act(st, a) {
+    if (st.busy) return;
+    const D = DRUGS[st.d], cap = st.el.querySelector('.r-cap');
+    if (a === 'cancel') { log('🙅', `Tu renonces finalement : ${D.name}, ce sera pour une autre fois.`, ''); return UI.dismiss(st.after); }
+    const s = st.R.steps[st.step], last = st.step === st.R.steps.length - 1;
+    if (!last && U.chance(12)) { cap.textContent = U.pick(st.R.fails); this.buttons(st, true); return; } // étape ratée : on recommence
+    st.busy = true;
+    st.el.querySelector('.stage').classList.add('s' + (st.step + 1));
+    cap.textContent = s.cap(st.brand, D.name.toLowerCase());
+    st.step++;
+    this.buttons(st);
+    setTimeout(() => {
+      if (!st.el.isConnected) return;
+      st.busy = false;
+      if (st.step >= st.R.steps.length) UI.dismiss(() => Actions.consume(st.d, st.di, st.free, st.after));
+      else this.buttons(st);
+    }, s.dur * CONFIG.anim);
+  },
+};
+
+/* ============================ VIE NOCTURNE ============================ */
+const Night = {
+  st: null,
+  enter() {
+    if (S.jail) return;
+    const C = CITIES[S.city];
+    UI.modal({ icon: '🪩', title: C.club, text: 'Basses qui font trembler les murs, file d\'attente, videurs à l\'entrée… La nuit t\'appartient.', choices: [
+      { label: '🎟️ Entrée classique', sub: `${U.money(40)} · 1 ⚡`, dis: S.cash < 40, fn: () => this.start(false) },
+      { label: '🍾 Carré VIP', sub: `${U.money(1500)} · 1 ⚡ · +3 👑 · clientèle fortunée (prix ×2)`, dis: S.cash < 1500, fn: () => this.start(true) },
+      { label: 'Annuler', cls: 'ghost' },
+    ] });
+  },
+  start(vip, invited = false) {
+    if (!invited) { if (!PlayerData.useAP(1)) return; S.cash -= vip ? 1500 : 40; }
+    if (vip) PlayerData.mod('respect', 3);
+    this.st = { vip, acts: 0 };
+    log('🪩', `Soirée ${vip ? 'en carré VIP ' : ''}au club « ${CITIES[S.city].club} ».`, 'info');
+    this.menu();
+  },
+  menu() {
+    UI.modal(() => {
+      const st = this.st;
+      if (!st) return null;
+      if (!S.alive || S.jail) { this.st = null; return null; }
+      if (st.acts >= 3) { this.end('6 h du matin : les lumières se rallument, la soirée est finie.'); return null; }
+      return { icon: st.vip ? '🍾' : '🪩', title: CITIES[S.city].club, text: `${st.vip ? 'Carré VIP' : 'Sur la piste'} · activité ${st.acts + 1}/3<br><small class="m">Liquide : ${U.money(S.cash)} · ❤️ ${Math.round(S.health)}</small>`, choices: [
+        { label: '💃 Danser & faire des rencontres', fn: () => this.dance() },
+        { label: '🍸 Consommer', sub: 'Ton stock ou le dealer de la boîte', fn: () => this.drink() },
+        { label: '💊 Vendre aux fêtards', sub: `Prix ×${st.vip ? 2 : 1.6} · sécurité et police aux aguets`, dis: !Inventory.list().length, fn: () => this.sellMenu() },
+        { label: '😈 Chercher la bagarre', fn: () => this.fight(U.chance(65) ? 'fetard' : 'videur', 'Tu cherches le regard du premier venu… et tu le trouves.') },
+        { label: '🚪 Rentrer', cls: 'ghost', fn: () => this.end() },
+      ] };
+    });
+  },
+  next() { if (!this.st) return; this.st.acts++; this.menu(); },
+  end(txt) { if (!this.st) return; this.st = null; log('🚪', txt || 'Tu quittes la boîte au petit matin.', ''); },
+  dance() {
+    const r = Math.random();
+    if (r < 0.25) { PlayerData.heal(4); PlayerData.mod('respect', 1); log('💞', 'Tu rencontres quelqu\'un de captivant : vous dansez et discutez jusqu\'à la fermeture (+4 ❤️).', 'good'); UI.result('💞', 'Belle rencontre', 'Une vraie connexion au milieu du bruit. +4 ❤️ · +1 👑', 'good'); }
+    else if (r < 0.4) { PlayerData.mod('respect', 3); PlayerData.mod('heat', 1); log('🎤', 'Tu fais la fête avec un rappeur connu : les stories tournent toute la nuit (+3 👑).', 'good'); UI.result('🎤', 'Soirée avec une star', 'Photos, bouteilles, stories… Ton nom circule. +3 👑', 'good'); }
+    else if (r < 0.6) return this.deal();
+    else if (r < 0.75) { const loss = Math.min(S.cash, U.ri(50, 400)); S.cash -= loss; log('👛', `Pickpocket sur la piste : on t'a délesté de ${U.money(loss)}.`, 'bad'); UI.result('👛', 'Pickpocket !', `Quelqu'un t'a fait les poches pendant que tu dansais. −${U.money(loss)}`, 'bad'); }
+    else if (r < 0.9) return this.fight('fetard', 'Un type jaloux te bouscule et te pousse contre le bar.');
+    else { PlayerData.heal(2); log('🎶', 'Tu danses toute la nuit sans penser à rien (+2 ❤️).', ''); UI.toast('🎶 +2 santé'); }
+    this.next();
+  },
+  deal() { // un client fortuné cherche de la marchandise
+    const d = U.pick(['coke', 'mdma', 'keta', 'weed', 'lean']), D = DRUGS[d], have = Inventory.qty(d);
+    const want = Math.max(2, Math.round(D.demand * U.rand(0.15, 0.4)));
+    const unit = MarketData.retail(S.city, d, Inventory.q(d) || 50) * (this.st.vip ? 2.6 : 2.2);
+    if (!have) { log('🤑', `Un fils de bonne famille cherchait ${want} ${U.u(D, want)} ${U.de(D.name)}… tu n'avais rien sur toi.`, ''); UI.result('🤑', 'Occasion manquée', `Un client fortuné voulait ${want} ${U.u(D, want)} ${U.de(D.name)} à ${U.unitPrice(unit)} l'unité. Tu n'as rien sur toi.`); return this.next(); }
+    const n = Math.min(want, have);
+    UI.modal({ icon: '🤑', title: 'Client fortuné', text: `Un fils de bonne famille veut <b>${n} ${U.u(D, n)}</b> ${U.de(D.name)} à <b>${U.unitPrice(unit)}</b> l'unité. Total : <b class="g">${U.money(n * unit)}</b>.`, choices: [
+      { label: '🤝 Conclure l\'affaire', sub: 'Risque ~8 % (flic infiltré)', fn: () => {
+        if (U.chance(8)) { log('🕵️', 'Le client fortuné était un policier infiltré !', 'bad'); this.st = null; return Actions.retailBust(d, n); }
+        const rev = Math.round(n * unit);
+        Inventory.remove(d, n); PlayerData.earn(rev); S.stats.sold += rev; PlayerData.mod('respect', 1); PlayerData.mod('heat', 2);
+        log('🤑', `Deal en boîte : ${n} ${U.u(D, n)} ${U.de(D.name)} → <b>+${U.money(rev)}</b>.`, 'money'); this.next();
+      } },
+      { label: '🙅 Refuser', fn: () => this.next() },
+    ] });
+  },
+  drink() {
+    UI.modal({ icon: '🍸', title: 'Consommer', text: 'Au bar, aux toilettes ou dans le carré…', choices: [
+      ...Inventory.list().map((d) => ({ label: `${DRUGS[d].icon} ${DRUGS[d].name}`, sub: `Ton stock : ${U.num(Inventory.qty(d))} ${U.u(DRUGS[d], U.num(Inventory.qty(d)))}`, fn: () => Actions.consumeMenu(d, () => this.next(), () => this.menu()) })),
+      { label: '💊 Acheter un cachet au dealer de la boîte', sub: `${U.money(30)} · ecstasy de qualité inconnue`, dis: S.cash < 30, fn: () => { S.cash -= 30; Ritual.start('mdma', 1, true, () => this.next()); } },
+      { label: '🍹 Juste un cocktail', sub: '15 €', fn: () => { S.cash = Math.max(0, S.cash - 15); log('🍹', 'Un cocktail au bar, tranquille.', ''); this.next(); } },
+      { label: 'Retour', cls: 'ghost', fn: () => this.menu() },
+    ] });
+  },
+  clubLeft(d) { return Math.max(0, Math.floor(DRUGS[d].demand * (CLUB_MULT[d] || 0.2) * (this.st.vip ? 0.6 : 1) * (1 + PlayerData.respect() / 150) - (S.market.sold['club:' + S.city + ':' + d] || 0))); },
+  clubPrice(d) { return MarketData.retail(S.city, d, Inventory.q(d)) * (this.st.vip ? 2 : 1.6); },
+  clubRisk(d, n) { return Math.round(U.clamp(Actions.retailRisk(d, n) * 1.5 + 5, 3, 75) * 10) / 10; },
+  sellMenu() {
+    UI.modal({ icon: '💊', title: 'Vendre aux fêtards', text: 'Qu\'est-ce que tu proposes ce soir ?', choices: Inventory.list().map((d) => {
+      const left = this.clubLeft(d), D = DRUGS[d];
+      return { label: `${D.icon} ${D.name}`, sub: left ? `${U.unitPrice(this.clubPrice(d))}/${D.unit} · ${left} ${U.u(D, left)} demandés` : 'Aucun client pour ça ici', dis: !left, fn: () => this.sellQty(d) };
+    }).concat([{ label: 'Retour', cls: 'ghost', fn: () => this.menu() }]) });
+  },
+  sellQty(d) {
+    const D = DRUGS[d], max = Math.min(Inventory.qty(d), this.clubLeft(d)), unit = this.clubPrice(d);
+    UI.qty({ icon: D.icon, title: `Vendre en boîte — ${D.name}`, text: `Prix fêtards : <b>${U.unitPrice(unit)}</b> / ${D.unit}`, max, init: max, unit: D.unit,
+      info: (n) => `Recette : <b class="g">${U.money(n * unit)}</b><br>Risque (videurs, police) : ${U.risk(this.clubRisk(d, n))}`,
+      confirm: '💊 Vendre', onConfirm: (n) => this.doSell(d, n), onCancel: () => this.menu() });
+  },
+  doSell(d, n) {
+    n = Math.min(n, Inventory.qty(d)); if (n < 1) return this.menu();
+    if (U.chance(this.clubRisk(d, n))) {
+      if (U.chance(45)) { log('🕵️', 'Un de tes clients était un policier en civil !', 'bad'); this.st = null; return Actions.retailBust(d, n); }
+      return this.bouncer(d, n);
+    }
+    this.complete(d, n);
+  },
+  complete(d, n) {
+    const D = DRUGS[d], rev = Math.round(n * this.clubPrice(d));
+    Inventory.remove(d, n); PlayerData.earn(rev); S.stats.sold += rev;
+    const k = 'club:' + S.city + ':' + d; S.market.sold[k] = (S.market.sold[k] || 0) + n;
+    PlayerData.mod('heat', Math.min(6, n * D.bulk / 40 + 1)); PlayerData.mod('respect', 0.5);
+    log('💊', `Vente aux fêtards : ${U.num(n)} ${U.u(D, U.num(n))} ${U.de(D.name)} → <b>+${U.money(rev)}</b>.`, 'money');
+    UI.toast(`💊 +${U.money(rev)}`);
+    this.next();
+  },
+  bouncer(d, n) {
+    const D = DRUGS[d];
+    UI.modal({ icon: '🦍', title: 'Repéré par la sécurité !', cls: 'bad', text: `Un videur t'a vu dealer près des toilettes (${D.name}). Il te barre la route.`, choices: [
+      { label: '👊 Lui tenir tête', sub: `Victoire ~${Combat.estimate('videur', { arms: 'melee' })} %`, fn: () => Combat.start({ foe: 'videur', ctx: { arms: 'melee', flee: 45, place: CITIES[S.city].club, intro: 'Le videur fait craquer ses phalanges : « Dehors. Tout de suite. »' },
+        onEnd: (res) => {
+          if (res === 'win') { PlayerData.mod('respect', 3); log('🦍', 'Tu mets le videur au tapis et files par l\'issue de secours avec ta marchandise (+3 👑).', 'good'); UI.result('🦍', 'Videur au tapis', 'Tu gardes ta marchandise et disparais dans la nuit. +3 👑', 'good'); }
+          else if (res === 'lose') { const lost = Inventory.remove(d, n); log('🦍', `Le videur te jette dehors et confisque ${lost} ${U.u(D, lost)} ${U.de(D.name)}.`, 'bad'); UI.result('🦍', 'Jeté dehors', `Marchandise confisquée : ${lost} ${U.u(D, lost)}.`, 'bad'); }
+          else log('🏃', 'Tu fausses compagnie au videur par la sortie de secours.', '');
+          this.end('La soirée est finie pour toi.');
+        } }) },
+      { label: `💶 Lui glisser un billet (${U.money(200)})`, sub: 'Chance ~70 %', dis: S.cash < 200, fn: () => {
+        S.cash -= 200;
+        if (U.chance(70)) { log('💶', 'Le videur empoche le billet et détourne le regard.', ''); this.complete(d, n); }
+        else { const lost = Inventory.remove(d, n); log('🦍', `Le videur prend l'argent… et ta marchandise (${lost} ${U.u(D, lost)}). Dehors !`, 'bad'); UI.result('🦍', 'Arnaqué', 'Billet empoché, marchandise confisquée, et direction le trottoir.', 'bad'); this.end('Tu es jeté dehors.'); }
+      } },
+      { label: '🚪 Lâcher la marchandise et partir', fn: () => { const lost = Inventory.remove(d, n); log('🚪', `Tu abandonnes ${lost} ${U.u(D, lost)} ${U.de(D.name)} et quittes la boîte.`, 'bad'); this.end('Soirée gâchée.'); } },
+    ] });
+  },
+  fight(foe, intro) {
+    Combat.start({ foe, ctx: { arms: 'melee', flee: 55, place: CITIES[S.city].club, intro }, onEnd: (res) => {
+      if (res === 'win') {
+        PlayerData.mod('respect', 2); PlayerData.mod('heat', 2);
+        log('👊', `Bagarre en boîte : ${U.the(FOES[foe].name).toLowerCase()} finit au tapis (+2 👑).`, 'good');
+        if (foe === 'videur' || U.chance(40)) return this.end('La sécurité te met dehors après la bagarre.');
+        this.next();
+      } else if (res === 'lose') { PlayerData.mod('respect', -2); log('🤕', 'Bagarre en boîte : tu finis K.O. sur le trottoir (−2 👑).', 'bad'); this.end('Fin de soirée sur le trottoir.'); }
+      else { log('🏃', 'Tu t\'éclipses avant que ça dégénère.', ''); this.next(); }
+    } });
+  },
+};
+
+/* ============================ CRIME DE RUE ============================ */
+const Street = {
+  pickChance() { return Math.round(U.clamp(68 + PlayerData.crimeBuff() - S.heat * 0.15 - S.addiction * 0.1, 10, 92)); },
+  intimidate(base) { return Math.round(U.clamp(base + S.force * 0.4 + PlayerData.respect() * 0.25 + PlayerData.firepower() * 0.3 + S.territories * 4 + PlayerData.crimeBuff() * 0.5, 5, 95)); },
+  pickpocket() {
+    if (!PlayerData.useAP(1)) return;
+    S.stats.crimes++;
+    if (U.chance(this.pickChance())) {
+      const g = Math.round(U.ri(30, 320) * (S.city === 'miami' || S.city === 'paris' ? 1.25 : 1));
+      PlayerData.earn(g); PlayerData.mod('heat', 1.5);
+      log('🤏', `Vol à la tire : tu subtilises un portefeuille dans la foule (+${U.money(g)}).`, 'money'); UI.toast(`🤏 +${U.money(g)}`); return;
+    }
+    const r = Math.random();
+    if (r < 0.4) { PlayerData.mod('heat', 3); log('🏃', 'Vol à la tire raté : la victime crie au voleur, tu te fonds dans la foule.', 'bad'); UI.result('🏃', 'Repéré !', 'La victime a senti ta main. Tu disparais dans la foule.', 'bad'); }
+    else if (r < 0.75) {
+      log('😠', 'Vol à la tire raté : la victime t\'attrape par le bras !', 'bad');
+      Combat.start({ foe: 'passant', over: { name: 'Ta victime', role: 'Passant en colère' }, ctx: { arms: 'melee', flee: 60, place: 'Vol à la tire', intro: 'La victime t\'a saisi le poignet et refuse de lâcher prise.' }, onEnd: (res) => {
+        if (res === 'win') { const g = U.ri(20, 200); PlayerData.earn(g); PlayerData.mod('heat', 4); log('👊', `Tu te dégages et repars avec le portefeuille (+${U.money(g)}).`, 'money'); }
+        else if (res === 'lose') { log('🤕', 'La victime te maîtrise en attendant la police…', 'bad'); Actions.arrest({ charge: 'Vol à la tire', months: U.ri(1, 4) }); }
+        else log('🏃', 'Tu te dégages et t\'enfuis les mains vides.', '');
+      } });
+    } else { log('🚓', 'Vol à la tire : un policier en civil t\'a vu faire.', 'bad'); Actions.arrest({ charge: 'Vol à la tire', months: U.ri(1, 4) }); }
+  },
+  racketPassant() {
+    if (!PlayerData.useAP(1)) return;
+    S.stats.crimes++;
+    if (U.chance(this.intimidate(35))) {
+      const g = U.ri(40, 450); PlayerData.earn(g); PlayerData.mod('respect', 1); PlayerData.mod('heat', 3);
+      log('😈', `Racket : un passant terrorisé te tend son argent (+${U.money(g)}).`, 'money');
+      UI.result('😈', 'Racket réussi', `Ta carrure et ta réputation ont suffi. <b class="g">+${U.money(g)}</b>`, 'good'); return;
+    }
+    log('💪', 'Racket : le passant refuse de payer et se met en garde.', 'bad');
+    Combat.start({ foe: 'costaud', ctx: { arms: 'all', flee: 55, place: 'Racket de rue', intro: '« Tu crois que je vais te donner mon fric ? Viens le chercher. »' }, onEnd: (res) => {
+      if (res === 'win') { const g = U.ri(60, 500); PlayerData.earn(g); PlayerData.mod('respect', 2); PlayerData.mod('heat', 5); log('👊', `Racket : tu mets le récalcitrant au sol et prends son argent (+${U.money(g)}).`, 'money'); UI.result('👊', 'Il a payé', `<b class="g">+${U.money(g)}</b> · +2 👑`, 'good'); }
+      else if (res === 'lose') { PlayerData.mod('respect', -3); log('🤕', 'Racket raté : le passant t\'a humilié devant tout le monde (−3 👑).', 'bad'); }
+      else log('🏃', 'Racket raté : tu préfères décamper.', '');
+      if (S.alive && U.chance(10 * CITIES[S.city].police)) Actions.arrest({ charge: 'Extorsion avec violence', months: U.ri(4, 12) });
+    } });
+  },
+  racketShop() {
+    if (!PlayerData.useAP(1)) return;
+    S.stats.crimes++;
+    const free = SHOPS_RACKET.filter((n) => !S.rackets.some((r) => r.name === n));
+    const shop = U.pick(free.length ? free : SHOPS_RACKET);
+    const win = () => {
+      const g = U.ri(300, 2500); PlayerData.earn(g); PlayerData.mod('respect', 2); PlayerData.mod('heat', 5);
+      let extra = '';
+      if (free.includes(shop) && U.chance(35)) {
+        const m = Math.round(U.ri(150, 450) * (1 + S.rank * 0.3));
+        S.rackets.push({ name: shop, amount: m }); extra = ` Le gérant accepte de te verser ${U.money(m)}/mois de « protection ».`;
+      }
+      log('🏪', `Racket (${shop}) : ${U.money(g)} empochés.${extra}`, 'money');
+      UI.result('🏪', 'Le commerçant a payé', `<b class="g">+${U.money(g)}</b> · +2 👑${extra ? '<br>' + extra : ''}`, 'good');
+    };
+    if (U.chance(this.intimidate(25))) return win();
+    UI.modal({ icon: '🧑‍🍳', title: 'Le commerçant résiste', text: `Le gérant (${shop}) sort une batte de derrière le comptoir et menace d'appeler la police.`, choices: [
+      { label: '👊 L\'affronter', sub: `Victoire ~${Combat.estimate('commercant', { arms: 'all' })} %`, fn: () => Combat.start({ foe: 'commercant', ctx: { arms: 'all', flee: 55, place: shop },
+        onEnd: (res) => { if (res === 'win') win(); else if (res === 'lose') { PlayerData.mod('respect', -3); log('🤕', 'Le commerçant t\'a chassé à coups de batte (−3 👑).', 'bad'); } else log('🏃', 'Tu quittes la boutique en courant.', ''); } }) },
+      { label: '🏃 Partir avant la police', fn: () => { PlayerData.mod('respect', -1); log('🏃', `Racket raté (${shop}) : tu repars bredouille.`, ''); if (U.chance(30)) { PlayerData.mod('heat', 6); log('📞', 'Le commerçant a porté plainte (+6 🚨).', 'bad'); } } },
+    ] });
+  },
+};
+
+/* ============================== MUSCULATION ============================== */
+const Gym = {
+  open() {
+    UI.modal({ icon: '🏋️', title: 'Salle de sport', text: `💪 Force : <b>${Math.round(S.force)} %</b>${S.roids > 0 ? ' · 🧬 sous stéroïdes (gains ×1,8)' : ''}<br><small class="m">La force augmente tes dégâts au combat et ta résistance aux coups. Sans entraînement, la musculature fond chaque mois.</small>`,
+      choices: GYM.map((p) => ({ label: `${p.icon} ${p.name}`, sub: `${U.money(p.cost)} · 1 ⚡ · ${p.desc}`, dis: !PlayerData.can(p.cost), fn: () => this.train(p.id) })).concat([{ label: 'Annuler', cls: 'ghost' }]) });
+  },
+  gain(range) { return U.rand(range[0], range[1]) * (1 - S.force / 115) * (S.roids > 0 ? 1.8 : 1); },
+  train(id) {
+    const p = GYM.find((x) => x.id === id);
+    if (!PlayerData.can(p.cost)) return UI.toast('Pas assez d\'argent.');
+    if (!PlayerData.useAP(1)) return;
+    PlayerData.pay(p.cost); S.trained = true;
+    if (p.injury && U.chance(p.injury)) {
+      log('🤕', `${p.name} : blessure à l'entraînement (−5 ❤️).`, 'bad');
+      PlayerData.hurt(5, 'Blessure à l\'entraînement');
+      if (S.alive) UI.result('🤕', 'Blessure', 'Un mauvais coup à l\'entraînement. −5 ❤️', 'bad');
+      return;
+    }
+    const f = this.gain(p.force), h = U.ri(p.hp[0], p.hp[1]);
+    PlayerData.mod('force', f); if (h) PlayerData.heal(h); if (p.respect) PlayerData.mod('respect', p.respect);
+    const ft = f.toFixed(1).replace('.', ',');
+    log(p.icon, `${p.name} : +${ft} 💪 force${h ? `, +${h} ❤️` : ''}.`, 'good');
+    UI.toast(`${p.icon} +${ft} force${h ? ` · +${h} santé` : ''}`);
+  },
+};
+
+/* ============================== PRISON ============================== */
+const Prison = {
+  enter() { S.prison = { served: 0, protection: 0, ally: null, hunted: false, shank: false }; },
+  ensure() { if (!S.prison) this.enter(); return S.prison; },
+  // Menace des cartels : dépend de ton historique (territoires, guerres, victimes, grade)
+  threat() {
+    const p = this.ensure();
+    let t = S.territories * 2 + S.stats.wars * 0.4 + S.stats.kills * 0.5 + S.rank * 1.5 + (p.hunted ? 15 : 0);
+    if (p.protection > 0) t *= 0.25;
+    return t;
+  },
+  threatLabel() { const t = this.threat(); return t >= 12 ? '<b class="r">Élevée</b>' : t >= 5 ? '<b class="y">Moyenne</b>' : '<b class="g">Faible</b>'; },
+  rival() { return S.rivals.length ? U.pick(S.rivals).name : U.pick(RIVAL_NAMES); },
+  monthly() {
+    const p = this.ensure(); p.served++;
+    if (p.protection > 0) p.protection--;
+    log('⛓️', `Détention — mois ${p.served} · encore ${U.dur(S.jail)}${p.protection > 0 ? ' · 🛡️ sous protection' : ''}`, 'jail');
+  },
+  event() {
+    const p = this.ensure(), th = this.threat();
+    const pool = [
+      { w: 4, run: () => this.corvee() }, { w: 4, run: () => this.traffic() }, { w: p.ally ? 0 : 3, run: () => this.alliance() },
+      { w: 3, run: () => this.yard() }, { w: 2, run: () => this.visit() },
+      { w: th * 0.6, run: () => this.intimidation() }, { w: th * 0.4 + (p.hunted ? 25 : 0), run: () => this.attack() },
+    ].filter((e) => e.w > 0);
+    let r = Math.random() * pool.reduce((a, e) => a + e.w, 0);
+    for (const e of pool) { r -= e.w; if (r <= 0) return e.run(); }
+  },
+  corvee() {
+    const job = U.pick(['aux cuisines', 'à la buanderie', 'au nettoyage des coursives', 'à l\'atelier de menuiserie']);
+    UI.modal({ icon: '🧹', title: 'Corvée', text: `L'administration t'affecte ${job}. Payé une misère, mais bien vu par le juge d'application des peines.`, choices: [
+      { label: '🧹 Accepter la corvée', sub: '+120 € · chance de remise de peine', fn: () => { S.cash += 120; let t = 'Tu fais ta corvée sans broncher (+120 €).'; if (U.chance(25) && S.jail > 1) { S.jail--; t += ' <b>Remise de peine : −1 mois</b> pour bonne conduite.'; } log('🧹', t, 'jail'); } },
+      { label: '🙅 Refuser', sub: '+1 👑 · risque de mitard', fn: () => { PlayerData.mod('respect', 1); if (U.chance(40)) { S.jail += 1; log('🔒', 'Refus de corvée : mitard et +1 mois au compteur. Mais les détenus respectent ça (+1 👑).', 'bad'); } else log('🙅', 'Tu refuses la corvée. Les surveillants notent, les détenus apprécient (+1 👑).', 'jail'); } },
+    ] });
+  },
+  traffic() {
+    const what = U.pick(['des téléphones', 'du shit', 'des cartes SIM', 'des cachets']);
+    UI.modal({ icon: '📦', title: 'Trafic interne', text: `Un codétenu te propose de faire entrer ${what} par le parloir. Un bon business… si personne ne balance.`, choices: [
+      { label: '🤝 Participer', sub: 'Gain 500–3 000 € · 25 % de risque', fn: () => {
+        if (U.chance(25)) { const m = U.ri(3, 8); S.jail += m; log('🚨', `Fouille générale : le trafic est découvert. +${m} mois et passage au mitard.`, 'bad'); UI.result('🚨', 'Découvert !', `+${m} mois de détention.`, 'bad'); }
+        else { const g = U.ri(500, 3000); PlayerData.earn(g); PlayerData.mod('respect', 1); log('📦', `Trafic interne : l'opération passe sans accroc (+${U.money(g)}).`, 'money'); }
+      } },
+      { label: '💶 Financer sans se mouiller (1 000 €)', sub: '60 % de chance de doubler la mise', dis: !PlayerData.can(1000), fn: () => { PlayerData.pay(1000); if (U.chance(60)) { PlayerData.earn(2200); log('💶', 'Ton investissement en détention rapporte 2 200 €.', 'money'); } else log('💸', 'Le colis a été intercepté : ta mise est perdue.', 'bad'); } },
+      { label: '🙅 Refuser', fn: () => log('🙅', 'Tu refuses de te mêler du trafic interne.', 'jail') },
+    ] });
+  },
+  alliance() {
+    const p = this.ensure(), g = U.pick(PRISON_GANGS), tribute = 1500 * (1 + S.rank);
+    UI.modal({ icon: '🤝', title: 'Proposition d\'alliance', text: `Les ${g} te proposent de rejoindre leur clan. En échange de leur protection, ils attendent un « geste ».`, choices: [
+      { label: `💶 Payer le tribut (${U.money(tribute)})`, sub: 'Protection jusqu\'à ta sortie', dis: !PlayerData.can(tribute), fn: () => { PlayerData.pay(tribute); p.ally = g; p.protection = S.jail + 1; p.hunted = false; log('🤝', `Alliance scellée avec les ${g} : tu es sous leur protection.`, 'good'); } },
+      { label: '🤐 Rendre un service', sub: 'Faire le guet pendant un règlement de comptes · 30 % de risque', fn: () => {
+        if (U.chance(30)) { const m = U.ri(4, 10); S.jail += m; log('🚨', `Le « service » tourne mal : complicité d'agression, +${m} mois.`, 'bad'); UI.result('🚨', 'Ça a mal tourné', `+${m} mois de détention.`, 'bad'); }
+        else { p.ally = g; p.protection = S.jail + 1; PlayerData.mod('respect', 2); log('🤝', `Service rendu : les ${g} te protègent désormais (+2 👑).`, 'good'); }
+      } },
+      { label: '🙅 Refuser poliment', fn: () => log('🙅', `Tu déclines l'offre des ${g}. Ils n'insistent pas… pour l'instant.`, 'jail') },
+      { label: '😤 Les envoyer balader', sub: '+3 👑 · ils s\'en souviendront', fn: () => { PlayerData.mod('respect', 3); if (U.chance(50)) p.hunted = true; log('😤', `Tu envoies balader les ${g} devant tout le monde (+3 👑). Ça risque de se payer.`, 'bad'); } },
+    ] });
+  },
+  yard() {
+    UI.modal({ icon: '😠', title: 'Provocation en promenade', text: 'Un gros bras du bâtiment te bouscule exprès devant tout le monde. Tous les regards sont sur toi.', choices: [
+      { label: '👊 Accepter le combat', sub: `${this.ensure().shank ? '🗡️ Surin' : '👊 Mains nues'} · victoire ~${Combat.estimate('detenu', { arms: 'prison' })} %`, fn: () => Combat.start({ foe: 'detenu', ctx: { arms: 'prison', flee: 35, place: 'Cour de promenade' },
+        onEnd: (res) => {
+          if (res === 'win') { PlayerData.mod('respect', 4); log('👊', 'Promenade : tu mets le gros bras à terre. Le bâtiment te respecte (+4 👑).', 'good'); }
+          else if (res === 'lose') { PlayerData.mod('respect', -3); log('🤕', 'Promenade : tu t\'es fait humilier (−3 👑).', 'bad'); }
+          else { PlayerData.mod('respect', -2); log('🏃', 'Les surveillants interviennent pendant que tu recules (−2 👑).', 'jail'); }
+        } }) },
+      { label: '👀 Baisser les yeux', sub: '−2 👑', fn: () => { PlayerData.mod('respect', -2); log('👀', 'Tu baisses les yeux. En prison, ça se paie (−2 👑).', 'bad'); } },
+    ] });
+  },
+  visit() {
+    if (S.crew.length && U.chance(60)) { S.crew.forEach((c) => { c.loyalty = Math.min(100, c.loyalty + 5); }); log('📞', 'Parloir : tes lieutenants viennent prendre les ordres. Loyauté de l\'équipe +5.', 'jail'); }
+    else { PlayerData.heal(4); log('👩', 'Parloir : ta mère est venue te voir avec du linge propre et des larmes (+4 ❤️).', 'jail'); }
+  },
+  intimidation() {
+    const rv = this.rival(), p = this.ensure(), bribe = 2500 * (1 + S.rank), prot = 4000 * (1 + S.rank);
+    const sign = U.pick(['un rat mort dans ton lit', 'une photo de ta famille glissée sous ta porte', 'une lame posée sur ton oreiller', 'un mot griffonné : « On sait qui tu es. »']);
+    UI.modal({ icon: '💀', title: 'Menace du cartel', cls: 'bad', text: `En rentrant en cellule, tu trouves ${sign}. Le message vient <b>${U.deN(rv)}</b> : un contrat court peut-être sur ta tête.`, choices: [
+      { label: '🔪 Se défendre : fabriquer un surin', sub: p.shank ? 'Tu as déjà une lame planquée' : 'Arme de fortune pour les combats en détention · +1 👑', fn: () => { p.shank = true; PlayerData.mod('respect', 1); p.hunted = true; log('🔪', 'Tu affûtes une brosse à dents en surin. Qu\'ils viennent.', 'jail'); } },
+      { label: `💶 Soudoyer des gardes (${U.money(bribe)})`, sub: 'Transfert des suspects · protection 6 mois', dis: !PlayerData.can(bribe), fn: () => { PlayerData.pay(bribe); p.protection = Math.max(p.protection, 6); p.hunted = false; log('💶', 'Des surveillants font transférer les détenus suspects. Tu respires… pour 6 mois.', 'good'); } },
+      { label: `🤝 Négocier sa protection (${U.money(prot)})`, sub: 'Auprès d\'un clan de détenus · jusqu\'à ta sortie', dis: !PlayerData.can(prot), fn: () => { PlayerData.pay(prot); const g = U.pick(PRISON_GANGS); p.ally = g; p.protection = S.jail + 1; p.hunted = false; log('🤝', `Les ${g} acceptent de te protéger contre ${rv}.`, 'good'); } },
+      { label: '🤷 Ignorer la menace', sub: 'Dangereux', fn: () => { p.hunted = true; log('🤷', 'Tu fais comme si de rien n\'était. Mauvaise idée ?', 'bad'); } },
+    ] });
+  },
+  attack() {
+    const rv = this.rival(), p = this.ensure(), bribe = 3000 * (1 + S.rank), price = 8000 * (1 + S.rank);
+    const where = U.pick(['Dans les douches', 'À la bibliothèque', 'Dans la file de la cantine', 'Dans un angle mort de la cour']);
+    UI.modal({ icon: '🔪', title: 'Tentative d\'assassinat !', cls: 'bad', text: `${where}, un détenu affilié <b>${U.aN(rv)}</b> surgit, un surin à la main. Il est là pour toi.`, choices: [
+      { label: '🛡️ Se défendre', sub: `${p.shank ? '🗡️ Surin' : '👊 Mains nues'} · victoire ~${Combat.estimate('sicaire', { arms: 'prison' })} %`, fn: () => this.fightAssassin(rv) },
+      { label: `💶 Soudoyer un garde (${U.money(bribe)})`, sub: 'Un surveillant intervient ~70 %', dis: !PlayerData.can(bribe), fn: () => {
+        PlayerData.pay(bribe);
+        if (U.chance(70)) { p.protection = Math.max(p.protection, 4); p.hunted = false; log('👮', 'Un surveillant payé intervient au dernier moment et plaque l\'agresseur au sol.', 'good'); UI.result('👮', 'Sauvé', 'Le garde a tenu parole. L\'agresseur part au mitard.', 'good'); }
+        else { log('😨', 'Le garde a empoché l\'argent… et regardé ailleurs.', 'bad'); this.fightAssassin(rv, true); }
+      } },
+      { label: `🤝 Négocier (${U.money(price)})`, sub: `Racheter le contrat · succès ~${Math.round(U.clamp(40 + PlayerData.respect() * 0.5, 0, 95))} %`, dis: !PlayerData.can(price), fn: () => {
+        PlayerData.pay(price);
+        if (U.chance(40 + PlayerData.respect() * 0.5)) { p.hunted = false; p.protection = Math.max(p.protection, 8); log('🤝', `Tu fais passer un message ${U.aN(rv)} : le contrat est racheté.`, 'good'); UI.result('🤝', 'Contrat racheté', 'Le tueur range sa lame. « Pour cette fois. »', 'good'); }
+        else { log('💸', 'Il prend l\'argent… et attaque quand même !', 'bad'); this.fightAssassin(rv); }
+      } },
+    ] });
+  },
+  fightAssassin(rv, surprise = false) {
+    const p = this.ensure();
+    Combat.start({ foe: 'sicaire', over: { role: `Envoyé ${U.deN(rv)}` }, ctx: { arms: 'prison', lethal: true, flee: 30, place: 'Détention', cause: `Assassiné en prison par un envoyé ${U.deN(rv)}`, intro: surprise ? 'Pris par surprise, dos au mur…' : 'Il fonce sur toi, lame en avant.' },
+      onEnd: (res) => {
+        if (res === 'win') { const m = U.ri(6, 18); S.jail += m; p.hunted = false; PlayerData.mod('respect', 8); log('☠️', `Tu as tué l'envoyé ${U.deN(rv)}. Légitime défense contestée : +${m} mois. Toute la prison te craint (+8 👑).`, 'bad'); UI.result('☠️', 'Survivant', `L'assassin ne se relèvera pas. +${m} mois de peine, mais plus personne n'osera t'approcher.`, 'bad'); }
+        else if (res === 'fled') { p.hunted = U.chance(50); log('🏃', 'Tu parviens à rejoindre les surveillants. L\'agresseur part au mitard.', 'jail'); }
+      } });
+  },
+};
+
+/* ============================ PROFIL & STYLE ============================ */
+const Profile = {
+  tier(t) { return t >= 30 ? '👑 Icône du milieu' : t >= 20 ? '💎 Luxe assumé' : t >= 12 ? '🔥 Streetwear premium' : t >= 5 ? '👟 Street clean' : '🧢 Petit du quartier'; },
+  open() {
+    const b = PlayerData.styleBreakdown(), E = (s) => PlayerData.equipped(s), r = RANKS[S.rank];
+    const ic = (s) => (E(s) ? E(s).icon : `<span class="empty">${SLOTS[s].icon}</span>`);
+    const extra = (...sl) => sl.map((s) => (E(s) ? E(s).icon : '')).join('');
+    const doll = `<div class="doll">
+      <div class="d head">${S.avatar}<small>${E('dents') ? '😁 grillz' : 'visage'}</small></div>
+      <div class="d">${ic('cou')}${extra('pendentif')}<small>cou</small></div>
+      <div class="d">${ic('haut')}${extra('veste')}<small>torse</small></div>
+      <div class="d">${ic('montre')}${extra('poignet', 'doigts')}<small>poignets</small></div>
+      <div class="d">${ic('bas')}<small>jambes</small></div>
+      <div class="d">${ic('chaussures')}<small>pieds</small></div></div>`;
+    const info = `<div class="pinfo"><div class="big">${U.esc(S.name)}</div>${r.icon} ${r.name}<br>${U.age(S.ageMonths)} · ${CITIES[S.city].flag} ${CITIES[S.city].name}<br>
+      💪 Force ${Math.round(S.force)} %<br>👑 Respect ${PlayerData.respect()} %<br>❤️ Santé ${Math.round(S.health)} %<br><span class="tier">${this.tier(b.total)}</span></div>`;
+    const slot = (s) => {
+      const it = E(s), n = PlayerData.items(SLOTS[s].cat).filter((i) => i.slot === s).length;
+      return `<button class="slot ${it ? '' : 'none'}" data-slot="${s}"><span class="si">${it ? it.icon : SLOTS[s].icon}</span><span class="sl"><small>${SLOTS[s].label}${n > 1 ? ` · ${n} en stock` : ''}</small><b>${it ? it.name : 'Rien d\'équipé'}</b></span><span class="sr">${it ? '+' + it.respect : ''}</span></button>`;
+    };
+    const list = (cat) => Object.keys(SLOTS).filter((s) => SLOTS[s].cat === cat).map(slot).join('');
+    const bonus = `<div class="bonus"><span>👕 Tenue</span><b>+${b.tenue}</b><span>💍 Accessoires</span><b>+${b.acc}</b><span>🚗 Meilleur véhicule</span><b>+${b.veh}</b>
+      <span>🏠 Logement</span><b>+${b.home}</b><span>🏢 Commerces</span><b>+${b.biz}</b>
+      <span class="tot">Bonus de respect${b.raw > 40 ? ' (plafonné)' : ''}</span><b class="tot y">+${b.total} / 40</b></div>`;
+    UI.modal({ title: '🪞 Profil & Style', cls: 'profile', html: `<div class="prof">${doll}${info}</div><div class="ptitle">Tenue équipée</div>${list('clothes')}<div class="ptitle">Accessoires</div>${list('jewelry')}<div class="ptitle">Statut social</div>${bonus}`,
+      choices: [{ label: '🛍️ Boutique de vêtements', fn: () => { if (!S.jail) { UI.tab = 'assets'; UI.stack = [{ view: 'assets' }, { view: 'shop', arg: 'clothes' }]; } else UI.toast('⛓️ Pas de shopping en cellule.'); } }, { label: 'Fermer', cls: 'ghost' }],
+      onShow: (root) => root.querySelectorAll('[data-slot]').forEach((bt) => bt.addEventListener('click', () => { const s = bt.dataset.slot; UI.dismiss(() => this.pick(s)); })) });
+  },
+  pick(slot) {
+    const sl = SLOTS[slot], cur = S.equip[slot];
+    const own = PlayerData.items(sl.cat).filter((i) => i.slot === slot).sort((a, b) => b.respect - a.respect);
+    UI.modal({ icon: sl.icon, title: sl.label, text: own.length ? 'Que portes-tu ?' : 'Tu ne possèdes rien pour cet emplacement. Passe par la boutique !', choices: [
+      ...own.map((it) => ({ label: `${it.icon} ${it.name}${it.id === cur ? ' ✔' : ''}`, sub: `+${it.respect} respect`, cls: it.id === cur ? 'primary' : '', fn: () => { Shop.equip(it); this.open(); } })),
+      ...(cur ? [{ label: '🚫 Ne rien porter', fn: () => { delete S.equip[slot]; this.open(); } }] : []),
+      { label: '↩️ Retour au profil', cls: 'ghost', fn: () => this.open() },
     ] });
   },
 };
@@ -1826,12 +2654,15 @@ const UI = {
     clearTimeout(this._toastT); this._toastT = setTimeout(() => t.classList.remove('show'), 2200);
   },
   /* ----- Modales (file d'attente) ----- */
+  // m peut être une fonction : la modale est alors construite au moment de son affichage (file d'attente)
   modal(m) {
     if (S && !S.alive && !m.force) return;
     if (this.cur) { this.queue.push(m); return; }
     this.showModal(m);
   },
   showModal(m) {
+    if (typeof m === 'function') m = m();
+    if (!m || (S && !S.alive && !m.force)) { if (this.queue.length) this.showModal(this.queue.shift()); return; }
     this.cur = m; CB.m = [];
     const choices = (m.choices || [{ label: 'OK', cls: 'primary' }]).map((c) =>
       `<button class="mbtn ${c.cls || ''}" ${c.dis ? 'disabled' : ''} data-cb="${cb(() => this.choose(c), 'm')}">${c.label}${c.sub ? `<small>${c.sub}</small>` : ''}</button>`).join('');
@@ -1848,6 +2679,15 @@ const UI = {
     if (!this.cur && this.queue.length) this.showModal(this.queue.shift());
     this.renderNav();
   },
+  // fermeture d'une modale interactive (combat, rituel, profil) hors du gestionnaire de clics
+  dismiss(fn) {
+    this.cur = null;
+    const root = $('#modal-root'); root.innerHTML = ''; root.classList.remove('show');
+    if (fn) fn();
+    if (!this.cur && this.queue.length) this.showModal(this.queue.shift());
+    this.renderNav();
+    if (S) Game.commit();
+  },
   result(icon, title, text, cls = '') { this.modal({ icon, title, text, cls }); },
   confirm(icon, title, text, label, fn, cls = 'primary') { this.modal({ icon, title, text, choices: [{ label, cls, fn }, { label: 'Annuler', cls: 'ghost' }] }); },
   pay({ icon, title, text = '', price, cashOnly = false, onPay }) {
@@ -1858,7 +2698,7 @@ const UI = {
     ch.push({ label: 'Annuler', cls: 'ghost' });
     this.modal({ icon, title, text: `${text}${text ? '<br>' : ''}Prix : <b class="y">${U.money(price)}</b>${cashOnly ? '<br><small class="m">Marché noir : liquide uniquement</small>' : ''}`, choices: ch });
   },
-  qty({ icon, title, text = '', max, init = 1, unit = '', info, confirm = 'Valider', onConfirm }) {
+  qty({ icon, title, text = '', max, init = 1, unit = '', info, confirm = 'Valider', onConfirm, onCancel }) {
     max = Math.floor(max); if (max < 1) return;
     let cur = U.clamp(Math.floor(init), 1, max);
     const html = `<div class="qty">
@@ -1867,7 +2707,7 @@ const UI = {
       <input id="q-rng" type="range" min="1" max="${max}" value="${cur}">
       <div class="qty-pre"><button type="button" data-p="0.1">10 %</button><button type="button" data-p="0.25">25 %</button><button type="button" data-p="0.5">50 %</button><button type="button" data-p="1">MAX</button></div>
       <div id="q-info" class="qty-info"></div></div>`;
-    this.modal({ icon, title, text, html, choices: [{ label: confirm, cls: 'primary', fn: () => onConfirm(cur) }, { label: 'Annuler', cls: 'ghost' }],
+    this.modal({ icon, title, text, html, choices: [{ label: confirm, cls: 'primary', fn: () => onConfirm(cur) }, { label: 'Annuler', cls: 'ghost', fn: onCancel }],
       onShow: (root) => {
         const num = root.querySelector('#q-num'), rng = root.querySelector('#q-rng'), inf = root.querySelector('#q-info');
         const upd = () => { inf.innerHTML = info ? info(cur) : ''; };
@@ -1913,14 +2753,19 @@ const UI = {
   renderNav() {
     document.querySelectorAll('.tab').forEach((t) => t.classList.toggle('on', t.dataset.tab === this.tab && this.stack.length > 0));
     $('#age-btn').disabled = !S || !S.alive || !!this.cur;
+    // mode détention : thème, libellé du bouton central, onglet trafic verrouillé
+    const jail = !!(S && S.alive && S.jail), ab = $('#age-btn'), lbl = jail ? 'Purger' : 'Vieillir';
+    document.body.classList.toggle('jail', jail);
+    if (ab.dataset.l !== lbl) { ab.innerHTML = `<small>${lbl}</small><b>+1 mois</b>`; ab.dataset.l = lbl; }
+    $('.tab[data-tab="trafic"] .ti').textContent = jail ? '🔒' : '💊';
   },
-  bar(icon, label, v, cls) { return `<div class="bar ${cls}"><div class="bl"><span>${icon} ${label}</span><b>${Math.round(v)}%</b></div><div class="bt"><div class="bf" style="width:${U.clamp(v, 0, 100)}%"></div></div></div>`; },
+  bar(icon, label, v, cls, txt) { return `<div class="bar ${cls}"><div class="bl"><span>${icon} <span class="t">${label}</span></span><b>${txt || Math.round(v) + '%'}</b></div><div class="bt"><div class="bf" style="width:${U.clamp(v, 0, 100)}%"></div></div></div>`; },
   renderHud() {
     CB.h = [];
     const r = RANKS[S.rank], c = CITIES[S.city];
     $('#hud').innerHTML = `
       <div class="hud-top">
-        <div class="avatar">${S.avatar}</div>
+        <button class="avatar" aria-label="Profil & Style" data-cb="${cb(() => Profile.open(), 'h')}">${S.avatar}</button>
         <div class="who"><div class="name">${U.esc(S.name)}</div><div class="sub">${r.icon} ${r.name} · ${U.age(S.ageMonths)}</div></div>
         <div class="loc">${c.flag} ${c.name}<small>${c.country}</small></div>
         <button class="gear" aria-label="Paramètres" data-cb="${cb(() => { this.tab = null; this.stack = [{ view: 'settings' }]; }, 'h')}">⚙️</button>
@@ -1928,15 +2773,16 @@ const UI = {
       <div class="hud-money">
         <div class="chip cash"><small>💵 Liquide (sale)</small><b>${U.money(S.cash)}</b></div>
         <div class="chip bank"><small>🏦 Banque (blanchi)</small><b>${U.money(S.bank)}</b></div>
-        <div class="chip ap"><small>Énergie</small><b>⚡ ${S.ap}</b></div>
       </div>
       <div class="bars">
         ${this.bar('❤️', 'Santé', S.health, 'hp')}
+        ${this.bar('💪', 'Force', S.force, 'fo')}
         ${this.bar('👑', 'Respect', PlayerData.respect(), 'rs')}
         ${this.bar('💉', 'Addiction', S.addiction, 'ad')}
         ${this.bar('🚨', 'Police', S.heat, 'ht')}
+        ${this.bar('⚡', 'Énergie', S.ap / PlayerData.apMax() * 100, 'en', `${S.ap}/${PlayerData.apMax()}`)}
       </div>
-      ${S.jail ? `<div class="jailband">⛓️ EN PRISON — encore ${U.dur(S.jail)}</div>` : ''}`;
+      ${S.jail ? `<div class="jailband">⛓️ DÉTENTION — encore ${U.dur(S.jail)}${S.prison && S.prison.protection > 0 ? ' · 🛡️ sous protection' : ''}</div>` : ''}`;
   },
   renderLog() {
     const el = $('#log');
@@ -1971,7 +2817,15 @@ const V = {
     const n = Inventory.list().length;
     let h = H.sec('Crimes');
     h += H.row({ icon: '🥷', title: 'Voler', sub: 'Vol à l\'arraché, cambriolages, braquages', fn: () => UI.open('steal') });
-    h += H.row({ icon: '👊', title: 'Agression', sub: 'Racket, caïds, balances', fn: () => UI.open('assault') });
+    h += H.row({ icon: '👊', title: 'Agression', sub: 'Combats au tour par tour : racket, caïds, balances', fn: () => UI.open('assault') });
+    h += H.sec('Vie nocturne & crime de rue');
+    h += H.row({ icon: '🪩', title: 'Aller en boîte de nuit', sub: `Club « ${CITIES[S.city].club} » · rencontres, fête, vente aux fêtards, bagarres`, right: '1 ⚡', fn: () => Night.enter() });
+    h += H.row({ icon: '🤏', title: 'Vol à la tire', sub: `Délit rapide dans la foule · ${U.money(30)}–${U.money(400)} · 1 ⚡`, right: U.pct(Street.pickChance()), fn: () => Street.pickpocket() });
+    h += H.row({ icon: '😈', title: 'Racketter des passants', sub: 'Intimidation (force, respect, arme)… sinon combat · 1 ⚡', right: U.pct(Street.intimidate(35)), fn: () => Street.racketPassant() });
+    const rk = S.rackets.reduce((a, r) => a + r.amount, 0);
+    h += H.row({ icon: '🏪', title: 'Racketter des commerçants', sub: `${S.rackets.length ? `${S.rackets.length} commerce(s) te versent ${U.money(rk)}/mois` : 'Butin + chance de « protection » mensuelle'} · 1 ⚡`, right: U.pct(Street.intimidate(25)), fn: () => Street.racketShop() });
+    h += H.sec('Forme & musculation');
+    h += H.row({ icon: '🏋️', title: 'Aller à la salle de sport', sub: `💪 Force ${Math.round(S.force)} % · ${S.trained ? 'séance faite ce mois ✔' : 'aucune séance ce mois (la force fond)'}${S.roids > 0 ? ' · 🧬 stéroïdes' : ''}`, right: '1 ⚡', fn: () => Gym.open() });
     h += H.sec('Vices & santé');
     h += H.row({ icon: '💉', title: 'Consommer de la drogue', sub: n ? `${n} produit(s) en stock` : 'Stock vide', fn: () => UI.open('consume') });
     h += H.row({ icon: '🧘', title: 'Cure de désintox', sub: `Addiction : ${Math.round(S.addiction)} %`, fn: () => UI.open('rehab') });
@@ -1991,21 +2845,23 @@ const V = {
     return { title: '🥷 Voler', html: h };
   },
   assault() {
-    let h = H.note(`Ta force de combat : <b>${Math.round(PlayerData.combatPower())}</b> (santé, armes, gilet, respect).`);
+    const w = Combat.weapon('all');
+    let h = H.note(`Combat au tour par tour. Arme : <b>${w.icon} ${w.name}</b> · 💪 Force ${Math.round(S.force)} % · 🦺 Protection ${PlayerData.armor()}. Tes PV sont ta santé. Pourcentage = chances de victoire estimées.`);
     for (const a of ASSAULTS) {
-      h += H.row({ icon: a.icon, title: a.name, sub: `${a.cash[1] ? U.money(a.cash[0]) + ' – ' + U.money(a.cash[1]) + ' · ' : ''}+${a.respect} 👑 · ${a.heat >= 0 ? '+' : ''}${a.heat} 🚨 · ${a.ap} ⚡${a.lethal ? ' · ☠️ dangereux' : ''}`,
-        right: U.pct(Actions.fightChance(a)), fn: () => Actions.assault(a.id) });
+      const F = FOES[a.foe];
+      h += H.row({ icon: a.icon, title: a.name, sub: `${F.icon} ${F.name} (${F.w}) · ${a.cash[1] ? U.money(a.cash[0]) + ' – ' + U.money(a.cash[1]) + ' · ' : ''}+${a.respect} 👑 · ${a.ap} ⚡${a.lethal ? ' · ☠️ combat à mort' : ''}`,
+        right: U.pct(Combat.estimate(a.foe, { arms: 'all' })), fn: () => Actions.assault(a.id) });
     }
     return { title: '👊 Agression', html: h };
   },
   consume() {
     const list = Inventory.list();
-    let h = H.card(`💉 Addiction : <b class="p">${Math.round(S.addiction)} %</b>${H.mini(S.addiction, 100)}<small class="m">Au-dessus de 25 %, chaque mois sans consommer provoque une crise de manque. Mélanger opioïdes et benzos multiplie le risque d'overdose.</small>`);
+    let h = H.card(`💉 Addiction : <b class="p">${Math.round(S.addiction)} %</b>${H.mini(S.addiction, 100)}<small class="m">Au-dessus de 25 %, chaque mois sans consommer provoque une crise de manque. Mélanger opioïdes et benzos multiplie le risque d'overdose.${S.roids > 0 ? ` 🧬 Charge en stéroïdes : ${Math.round(S.roids)} (abîme le cœur chaque mois).` : ''}</small>`);
     if (PlayerData.crimeBuff()) h += H.note(`⚡ Boost actif : +${PlayerData.crimeBuff()} % de réussite aux crimes ce mois-ci.`);
     if (!list.length) h += H.note('Ton stock est vide. Achète sur le marché (onglet Trafic).');
     for (const d of list) {
       const D = DRUGS[d];
-      h += H.row({ icon: D.icon, title: D.name, sub: `${U.num(Inventory.qty(d))} ${D.unit} · ${U.q(Inventory.q(d))} · ${Actions.fxText(D)}`, fn: () => Actions.consumeMenu(d) });
+      h += H.row({ icon: D.icon, title: D.name, sub: `${U.esc(Inventory.brand(d))} · ${U.num(Inventory.qty(d))} ${U.u(D, U.num(Inventory.qty(d)))} · ${U.q(Inventory.q(d))} · ${Actions.fxText(D)}`, fn: () => Actions.consumeMenu(d) });
     }
     return { title: '💉 Consommer', html: h };
   },
@@ -2029,11 +2885,17 @@ const V = {
     return { title: '🔪 Chirurgie', html: h };
   },
   prison() {
-    let h = H.card(`<div class="big">⛓️ Détention</div>Encore <b class="y">${U.dur(S.jail)}</b> à tirer · Casier : ${S.record} condamnation(s)<br><small class="m">Ton équipe, tes labos et tes commerces continuent de tourner. Le marché et les achats sont inaccessibles.</small>`, 'accent');
+    const p = Prison.ensure();
+    let h = H.card(`<div class="big">⛓️ Détention</div>Encore <b class="y">${U.dur(S.jail)}</b> à tirer · mois ${p.served} · casier : ${S.record} condamnation(s)
+      ${H.kv([['🛡️ Protection', p.protection > 0 ? `${p.protection} mois` : 'Aucune'], ['🤝 Clan allié', p.ally || '—'], ['💀 Menace des cartels', Prison.threatLabel()], ['🗡️ Arme', p.shank ? 'Surin planqué' : 'Mains nues']])}
+      <small class="m">Ton équipe, tes labos et tes commerces continuent de tourner. Le marché et les achats sont inaccessibles.</small>`, 'accent');
     h += H.sec('Vie en détention');
-    h += H.row({ icon: '💪', title: 'Musculation en cellule', sub: '+3 ❤️ · +1 👑 · 1 ⚡', fn: () => Actions.prison('muscu') });
-    h += H.row({ icon: '👊', title: 'Se battre dans la cour', sub: 'Gagner le respect du bâtiment · 1 ⚡', fn: () => Actions.prison('bagarre') });
+    h += H.row({ icon: '💪', title: 'Musculation en cellule', sub: `Force ${Math.round(S.force)} % ↑ · +2 ❤️ · +1 👑 · 1 ⚡`, fn: () => Actions.prison('muscu') });
+    h += H.row({ icon: '👊', title: 'Se battre dans la cour', sub: `Combat au tour par tour · victoire ~${Combat.estimate('detenu', { arms: 'prison' })} % · 1 ⚡`, fn: () => Actions.prison('bagarre') });
     h += H.row({ icon: '📦', title: 'Trafic en détention', sub: 'Téléphones, shit… 25 % de risque de rallonge · 1 ⚡', fn: () => Actions.prison('trafic') });
+    h += H.row({ icon: '🔪', title: 'Fabriquer un surin', sub: p.shank ? 'Déjà planqué dans ta cellule' : 'Arme pour les combats en détention · 20 % de fouille · 1 ⚡', dis: p.shank, fn: () => Actions.prison('surin') });
+    h += H.sec('Protection & corruption');
+    h += H.row({ icon: '🛡️', title: 'Acheter la protection d\'un clan', sub: `12 mois · ${U.money(2500 * (1 + S.rank))} · 1 ⚡`, fn: () => Actions.prison('protection') });
     h += H.row({ icon: '💶', title: 'Corrompre un surveillant', sub: `−25 % de peine (70 %) · ${U.money(3000 * (S.rank + 1))} · 1 ⚡`, fn: () => Actions.prison('maton') });
     h += H.row({ icon: '🪢', title: 'Tenter une évasion', sub: `Chance ~${Math.round(U.clamp(10 + PlayerData.respect() / 8 + PlayerData.soldiers().length * 2, 5, 40))} % · échec : +12 mois · 2 ⚡`, fn: () => Actions.prison('evasion') });
     h += H.row({ icon: '🏥', title: 'Infirmerie', sub: 'Soins gratuits (+10 ❤️) · 1 ⚡', fn: () => { if (PlayerData.useAP(1)) { PlayerData.heal(10); S.wounded = false; UI.toast('🏥 +10 santé'); } } });
@@ -2067,7 +2929,7 @@ const V = {
     if (!list.length) h += H.note('Ta planque est vide. Passe par le marché de gros.');
     for (const d of list) {
       const D = DRUGS[d];
-      h += H.row({ icon: D.icon, title: D.name, sub: `${U.num(Inventory.qty(d))} ${D.unit} · ${U.q(Inventory.q(d))} · encombrement ${U.num(Inventory.qty(d) * D.bulk)}`, right: U.money(Inventory.streetValue(d, Inventory.qty(d))), fn: () => Actions.stockMenu(d) });
+      h += H.row({ icon: D.icon, title: D.name, sub: `${U.esc(Inventory.brand(d))} · ${U.num(Inventory.qty(d))} ${U.u(D, U.num(Inventory.qty(d)))} · ${U.q(Inventory.q(d))} · encombrement ${U.num(Inventory.qty(d) * D.bulk)}`, right: U.money(Inventory.streetValue(d, Inventory.qty(d))), fn: () => Actions.stockMenu(d) });
     }
     return { title: '📦 Mon stock', html: h };
   },
@@ -2089,7 +2951,7 @@ const V = {
     if (!list.length) h += H.note('Rien à vendre. Achète d\'abord en gros.');
     for (const d of list) {
       const D = DRUGS[d], left = MarketData.demandLeft(d), q = Inventory.q(d);
-      h += H.row({ icon: D.icon, title: D.name, sub: `Stock ${U.num(Inventory.qty(d))} · ${U.q(q)} · clients restants : ${U.num(left)} ${D.unit}`, right: `${U.unitPrice(MarketData.retail(S.city, d, q))}<br><small class="m">/${D.unit}</small>`, dis: left < 1, fn: () => Actions.sellRetail(d) });
+      h += H.row({ icon: D.icon, title: D.name, sub: `Stock ${U.num(Inventory.qty(d))} · ${U.q(q)} · clients restants : ${U.num(left)} ${U.u(D, U.num(left))}`, right: `${U.unitPrice(MarketData.retail(S.city, d, q))}<br><small class="m">/${D.unit}</small>`, dis: left < 1, fn: () => Actions.sellRetail(d) });
     }
     return { title: '🏪 Vente au détail', html: h };
   },
@@ -2099,7 +2961,7 @@ const V = {
     if (!list.length) h += H.note('Rien à vendre.');
     for (const d of list) {
       const D = DRUGS[d], q = Inventory.q(d);
-      h += H.row({ icon: D.icon, title: D.name, sub: `Stock ${U.num(Inventory.qty(d))} ${D.unit} · ${U.q(q)} ${MarketData.trendIcon(S.city, d)}`, right: `${U.unitPrice(MarketData.sellUnit(S.city, d, q))}<br><small class="m">/${D.unit}</small>`, fn: () => Actions.sellBulk(d) });
+      h += H.row({ icon: D.icon, title: D.name, sub: `Stock ${U.num(Inventory.qty(d))} ${U.u(D, U.num(Inventory.qty(d)))} · ${U.q(q)} ${MarketData.trendIcon(S.city, d)}`, right: `${U.unitPrice(MarketData.sellUnit(S.city, d, q))}<br><small class="m">/${D.unit}</small>`, fn: () => Actions.sellBulk(d) });
     }
     return { title: '🏭 Vente en gros', html: h };
   },
@@ -2138,7 +3000,7 @@ const V = {
     if (!S.imports.length) h += H.note('Aucune cargaison en route.');
     for (const im of S.imports) {
       const D = DRUGS[im.d], m = IMPORT_METHODS.find((x) => x.id === im.method);
-      h += H.row({ icon: m.icon, title: `${U.num(im.qty)} ${D.unit} ${U.de(D.name)}`, sub: `${CITIES[im.from].flag} ${CITIES[im.from].name} · ${m.name} · arrivée dans ${Math.max(1, im.arrive - S.ageMonths)} mois · saisie ${im.risk} %` });
+      h += H.row({ icon: m.icon, title: `${U.num(im.qty)} ${U.u(D, U.num(im.qty))} ${U.de(D.name)}`, sub: `${CITIES[im.from].flag} ${CITIES[im.from].name} · ${m.name} · arrivée dans ${Math.max(1, im.arrive - S.ageMonths)} mois · saisie ${im.risk} %` });
     }
     return { title: '🚢 Importations', html: h };
   },
@@ -2175,14 +3037,14 @@ const V = {
       h += H.sec('Mes laboratoires');
       for (const l of S.labs) {
         const L = LABS[l.type];
-        h += H.row({ icon: L.icon, title: `${L.name} · niv. ${l.level}`, sub: `~${U.num(L.out * LAB_MULT[l.level - 1])} ${DRUGS[L.drug].unit}/mois · frais ${U.money(L.upkeep * (1 + (l.level - 1) * 0.5))}/mois${L.input ? ` · consomme ${Math.round(L.input.qty * LAB_MULT[l.level - 1])} ${DRUGS[L.input.drug].unit} ${U.de(DRUGS[L.input.drug].name)}` : ''}`, fn: () => Actions.labMenu(l.id) });
+        h += H.row({ icon: L.icon, title: `${L.name} · niv. ${l.level}`, sub: `~${U.num(L.out * LAB_MULT[l.level - 1])} ${U.u(DRUGS[L.drug], U.num(L.out * LAB_MULT[l.level - 1]))}/mois · frais ${U.money(L.upkeep * (1 + (l.level - 1) * 0.5))}/mois${L.input ? ` · consomme ${Math.round(L.input.qty * LAB_MULT[l.level - 1])} ${U.u(DRUGS[L.input.drug], Math.round(L.input.qty * LAB_MULT[l.level - 1]))} ${U.de(DRUGS[L.input.drug].name)}` : ''}`, fn: () => Actions.labMenu(l.id) });
       }
     }
     h += H.sec('Monter un laboratoire');
     h += H.note('La production arrive dans ton stock chaque mois. Risque de démantèlement lié à la pression policière.');
     for (const t in LABS) {
       const L = LABS[t], lock = S.rank < L.rank;
-      h += H.row({ icon: L.icon, title: L.name, sub: `${lock ? `🔒 ${RANKS[L.rank].name} · ` : ''}${U.num(L.out)} ${DRUGS[L.drug].unit}/mois ${U.de(DRUGS[L.drug].name)} (Q${L.q[0]}–${L.q[1]}) · frais ${U.money(L.upkeep)}/mois${L.input ? ` · nécessite ${L.input.qty} g de cocaïne/mois` : ''}${L.boom ? ' · 💥 explosif' : ''}`,
+      h += H.row({ icon: L.icon, title: L.name, sub: `${lock ? `🔒 ${RANKS[L.rank].name} · ` : ''}${U.num(L.out)} ${U.u(DRUGS[L.drug], U.num(L.out))}/mois ${U.de(DRUGS[L.drug].name)} (Q${L.q[0]}–${L.q[1]}) · frais ${U.money(L.upkeep)}/mois${L.input ? ` · nécessite ${L.input.qty} g de cocaïne/mois` : ''}${L.boom ? ' · 💥 explosif' : ''}`,
         right: U.money(L.price), dis: lock, fn: () => Actions.buyLab(t) });
     }
     return { title: '🧪 Laboratoires', html: h };
@@ -2247,7 +3109,7 @@ const V = {
     h += H.sec('Dealeur — produit à écouler');
     for (const d in DRUGS) {
       const D = DRUGS[d];
-      h += H.row({ icon: D.icon, title: D.name, sub: `En stock : ${U.num(Inventory.qty(d))} ${D.unit}`, cls: m.role === 'dealer' && m.drug === d ? 'hl' : '', fn: () => Crew.assign(id, 'dealer', d) });
+      h += H.row({ icon: D.icon, title: D.name, sub: `En stock : ${U.num(Inventory.qty(d))} ${U.u(D, U.num(Inventory.qty(d)))}`, cls: m.role === 'dealer' && m.drug === d ? 'hl' : '', fn: () => Crew.assign(id, 'dealer', d) });
     }
     return { title: 'Affectation', html: h };
   },
@@ -2320,6 +3182,7 @@ const V = {
       h += H.row({ icon: C.icon, title: C.label, sub: own ? `${own} possédé(s)` : 'Rien pour l\'instant', fn: () => UI.open('shop', cat) });
     }
     h += H.sec('Ma vie');
+    h += H.row({ icon: '🪞', title: 'Profil & Style', sub: `${Profile.tier(PlayerData.possessionRespect())} · tenue portée, accessoires, statut social`, fn: () => Profile.open() });
     h += H.row({ icon: '📊', title: 'Statistiques', sub: 'Bilan de ta carrière criminelle', fn: () => UI.open('stats') });
     h += H.row({ icon: '⚙️', title: 'Paramètres', sub: 'Sauvegarde, nouvelle vie', fn: () => UI.open('settings') });
     return { title: '💎 Achats & Patrimoine', html: h };
@@ -2327,10 +3190,25 @@ const V = {
   shop(cat) {
     const C = SHOP[cat];
     let h = '';
+    if (cat === 'clothes' || cat === 'jewelry') {
+      const b = PlayerData.styleBreakdown();
+      h += H.note(`Un objet porté par emplacement. Seule la tenue portée compte : tenue +${b.tenue}, accessoires +${b.acc} (bonus total plafonné à +40). Touche un objet possédé pour le porter ou le revendre.`);
+      h += H.row({ icon: '🪞', title: 'Profil & Style', sub: `${Profile.tier(b.total)} · bonus de respect +${b.total}`, cls: 'hl', fn: () => Profile.open() });
+      for (const sl in SLOTS) {
+        if (SLOTS[sl].cat !== cat) continue;
+        h += H.sec(`${SLOTS[sl].icon} ${SLOTS[sl].label}`);
+        for (const it of C.items.filter((i) => i.slot === sl)) {
+          const own = S.owned[cat].includes(it.id), eq = Shop.isEquipped(it);
+          h += H.row({ icon: it.icon, title: it.name, sub: `+${it.respect} respect${own ? ` · revente ${U.money(it.price * RESALE[cat])}` : ''}`,
+            right: own ? (eq ? '<span class="g">✔ Porté</span>' : '<span class="m">Possédé</span>') : U.money(it.price), cls: own ? 'owned' : '',
+            fn: () => (own ? Shop.ownedMenu(cat, it) : Shop.buy(cat, it)) });
+        }
+      }
+      return { title: `${C.icon} ${C.label}`, html: h };
+    }
     if (cat === 'properties') h += H.note(`Ta planque de base : chambre chez ta mère (50). Capacité actuelle : <b>${U.num(PlayerData.capacity())}</b> · sécurité <b>${PlayerData.security()}</b>. La sécurité réduit les descentes et les cambriolages.`);
-    else if (cat === 'weapons') h += H.note(`Marché noir, liquide uniquement. Puissance de feu : <b>${PlayerData.firepower()}</b> · protection : <b>${PlayerData.armor()}</b>. Les armes augmentent tes chances aux braquages, agressions et guerres, mais alourdissent les peines.`);
-    else if (cat === 'vehicles') h += H.note('La vitesse aide à fuir (go fast, contrôles), la discrétion à passer inaperçu. Entretien mensuel : 0,4 % du prix.');
-    else h += H.note('Le style impose le respect. Bonus total des biens plafonné à +40.');
+    else if (cat === 'weapons') h += H.note(`Marché noir, liquide uniquement. Puissance de feu : <b>${PlayerData.firepower()}</b> · protection : <b>${PlayerData.armor()}</b>. En combat, ta meilleure arme est utilisée (dégâts, précision) et le gilet réduit les dégâts des balles. Les armes alourdissent les peines.`);
+    else if (cat === 'vehicles') h += H.note('La vitesse aide à fuir (go fast, contrôles), la discrétion à passer inaperçu. Seul ton meilleur véhicule compte pour le respect. Entretien mensuel : 0,4 % du prix.');
     for (const it of C.items) {
       const own = S.owned[cat].includes(it.id);
       h += H.row({ icon: it.icon, title: it.name, sub: Shop.statLine(cat, it) + (own ? ` · revente ${U.money(it.price * RESALE[cat])}` : ''), right: own ? '<span class="g">✔ Possédé</span>' : U.money(it.price), cls: own ? 'owned' : '',
@@ -2349,6 +3227,7 @@ const V = {
       ['Casier', `${S.record} condamnation(s)`], ['Victimes', s.kills],
       ['Guerres menées', s.wars], ['Territoires', S.territories],
       ['Doses consommées', s.doses], ['Overdoses', s.ods],
+      ['Force', `${Math.round(S.force)} %`], ['Combats gagnés', `${s.fightsWon} / ${s.fights}`],
     ]));
     return { title: '📊 Statistiques', html: h };
   },
@@ -2373,9 +3252,11 @@ const Game = {
     S.rivals = this.genRivals();
     S.candidates = Crew.genList(3);
     S.gofasts = GoFast.gen();
+    S.owned.clothes = ['zara_tee', 'zara_jog', 'zara_shoes'];
+    S.equip = { haut: 'zara_tee', bas: 'zara_jog', chaussures: 'zara_shoes' };
     log('👶', CITIES[city].intro, 'info');
     log('🎂', `Tu as <b>18 ans</b>. Poche : ${U.money(S.cash)}. La rue t'appelle.`, 'info');
-    log('💡', 'Astuce : achète un peu de marchandise en gros (onglet Trafic), revends-la au détail, et appuie sur <b>+1 mois</b> pour avancer.', '');
+    log('💡', 'Astuce : achète un peu de marchandise en gros (onglet Trafic), revends-la au détail, et appuie sur <b>+1 mois</b> pour avancer. Touche ton avatar pour voir ton profil et ta garde-robe.', '');
     UI.stack = []; UI.tab = null; UI._seq = -1;
     this.commit();
   },
@@ -2408,7 +3289,7 @@ const Game = {
     const consumed = Object.keys(S.used).length > 0;
     S.used = {}; S.deposit = 0;
     S.buffs = S.buffs.filter((b) => --b.months > 0);
-    const steps = [Monthly.jail, () => Monthly.addiction(consumed), Monthly.health, Monthly.income, () => Monthly.crew(), Monthly.labs,
+    const steps = [Monthly.jail, () => Monthly.addiction(consumed), Monthly.health, Monthly.fitness, Monthly.income, () => Monthly.crew(), Monthly.labs,
       Monthly.business, Monthly.upkeep, Monthly.imports, Monthly.debts, Monthly.heat, Monthly.refresh];
     for (const st of steps) { st.call(Monthly); if (!S.alive) break; }
     S.ap = PlayerData.apMax();
@@ -2443,6 +3324,20 @@ const Game = {
     if (!S.market) S.market = MarketData.init();
     if (!S.rivals || !S.rivals.length) S.rivals = this.genRivals();
     if (!CITIES[S.city]) S.city = 'marseille';
+    // v1 → v2 : tenues complètes remplacées par des pièces portées par emplacement
+    if ((S.v || 1) < 2) {
+      const clothes = [];
+      for (const id of S.owned.clothes) {
+        for (const nid of OLD_CLOTHES[id] || [id]) {
+          if (SHOP.clothes.items.some((i) => i.id === nid)) { if (!clothes.includes(nid)) clothes.push(nid); }
+          else if (SHOP.jewelry.items.some((i) => i.id === nid) && !S.owned.jewelry.includes(nid)) S.owned.jewelry.push(nid);
+        }
+      }
+      S.owned.clothes = clothes; S.v = 2;
+    }
+    for (const sl in SLOTS) if (!PlayerData.equipped(sl)) { const best = Shop.bestFor(sl); if (best) S.equip[sl] = best.id; }
+    for (const c in CITIES) for (const d in DRUGS) if (S.market.trend[c][d] == null) { S.market.trend[c][d] = 1; S.market.qual[c][d] = MarketData.rollQ(c, d); S.market.brand[c][d] = 0; }
+    if (S.jail && !S.prison) Prison.enter();
   },
   wipe() { try { localStorage.removeItem(SAVE_KEY); } catch (e) { /* ignore */ } S = null; UI.stack = []; UI.tab = null; UI.render(); },
   commit() { this.save(); UI.render(); },
