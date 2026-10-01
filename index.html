@@ -480,6 +480,79 @@ body.trip #modal-root .stage{animation:trip 2.6s ease-in-out}
 .st-vial.s2 .gl{transform:translate(-45px,-66px) rotate(-38deg)}
 .st-vial.s2 .gl .liq{height:0}
 
+/* ---------- COMPRIMÉS RÉALISTES : formes, couleurs, gravures ---------- */
+.pl{display:grid;place-items:center;overflow:hidden}
+.pl em{font-style:normal;font-size:3.6px;font-weight:900;letter-spacing:.2px;color:rgba(0,0,0,.42);white-space:nowrap;line-height:1}
+.pl.oval{width:20px;height:13px;margin:-6px -10px;border-radius:50%;background:radial-gradient(ellipse at 35% 30%,#fff,var(--pc) 58%)}
+.pl.oblong{width:26px;height:11px;margin:-5px -13px;border-radius:6px;background:radial-gradient(ellipse at 35% 25%,#fff,var(--pc) 60%)}
+.pl.capsule{background:linear-gradient(180deg,rgba(255,255,255,.55),transparent 45%,rgba(0,0,0,.12)),linear-gradient(90deg,var(--pc) 50%,var(--pc2) 50%)}
+.pl.sc::before{content:'';position:absolute;left:50%;top:8%;bottom:8%;width:1px;background:rgba(0,0,0,.28)}
+.st-rx .lb span{display:block;font-size:5px;font-weight:800;color:#333;line-height:1.2}
+.st-fr .blister i{background:radial-gradient(circle at 35% 35%,#fff,var(--pc,#e6e6e6) 62%,rgba(0,0,0,.25))}
+.st-fr .blister.ob i{border-radius:6px}
+.st-fr.s3 .pl{animation:frTake 1.1s forwards}
+.st-fr .nm.lg2{font-size:11px;top:18px}
+.st-fr .qt{font-size:6.5px}
+.st-fr .fr-lab{position:absolute;right:6px;top:16px;font-size:7px;font-weight:900;letter-spacing:.3px;color:var(--lgc,#333)}
+.st-fr .fr-lab.roche{background:#0b41cd;color:#fff;padding:1px 6px;clip-path:polygon(14% 0,86% 0,100% 50%,86% 100%,14% 100%,0 50%)}
+.st-fr .fr-rg{position:absolute;right:6px;top:30px;padding:1px 3px;border:1.5px solid #d32f2f;color:#d32f2f;font-size:5px;font-weight:900;line-height:1.2}
+.st-pill .blister i{background:radial-gradient(circle at 35% 35%,#fff,var(--pc,#e6e6e6) 62%,rgba(0,0,0,.25))}
+.st-pill.s2 .pl{animation:pillTake 1.1s forwards}
+.st-zip .tb.oblong,.st-zip .tb.capsule{width:34px;height:14px;border-radius:7px;font-size:6px}
+.st-zip .tb.bar{width:36px;height:11px;border-radius:3px;font-size:6px}
+.st-zip .tb.oval{width:28px;height:18px;border-radius:50%;font-size:7px}
+/* oxycodone écrasée puis sniffée */
+.st-crush .mirror{position:absolute;left:50%;top:50%;width:220px;height:110px;margin:-48px 0 0 -110px;background:linear-gradient(135deg,#3b404b,#15171c);border:2px solid #565c68;border-radius:8px}
+.st-crush .pl{opacity:1;top:62%;transform:scale(1.6);transition:transform .5s .9s,opacity .4s 1s}
+.st-crush .spn{position:absolute;left:50%;top:62%;width:40px;height:20px;margin:-58px 0 0 -20px;border-radius:50%;background:radial-gradient(ellipse at 40% 30%,#f5f5f5,#9e9e9e 65%,#616161);box-shadow:0 3px 6px rgba(0,0,0,.5);opacity:0;z-index:5}
+.st-crush .spn::after{content:'';position:absolute;left:34px;top:6px;width:70px;height:7px;border-radius:4px;background:linear-gradient(180deg,#e0e0e0,#8a8a8a);transform:rotate(-18deg);transform-origin:left center}
+.st-crush .dust{position:absolute;left:50%;top:62%;width:30px;height:14px;margin:-7px 0 0 -15px;border-radius:50% 50% 40% 40%;background:radial-gradient(circle,#fff 10%,var(--pc) 75%);opacity:0;transform:scale(.2);transition:transform .6s 1s,opacity .3s 1s}
+.st-crush .ln{position:absolute;left:50%;top:62%;width:110px;height:5px;margin:-2px 0 0 -55px;border-radius:3px;background:linear-gradient(90deg,#fff,var(--pc));transform:scaleX(0);transform-origin:left;transition:transform .9s .4s}
+.st-crush .card{position:absolute;left:50%;top:62%;width:44px;height:28px;margin:-34px 0 0 -100px;background:linear-gradient(135deg,#ffd23f,#b98a00);border-radius:4px;opacity:0}
+.st-crush .bill{position:absolute;left:50%;top:62%;width:46px;height:9px;margin:-14px 0 0 -78px;border-radius:5px;background:repeating-linear-gradient(90deg,#7cb342 0 5px,#9ccc65 5px 9px);box-shadow:0 2px 4px rgba(0,0,0,.4);opacity:0;transform:rotate(-12deg);z-index:5}
+.st-crush .nose{position:absolute;left:50%;top:4px;margin-left:-14px;font-size:26px;opacity:0;transition:opacity .4s}
+.st-crush.s1 .spn{animation:press 1.4s forwards}
+@keyframes press{0%{opacity:1;transform:translateY(-30px)}35%{opacity:1;transform:translateY(46px)}50%{opacity:1;transform:translateY(42px) rotate(8deg)}65%{opacity:1;transform:translateY(46px) rotate(-8deg)}100%{opacity:0;transform:translateY(-30px)}}
+.st-crush.s1 .pl{transform:scale(2.4,.3);opacity:0}
+.st-crush.s1 .dust{opacity:1;transform:none}
+.st-crush.s2 .dust{transform:scale(0);opacity:0;transition:transform .6s .3s,opacity .4s .5s}
+.st-crush.s2 .ln{transform:scaleX(1)}
+.st-crush.s2 .card{animation:swipe 1.1s}
+.st-crush.s3 .ln{transform:scaleX(0);transform-origin:right;transition:transform 1.1s .3s}
+.st-crush.s3 .bill{opacity:1;animation:snort 1.4s .1s forwards}
+@keyframes snort{0%{transform:translateX(-10px) rotate(-12deg)}100%{transform:translateX(124px) rotate(-12deg);opacity:.2}}
+.st-crush.s3 .nose{opacity:1}
+/* sirop codéiné « maison » (bouteille sans marque) */
+.st-lean .home .body{border-radius:9px 9px 6px 6px;border:1px solid rgba(255,255,255,.45);background:rgba(255,255,255,.08)}
+.st-lean .home .body::after{content:'';position:absolute;inset:0;background:linear-gradient(90deg,rgba(255,255,255,.3),transparent 22%,transparent 72%,rgba(255,255,255,.16));pointer-events:none}
+.st-lean .home .lq{position:absolute;left:0;right:0;bottom:0;height:82%;background:var(--lc);transition:height 1.2s .8s}
+.st-lean .home .nk{border:1px solid rgba(255,255,255,.4);border-bottom:none;background:rgba(255,255,255,.12)}
+.st-lean .home .tp{position:absolute;left:3px;right:2px;top:36px;height:15px;background:#f3e7c4;transform:rotate(-6deg);font:italic 700 6.5px/15px 'Comic Sans MS',cursive;color:#333;text-align:center;box-shadow:0 1px 2px rgba(0,0,0,.3)}
+.st-lean.s1 .home .lq{height:45%}
+/* paquets de cigarettes contrefaits (marques imitées) */
+.st-cig.brand .pk{background:var(--pk)} .st-cig.brand .lid{background:var(--pl)} .st-cig.brand .pk .br{color:var(--pt);font-size:9.5px;font-weight:900;top:26px;font-style:italic}
+.st-cig.brand .pk .warn{background:#fff;color:#111}
+/* panneau de réglage des labos */
+.lcw{text-align:left}
+.lc-prev{position:relative;height:96px;border-radius:12px;background:radial-gradient(circle at 50% 60%,#2a1d36,#141417 75%);border:1px solid #2e2e34;display:grid;place-items:center;margin:4px 0 6px;overflow:hidden}
+.lc-sec{font-size:11px;font-weight:800;letter-spacing:.6px;text-transform:uppercase;color:var(--red);margin:10px 2px 5px}
+.lc-opts{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+.lc-o{background:#1d1d22;border:1px solid #33333a;border-radius:10px;padding:7px 8px;color:var(--tx);text-align:left;cursor:pointer;font:inherit;line-height:1.2}
+.lc-o b{display:block;font-size:13px} .lc-o small{display:block;color:var(--mut);font-size:10.5px;margin-top:2px}
+.lc-o.on{border-color:var(--red);box-shadow:0 0 0 1px var(--red) inset;background:#2a1418}
+.lc-sws{display:flex;flex-wrap:wrap;gap:9px}
+.lc-sw{width:30px;height:30px;border-radius:50%;border:2px solid #444;cursor:pointer;padding:0}
+.lc-sw.on{border-color:#fff;box-shadow:0 0 0 2px var(--red)}
+.lc-in{width:100%;box-sizing:border-box;background:#141417;border:1px solid #3a3a40;border-radius:10px;color:#fff;font-size:16px;font-weight:800;letter-spacing:2px;padding:9px 10px;text-transform:uppercase}
+.lc-info{font-size:12.5px;color:#cfcfd4;margin-top:10px;line-height:1.5;background:#141417;border-radius:10px;padding:8px 10px}
+.lc-prev .pl{position:relative;left:auto;top:auto;margin:0;opacity:1;transform:scale(3.4)}
+.lc-bud{font-size:56px;line-height:1}
+.lc-hash{width:96px;height:36px;border-radius:7px;background:radial-gradient(circle at 30% 30%,rgba(255,255,255,.25),transparent 60%),var(--hc);box-shadow:inset 0 -4px 8px rgba(0,0,0,.35),0 4px 10px rgba(0,0,0,.5);display:grid;place-items:center;color:rgba(0,0,0,.45);font-weight:900;font-size:13px;letter-spacing:1px}
+.lc-prev .tb{width:24px;height:24px;border-radius:50%;background:var(--pc);display:grid;place-items:center;font-size:10px;font-weight:900;color:rgba(0,0,0,.55);transform:scale(2.4);box-shadow:inset 0 -2px 3px rgba(0,0,0,.25)}
+.lc-prev .st-lean .lbt{position:relative;left:auto;bottom:auto;margin:0;transform:scale(.62)}
+.lc-prev .st-cig .pk{position:relative;left:auto;bottom:auto;margin:0;transform:scale(.72)}
+.lc-badge{position:absolute;right:8px;top:6px;font-size:11px;font-weight:800;color:#ff8a80}
+
 /* ---------- TOAST ---------- */
 #toast{position:fixed;left:50%;top:calc(10px + env(safe-area-inset-top));transform:translate(-50%,-160%);background:#26262b;border:1px solid var(--red);
   padding:10px 14px;border-radius:12px;font-size:14px;z-index:60;transition:transform .25s;max-width:92vw;text-align:center;box-shadow:0 4px 22px rgba(0,0,0,.6)}
@@ -584,7 +657,7 @@ function log(e, t, c = '') {
 /* =============================== DATA =============================== */
 const CONFIG = { anim: 1 }; // facteur de durée des animations (0 = instantané)
 const DRUGS = {
-  oxy:   { form: 'rxbottle', name: 'Oxycodone', cat: 'med', icon: '💊', unit: 'cp', brands: ['Percocet 10 mg', 'OxyContin 80 mg'], base: 25, demand: 60, depth: 4000, bulk: 0.2, add: 7, od: 1.4, opioid: true, fx: { health: 4, stress: -5 }, txt: 'Une chaleur cotonneuse t\'enveloppe, la douleur disparaît.' },
+  oxy:   { form: 'rxbottle', name: 'Oxycodone', cat: 'med', icon: '💊', unit: 'cp', brands: ['Percocet 10 mg', 'OxyContin 80 mg'], snort: true, base: 25, demand: 60, depth: 4000, bulk: 0.2, add: 7, od: 1.4, opioid: true, fx: { health: 4, stress: -5 }, txt: 'Une chaleur cotonneuse t\'enveloppe, la douleur disparaît.' },
   lean:  { form: 'lean', name: 'Sirop codéiné / Prométhazine', cat: 'med', icon: '🟣', unit: 'flacon', brands: ['Actavis', 'Euphon'], base: 120, demand: 10, depth: 400, bulk: 3, add: 5, od: 1.0, opioid: true, fx: { health: 1, respect: 1, stress: -6 }, txt: 'Double cup en main, le temps ralentit…' },
   benzo: { form: 'frbox', forms: { 'Xanax Bar 2 mg': 'rxbottle' }, name: 'Benzodiazépines', cat: 'med', icon: '💠', unit: 'cp', brands: ['Xanax Bar 2 mg', 'Valium 10 mg', 'Rivotril 2 mg'], base: 8, demand: 120, depth: 8000, bulk: 0.2, add: 5, od: 0.6, benzo: true, fx: { crime: 6, stress: -10 }, txt: 'Plus rien ne t\'atteint. Sang-froid total.' },
   rita:  { form: 'frbox', name: 'Méthylphénidate', cat: 'med', icon: '⚪', unit: 'cp', brands: ['Ritaline', 'Concerta'], base: 10, demand: 70, depth: 6000, bulk: 0.2, add: 3, od: 0.3, stim: true, fx: { ap: 1 }, txt: 'Concentration maximale, tu enchaînes les tâches.' },
@@ -592,8 +665,8 @@ const DRUGS = {
   crack: { form: 'pipe', name: 'Crack', cat: 'dure', icon: '🪨', unit: 'caillou', brands: ['Galette', 'Cailloux'], base: 20, demand: 70, depth: 4000, bulk: 0.3, add: 9, od: 1.5, stim: true, fx: { ap: 1, crime: 12, health: -5 }, txt: 'Un flash violent… puis l\'envie immédiate d\'y retourner.' },
   heroB: { form: 'inject', name: 'Héroïne (brown sugar)', cat: 'dure', icon: '🟤', unit: 'g', brands: ['Brown sugar', 'Brune afghane'], base: 40, demand: 30, depth: 2500, bulk: 1, add: 10, od: 2.2, opioid: true, fx: { health: 3, stress: -12 }, txt: 'Tu pars loin, très loin…' },
   heroW: { form: 'inject', name: 'Héroïne (blanche)', cat: 'dure', icon: '🤍', unit: 'g', brands: ['Blanche n°4', 'Chiva'], base: 80, demand: 20, depth: 1800, bulk: 1, add: 11, od: 2.8, opioid: true, fx: { health: 3, stress: -12 }, txt: 'Une vague tiède te submerge. Plus rien n\'existe.' },
-  weed:  { form: 'joint', name: 'Cannabis (herbe)', cat: 'douce', icon: '🌿', unit: 'g', brands: ['Amnesia', 'Gelato', 'OG Kush', 'Purple Haze'], base: 10, demand: 160, depth: 25000, bulk: 1, add: 1, od: 0, fx: { health: 2, stress: -8 }, txt: 'Tu te poses, le stress redescend.' },
-  hash:  { form: 'joint', name: 'Résine filtrée', cat: 'douce', icon: '🟫', unit: 'g', brands: ['Jaune mousseux', 'Filtré 120 µ', 'Charas'], base: 7, demand: 220, depth: 35000, bulk: 1, add: 1, od: 0, fx: { health: 1, stress: -8 }, txt: 'Un gros spliff sur le toit du bâtiment.' },
+  weed:  { form: 'joint', name: 'Cannabis (herbe)', cat: 'douce', icon: '🌿', unit: 'g', brands: ['Amnesia', 'Gelato', 'OG Kush', 'Purple Haze', 'White Widow', 'Critical'], base: 10, demand: 160, depth: 25000, bulk: 1, add: 1, od: 0, fx: { health: 2, stress: -8 }, txt: 'Tu te poses, le stress redescend.' },
+  hash:  { form: 'joint', name: 'Résine filtrée', cat: 'douce', icon: '🟫', unit: 'g', brands: ['Jaune mousseux', 'Filtré 120 µ', 'Charas', 'Ice-o-lator'], base: 7, demand: 220, depth: 35000, bulk: 1, add: 1, od: 0, fx: { health: 1, stress: -8 }, txt: 'Un gros spliff sur le toit du bâtiment.' },
   mdma:  { form: 'ziplock', name: 'MDMA / Ecstasy', cat: 'dure', icon: '💗', unit: 'cp', brands: ['Tesla', 'Punisher', 'Blue Dolphin', 'Skull'], base: 10, demand: 90, depth: 10000, bulk: 0.3, add: 3, od: 0.6, fx: { respect: 2, health: -1, stress: -10 }, txt: 'Tu aimes tout le monde, la soirée est magique.' },
   keta:  { form: 'powder', name: 'Kétamine', cat: 'dure', icon: '🐴', unit: 'g', brands: ['Cristaux', 'Poudre fine'], base: 30, demand: 30, depth: 2500, bulk: 1, add: 4, od: 1.0, fx: { health: -1, stress: -6 }, txt: 'Le sol se dérobe, tu flottes hors de ton corps.' },
   meth:  { form: 'pipe', name: 'Méthamphétamine', cat: 'dure', icon: '🧊', unit: 'g', brands: ['Crystal', 'Ice bleue'], base: 60, demand: 20, depth: 2500, bulk: 1, add: 9, od: 1.2, stim: true, fx: { ap: 2, crime: 10, health: -5 }, txt: 'Tu ne dors plus. Tu n\'as plus besoin de dormir.' },
@@ -604,6 +677,7 @@ const DRUGS = {
   subutex: { form: 'frbox', name: 'Subutex (buprénorphine)', cat: 'med', icon: '🟡', unit: 'cp', brands: ['Subutex 8 mg', 'Buprénorphine Arrow'], base: 12, demand: 50, depth: 5000, bulk: 0.2, add: 5, od: 0.5, opioid: true, subst: true, fx: { health: 2, stress: -4 }, txt: 'Le manque s\'apaise, sans vraie défonce.' },
   skenan:  { form: 'frbox', name: 'Skenan (morphine)', cat: 'med', icon: '🔵', unit: 'gél', brands: ['Skenan LP 100 mg', 'Moscontin 60 mg'], base: 22, demand: 35, depth: 3000, bulk: 0.2, add: 9, od: 1.8, opioid: true, fx: { health: 5, stress: -8 }, txt: 'La morphine t\'enveloppe comme une couverture chaude.' },
   roofies: { form: 'frbox', name: 'Rohypnol (flunitrazépam)', cat: 'med', icon: '🟢', unit: 'cp', brands: ['Rohypnol 1 mg'], base: 10, demand: 30, depth: 3000, bulk: 0.2, add: 6, od: 1.0, benzo: true, fx: { stress: -12 }, txt: 'Tout devient flou. Des trous noirs dans ta soirée…' },
+  codeine: { form: 'frbox', name: 'Cachets de codéine', cat: 'med', icon: '⚪', unit: 'cp', brands: ['Néo-Codion', 'Codoliprane', 'Dafalgan codéiné'], base: 1.2, demand: 120, depth: 30000, bulk: 0.1, add: 3, od: 0.4, opioid: true, fx: { health: 2, stress: -4 }, txt: 'Une douce torpeur : la douleur et la toux s\'effacent.' },
   clopes:  { form: 'cig', name: 'Cigarettes', cat: 'tabac', icon: '🚬', unit: 'paquet', brands: ['Marlboro Red (tabac)', 'Paquet volé (camion)', 'Contrebande (Algérie)'], base: 11, demand: 200, depth: 30000, bulk: 0.3, add: 1.5, od: 0, risk: 0.3, fx: { stress: -6, health: -0.5 }, txt: 'Une longue taffe. Les nerfs se relâchent un peu.' },
 };
 const CATS = { med: '💊 Médicaments détournés', dure: '💀 Drogues dures', douce: '🌿 Drogues douces', dope: '🏋️ Stéroïdes anabolisants', tabac: '🚬 Tabac (légal, volé, contrebande)' };
@@ -613,30 +687,31 @@ const DOSES = [
   { label: 'Grosse dose', units: 4, mult: 2.5 },
 ];
 const CIG_DOSES = [1, 3, 10]; // cigarettes fumées selon la dose (paquet de 20)
+const SNORT = { fx: 1.4, add: 1.5, od: 1.8 }; // comprimé écrasé et sniffé : effet ×1,4, addiction ×1,5, overdose ×1,8
 
 const CITIES = {
   marseille: { name: 'Marseille', country: 'France', flag: '🇫🇷', region: 'eu', police: 1.0, customs: 1.0, names: 'fr', cops: 'BAC', club: 'Velvet',
-    mult: { hash: 0.85, meth: 1.6, oxy: 1.3, lean: 1.2, clopes: 0.7, fenta: 2.2, adderall: 1.8 }, spec: { hash: 10 },
+    mult: { hash: 0.85, meth: 1.6, oxy: 1.3, lean: 1.2, clopes: 0.7, fenta: 2.2, adderall: 1.8, codeine: 0.8 }, spec: { hash: 10 },
     routes: ['Marbella → Marseille', 'Algésiras → Marseille', 'Barcelone → Marseille'], gfCargo: ['hash', 'hash', 'weed', 'coke'],
     intro: 'Tu as grandi dans une cité des quartiers nord de Marseille. À 18 ans, un grand du quartier te propose de tenir le guet sur un point de deal.' },
   paris: { name: 'Paris', country: 'France', flag: '🇫🇷', region: 'eu', police: 1.2, customs: 1.1, names: 'fr', cops: 'BAC', club: 'Noctambule',
-    mult: { coke: 1.1, crack: 0.9, meth: 1.6, oxy: 1.3, lean: 1.3, keta: 1.1, ster: 1.1, clopes: 0.85, fenta: 2.2, adderall: 1.8, skenan: 1.1 }, spec: {},
+    mult: { coke: 1.1, crack: 0.9, meth: 1.6, oxy: 1.3, lean: 1.3, keta: 1.1, ster: 1.1, clopes: 0.85, fenta: 2.2, adderall: 1.8, skenan: 1.1, codeine: 0.8 }, spec: {},
     routes: ['Madrid → Paris', 'Anvers → Paris', 'Perpignan → Paris'], gfCargo: ['hash', 'coke', 'coke', 'weed'],
     intro: 'Tu as grandi dans une tour de Seine-Saint-Denis, aux portes de Paris. À 18 ans, les grands du hall te proposent de faire le guetteur.' },
   amsterdam: { name: 'Amsterdam', country: 'Pays-Bas', flag: '🇳🇱', region: 'eu', police: 0.75, customs: 0.9, names: 'nl', cops: 'Politie', club: 'Neon Haven',
-    mult: { weed: 0.45, hash: 0.55, mdma: 0.35, keta: 0.5, coke: 0.75, meth: 1.4, lean: 1.3, ster: 0.8, ghb: 0.6, fenta: 1.8, clopes: 0.9 }, spec: { weed: 20, mdma: 20, hash: 10, keta: 10 },
+    mult: { weed: 0.45, hash: 0.55, mdma: 0.35, keta: 0.5, coke: 0.75, meth: 1.4, lean: 1.3, ster: 0.8, ghb: 0.6, fenta: 1.8, clopes: 0.9, codeine: 1.1 }, spec: { weed: 20, mdma: 20, hash: 10, keta: 10 },
     routes: ['Rotterdam → Anvers', 'Amsterdam → Cologne', 'Rotterdam → Lille'], gfCargo: ['mdma', 'coke', 'weed', 'keta'],
     intro: 'Tu as grandi à Amsterdam-Noord, entre les coffee shops et les docks. À 18 ans, un dealer du coin te propose de surveiller sa rue.' },
   medellin: { name: 'Medellín', country: 'Colombie', flag: '🇨🇴', region: 'am', police: 0.8, customs: 1.4, names: 'latam', cops: 'Policía Nacional', club: 'La Fuga',
-    mult: { coke: 0.2, crack: 0.3, weed: 0.4, heroW: 0.8, oxy: 1.4, lean: 1.5, benzo: 1.3, mdma: 1.5, meth: 1.3, ster: 0.7, clopes: 0.4, fenta: 1.5, adderall: 1.4 }, spec: { coke: 25, crack: 10 },
+    mult: { coke: 0.2, crack: 0.3, weed: 0.4, heroW: 0.8, oxy: 1.4, lean: 1.5, benzo: 1.3, mdma: 1.5, meth: 1.3, ster: 0.7, clopes: 0.4, fenta: 1.5, adderall: 1.4, codeine: 1.4 }, spec: { coke: 25, crack: 10 },
     routes: ['Medellín → Turbo (côte)', 'Cali → Buenaventura', 'Medellín → Carthagène'], gfCargo: ['coke', 'coke', 'weed'],
     intro: 'Tu as grandi dans une comuna accrochée aux collines de Medellín. À 18 ans, un patrón du barrio te propose de faire le « campanero », le guetteur.' },
   culiacan: { name: 'Culiacán', country: 'Mexique', flag: '🇲🇽', region: 'am', police: 0.6, customs: 1.2, names: 'latam', cops: 'Federales', club: 'El Toro Negro',
-    mult: { meth: 0.2, heroB: 0.3, heroW: 0.4, weed: 0.35, coke: 0.45, mdma: 1.3, lean: 1.3, ster: 0.45, fenta: 0.35, clopes: 0.4, adderall: 1.3 }, spec: { meth: 25, heroB: 15, heroW: 10, fenta: 15 },
+    mult: { meth: 0.2, heroB: 0.3, heroW: 0.4, weed: 0.35, coke: 0.45, mdma: 1.3, lean: 1.3, ster: 0.45, fenta: 0.35, clopes: 0.4, adderall: 1.3, codeine: 1.3 }, spec: { meth: 25, heroB: 15, heroW: 10, fenta: 15 },
     routes: ['Culiacán → Tijuana', 'Sinaloa → Nogales', 'Culiacán → Mexicali'], gfCargo: ['meth', 'heroB', 'coke', 'weed'],
     intro: 'Tu as grandi à Culiacán, au cœur du Sinaloa. À 18 ans, un « halcón » du quartier te propose de devenir guetteur pour la plaza.' },
   miami: { name: 'Miami', country: 'USA', flag: '🇺🇸', region: 'am', police: 1.35, customs: 1.3, names: 'us', cops: 'DEA', club: 'Vortex',
-    mult: { coke: 1.3, crack: 1.2, oxy: 1.8, lean: 1.7, benzo: 1.5, meth: 1.2, heroW: 1.3, weed: 1.2, hash: 1.8, rita: 1.4, ster: 1.4, fenta: 0.8, adderall: 0.8, roofies: 1.3, clopes: 1.1 }, spec: {},
+    mult: { coke: 1.3, crack: 1.2, oxy: 1.8, lean: 1.7, benzo: 1.5, meth: 1.2, heroW: 1.3, weed: 1.2, hash: 1.8, rita: 1.4, ster: 1.4, fenta: 0.8, adderall: 0.8, roofies: 1.3, clopes: 1.1, codeine: 1.8 }, spec: {},
     routes: ['Miami → Atlanta (I-95)', 'Houston → Miami (I-10)', 'Miami → New York'], gfCargo: ['coke', 'heroW', 'meth', 'weed'],
     intro: 'Tu as grandi à Liberty City, Miami. À 18 ans, un OG du block te propose de faire le lookout pour son corner.' },
 };
@@ -820,7 +895,7 @@ const FOES = {
 
 /* Vie nocturne, rue, prison */
 const CLUB_MULT = { mdma: 1.4, coke: 1.1, keta: 0.9, weed: 0.5, hash: 0.3, lean: 0.7, benzo: 0.3, rita: 0.4, oxy: 0.3, crack: 0.05, heroB: 0.05, heroW: 0.1, meth: 0.25, ster: 0.15,
-  fenta: 0.05, ghb: 0.8, adderall: 0.3, subutex: 0.02, skenan: 0.05, roofies: 0.1, clopes: 0.8 };
+  fenta: 0.05, ghb: 0.8, adderall: 0.3, subutex: 0.02, skenan: 0.05, roofies: 0.1, clopes: 0.8, codeine: 0.05 };
 const CLUB_DRUGS = ['mdma', 'coke', 'keta']; // stock récréatif écoulé par les dealeurs postés en boîte
 const SHOPS_RACKET = ['Épicerie de nuit', 'Kebab du coin', 'Tabac-presse', 'Salon de coiffure', 'Boulangerie', 'Garage auto', 'Boutique de téléphones', 'Laverie du quartier'];
 const PRISON_GANGS = ['Anciens du bâtiment B', 'Gars de la buanderie', 'Braqueurs de la vieille école', 'Longues Peines'];
@@ -883,6 +958,11 @@ const RITUALS = {
     { btn: '📜 Déposer dans la feuille', cap: () => 'Tu déposes le tout dans la feuille… puis tu roules avec précision.', dur: 2100 },
     { btn: '🔥 Allumer', cap: () => 'Clic du briquet. Première taffe…', dur: 1800 },
   ] },
+  crush: { cls: 'st-crush', fails: ['La poudre s\'éparpille sur le miroir… Recommence.', 'Le cachet glisse sous la cuillère. Recommence.'], steps: [
+    { btn: '🔨 Écraser le cachet', cap: (b) => `Tu poses le cachet (${b}) sur le miroir et l'écrases avec le dos d'une cuillère…`, dur: 1600 },
+    { btn: '💳 Tirer un trait', cap: () => 'Tu affines la poudre à la carte et tires un trait bien net.', dur: 1300 },
+    { btn: '💵 Sniffer', cap: () => 'Billet roulé, une longue inspiration… La brûlure dans le nez, puis la vague.', dur: 1600 },
+  ] },
   powder: { cls: 'st-powder', fails: ['Tes mains tremblent… Recommence.'], steps: [
     { btn: '💳 Préparer la dose', cap: (b, n) => `Tu prépares une dose ${U.de(n)} sur le miroir…`, dur: 1300 },
     { btn: '😶‍🌫️ Consommer', cap: () => 'Ça y est. L\'effet monte déjà…', dur: 1100 },
@@ -890,20 +970,97 @@ const RITUALS = {
 };
 
 const LABS = {
-  serre:  { name: 'Serre indoor (cannabis)', icon: '🌱', drug: 'weed', price: 15000, out: 350, q: [55, 85], upkeep: 900, rank: 1, risk: 1.5 },
-  crack:  { name: 'Cuisine à crack', icon: '🍳', drug: 'crack', price: 25000, out: 400, q: [40, 70], upkeep: 1000, rank: 1, risk: 2.5, input: { drug: 'coke', qty: 120 } },
-  presse: { name: 'Presse à comprimés (faux Oxy)', icon: '⚙️', drug: 'oxy', price: 70000, out: 1600, q: [35, 70], upkeep: 5000, rank: 2, risk: 2 },
-  mdma:   { name: 'Labo MDMA', icon: '🍬', drug: 'mdma', price: 90000, out: 2500, q: [50, 85], upkeep: 7000, rank: 2, risk: 2 },
-  meth:   { name: 'Labo de méthamphétamine', icon: '🧪', drug: 'meth', price: 160000, out: 900, q: [60, 95], upkeep: 12000, rank: 2, risk: 3, boom: 3 },
-  hero:   { name: 'Labo d\'héroïne', icon: '🌺', drug: 'heroW', price: 320000, out: 1800, q: [65, 92], upkeep: 30000, rank: 3, risk: 2.5 },
-  coke:   { name: 'Labo de cocaïne (jungle)', icon: '🌴', drug: 'coke', price: 450000, out: 3000, q: [70, 95], upkeep: 45000, rank: 3, risk: 2.5 },
+  serre:   { name: 'Serre indoor (weed)', icon: '🌱', drug: 'weed', price: 15000, out: 350, q: [55, 85], upkeep: 900, rank: 1, risk: 1.5 },
+  resine:  { name: 'Atelier de résine (shit)', icon: '🟫', drug: 'hash', price: 30000, out: 500, q: [45, 75], upkeep: 1600, rank: 1, risk: 1.6 },
+  crack:   { name: 'Cuisine à crack', icon: '🍳', drug: 'crack', price: 25000, out: 400, q: [40, 70], upkeep: 1000, rank: 1, risk: 2.5, input: { drug: 'coke', qty: 120 } },
+  codeine: { name: 'Labo de sirop codéiné (contrefaçon)', icon: '🧴', drug: 'lean', price: 45000, out: 100, q: [40, 65], upkeep: 2500, rank: 1, risk: 1.8, input: { drug: 'codeine', qty: 3000 } },
+  tabac:   { name: 'Usine de cigarettes de contrebande', icon: '🚬', drug: 'clopes', price: 80000, out: 3000, q: [35, 65], upkeep: 6000, rank: 1, risk: 1.4 },
+  presse:  { name: 'Presse à comprimés (contrefaçons)', icon: '⚙️', drug: 'oxy', price: 70000, out: 1600, q: [35, 70], upkeep: 5000, rank: 2, risk: 2 },
+  mdma:    { name: 'Labo MDMA', icon: '🍬', drug: 'mdma', price: 90000, out: 2500, q: [50, 85], upkeep: 7000, rank: 2, risk: 2 },
+  meth:    { name: 'Labo de méthamphétamine', icon: '🧪', drug: 'meth', price: 160000, out: 900, q: [60, 95], upkeep: 12000, rank: 2, risk: 3, boom: 3 },
+  hero:    { name: 'Labo d\'héroïne', icon: '🌺', drug: 'heroW', price: 320000, out: 1800, q: [65, 92], upkeep: 30000, rank: 3, risk: 2.5 },
+  coke:    { name: 'Labo de cocaïne (jungle)', icon: '🌴', drug: 'coke', price: 450000, out: 3000, q: [70, 95], upkeep: 45000, rank: 3, risk: 2.5 },
 };
 const LAB_MULT = [1, 1.6, 2.3];
+/* Réglages de production des labos */
+const STRAINS = {
+  amnesia: { name: 'Amnesia', type: 'Sativa', y: 1.1, q: 4, f: 'none', desc: 'Euphorisante, très demandée' },
+  gelato: { name: 'Gelato', type: 'Hybride', y: 0.9, q: 12, f: 'hue-rotate(25deg)', desc: 'Saveur dessert, qualité premium' },
+  og: { name: 'OG Kush', type: 'Indica', y: 1, q: 8, f: 'hue-rotate(-20deg) saturate(1.3)', desc: 'Puissante et terreuse' },
+  purple: { name: 'Purple Haze', type: 'Sativa', y: 0.85, q: 6, f: 'hue-rotate(160deg) saturate(1.5)', desc: 'Têtes violettes, prisée en soirée' },
+  widow: { name: 'White Widow', type: 'Hybride', y: 1.1, q: 2, f: 'saturate(.3) brightness(1.4)', desc: 'Résistante et régulière' },
+  critical: { name: 'Critical', type: 'Indica', y: 1.35, q: -8, f: 'hue-rotate(-35deg)', desc: 'Rendement énorme, qualité moyenne' },
+};
+const HASH_PLANTS = {
+  beldia: { name: 'Beldia (Maroc)', y: 1.15, q: -3, desc: 'Variété traditionnelle du Rif' },
+  critical: { name: 'Critical', y: 1.3, q: -6, desc: 'Gros rendement' },
+  amnesia: { name: 'Amnesia', y: 1, q: 4, desc: 'Arôme citronné' },
+  kush: { name: 'Kush afghane', y: 0.9, q: 8, desc: 'Résine grasse et puissante' },
+};
+const HASH_METHODS = {
+  tamis: { name: 'Tamisage à sec (120 µ)', brand: 'Filtré 120 µ', y: 1, q: 5, color: '#a77b3c', stamp: '120µ', desc: 'Pollen tamisé puis pressé' },
+  battage: { name: 'Battage traditionnel', brand: 'Jaune mousseux', y: 1.25, q: -5, color: '#d1b05a', stamp: '★', desc: 'Du volume : résine jaune et friable' },
+  charas: { name: 'Frottage à la main', brand: 'Charas', y: 0.6, q: 12, color: '#3b2a1a', stamp: '☘', desc: 'Plantes vivantes frottées : rare et noir' },
+  ice: { name: 'Extraction à l\'eau glacée', brand: 'Ice-o-lator', y: 0.8, q: 20, color: '#e2c672', stamp: 'ICE', desc: 'Trichomes purs, qualité extrême' },
+};
+const PRESS_MODELS = {
+  percocet: { drug: 'oxy', name: 'Percocet 10 mg', look: { c: '#f5d33b', s: 'oblong', t: 'PERCOCET' } },
+  oxycontin: { drug: 'oxy', name: 'OxyContin 80 mg', look: { c: '#3fa34d', s: 'round', t: 'OP 80' } },
+  m30: { drug: 'oxy', name: 'Roxicodone M 30', look: { c: '#4aa3df', s: 'round', t: 'M 30' } },
+  xanax: { drug: 'benzo', name: 'Xanax Bar 2 mg', look: { c: '#f6f6f6', s: 'bar', t: 'XANAX 2' } },
+  adderall: { drug: 'adderall', name: 'Adderall 30 mg', look: { c: '#f59b42', s: 'round', t: 'AD 30' } },
+  libre: { drug: 'oxy', name: 'Modèle maison (oxycodone)', look: null },
+};
+const PRESS_SHAPES = { round: 'Rond', oval: 'Ovale', oblong: 'Oblong', bar: 'Barre' };
+const PRESS_COLORS = [['#f5d33b', 'jaune'], ['#3fa34d', 'vert'], ['#4aa3df', 'bleu'], ['#f6f6f6', 'blanc'], ['#f59b42', 'orange'], ['#f48fb1', 'rose'], ['#9c6ade', 'violet'], ['#e53935', 'rouge']];
+const LEAN_LABELS = {
+  actavis: { name: 'Fausse étiquette Actavis', brand: 'Actavis', q: 0, fake: true, desc: 'Vendu comme un vrai pint Actavis' },
+  euphon: { name: 'Faux flacon Euphon', brand: 'Euphon', q: 0, fake: true, desc: 'Flacon ambré et étiquette imités' },
+  maison: { name: 'Bouteille sans marque', brand: 'Sirop maison', q: -20, fake: false, desc: 'Pas de risque de démasquage, prix plus bas' },
+};
+const FENTA_CUT = [
+  { name: 'Pas de fentanyl', per: 0, q: 0, cut: 0, desc: 'Sirop « propre »' },
+  { name: 'Coupe légère', per: 10, q: 12, cut: 0.5, desc: '1 cachet pour 10 flacons · plus fort, plus dangereux' },
+  { name: 'Coupe forte', per: 4, q: 25, cut: 1, desc: '1 cachet pour 4 flacons · overdoses de clients fréquentes' },
+];
+const CIG_BRANDS = {
+  marlboro: { name: 'Marlboro', pk: '#fafafa', pl: '#c62828', pt: '#c62828' },
+  camel: { name: 'Camel', pk: '#e8c872', pl: '#c9a64a', pt: '#4e342e' },
+  winston: { name: 'Winston', pk: '#c62828', pl: '#a51d1d', pt: '#fff' },
+  gauloises: { name: 'Gauloises', pk: '#1e5aa8', pl: '#174a8b', pt: '#fff' },
+};
 
 /* Rendus visuels des produits (mini-jeux de consommation) */
-const PILL_LOOK = { 'Percocet 10 mg': ['#f2d24b', 'round'], 'OxyContin 80 mg': ['#5cb85c', 'round'], 'Adderall XR 20 mg': ['#ff8c1a', 'capsule'], 'Adderall 30 mg': ['#ff9f43', 'round'], 'Xanax Bar 2 mg': ['#f4f4f4', 'bar'] };
-const BOX_LOOK = { Valium: ['#1e88e5', 'diazépam'], Rivotril: ['#43a047', 'clonazépam'], Ritaline: ['#e53935', 'méthylphénidate'], Concerta: ['#5e35b1', 'méthylphénidate LP'],
-  Subutex: ['#ef6c00', 'buprénorphine'], Buprénorphine: ['#8d6e63', 'buprénorphine'], Skenan: ['#8e24aa', 'sulfate de morphine'], Moscontin: ['#6d4c41', 'sulfate de morphine'], Rohypnol: ['#00897b', 'flunitrazépam'] };
+// couleur, forme et gravure des comprimés (Percocet, OxyContin, Xanax, Valium, Rivotril, Subutex… d'après les références officielles ;
+// stéroïdes : approximations)
+const PILL_LOOK = {
+  'Percocet 10 mg': { c: '#f5d33b', s: 'oblong', t: 'PERCOCET' }, 'OxyContin 80 mg': { c: '#3fa34d', s: 'round', t: 'OP 80' },
+  'Xanax Bar 2 mg': { c: '#f6f6f6', s: 'bar', t: 'XANAX 2' }, 'Adderall XR 20 mg': { c: '#f7882f', s: 'capsule', t: 'XR 20' }, 'Adderall 30 mg': { c: '#f59b42', s: 'round', t: 'AD 30', sc: 1 },
+  'Valium 10 mg': { c: '#4a8fe0', s: 'round', t: 'VALIUM', sc: 1 }, 'Rivotril 2 mg': { c: '#f7f7f7', s: 'round', t: 'ROCHE 2', sc: 1 },
+  Ritaline: { c: '#f7f7f7', s: 'round', t: '', sc: 1 }, Concerta: { c: '#f4f4f4', s: 'oblong', t: 'alza 36' },
+  'Subutex 8 mg': { c: '#f3eedc', s: 'oval', t: 'B8' }, 'Buprénorphine Arrow': { c: '#f5f5f5', s: 'oval', t: '8' },
+  'Skenan LP 100 mg': { c: '#fafafa', c2: 'rgba(235,235,235,.5)', s: 'capsule', t: '' }, 'Moscontin 60 mg': { c: '#f28c28', s: 'round', t: '' },
+  'Rohypnol 1 mg': { c: '#8a9a3c', s: 'oblong', t: '542', sc: 1 },
+  'Néo-Codion': { c: '#e8892d', s: 'round', t: '' }, Codoliprane: { c: '#f7f7f7', s: 'round', t: '', sc: 1 }, 'Dafalgan codéiné': { c: '#f7f7f7', s: 'oblong', t: '' },
+  'Dianabol 10 mg': { c: '#f48fb1', s: 'round', t: '' }, 'Anadrol 50': { c: '#f7f7f7', s: 'round', t: '50', sc: 1 }, 'Winstrol 10 mg': { c: '#f7f7f7', s: 'round', t: '' }, Turinabol: { c: '#64b5f6', s: 'round', t: '' },
+};
+// étiquette de pharmacie américaine (nom générique)
+const RX_LABEL = { 'Percocet 10 mg': 'OXYCODONE/APAP 10-325MG', 'OxyContin 80 mg': 'OXYCODONE HCL ER 80MG', 'Xanax Bar 2 mg': 'ALPRAZOLAM 2MG TAB', 'Adderall XR 20 mg': 'AMPHET SALTS ER 20MG', 'Adderall 30 mg': 'AMPHET SALTS 30MG TAB' };
+// boîtes françaises : bandeau, molécule, laboratoire, liste réglementaire, conditionnement
+const BOX_LOOK = {
+  Valium: { bc: '#1e88e5', dci: 'diazépam', lab: 'Roche', list: 'I', n: 'Boîte de 30 comprimés sécables' },
+  Rivotril: { bc: '#43a047', dci: 'clonazépam', lab: 'Roche', list: 'I', n: 'Comprimés quadrisécables' },
+  Ritaline: { bc: '#e53935', dci: 'méthylphénidate', lab: 'NOVARTIS', list: 'stup', n: 'Boîte de 30 comprimés sécables' },
+  Concerta: { bc: '#5e35b1', dci: 'méthylphénidate LP', lab: 'Janssen', list: 'stup', n: 'Comprimés à libération prolongée' },
+  Subutex: { bc: '#ef6c00', dci: 'buprénorphine', lab: 'INDIVIOR', list: 'I', n: 'Boîte de 7 comprimés sublinguaux' },
+  Buprénorphine: { bc: '#8d6e63', dci: 'buprénorphine', lab: 'Arrow', list: 'I', n: 'Boîte de 7 comprimés sublinguaux' },
+  Skenan: { bc: '#8e24aa', dci: 'sulfate de morphine', lab: 'ethypharm', list: 'stup', n: 'Boîte de 14 gélules LP' },
+  Moscontin: { bc: '#6d4c41', dci: 'sulfate de morphine', lab: '', list: 'stup', n: 'Comprimés enrobés LP' },
+  Rohypnol: { bc: '#00897b', dci: 'flunitrazépam', lab: 'Roche', list: 'stup', n: 'Comprimés pelliculés sécables' },
+  'Néo-Codion': { bc: '#e65100', dci: 'codéine · grindélia', lab: '', list: 'I', n: 'Boîte de 20 comprimés enrobés' },
+  Codoliprane: { bc: '#1565c0', dci: 'paracétamol · codéine', lab: 'sanofi', list: 'I', n: 'Boîte de 16 comprimés sécables' },
+  Dafalgan: { bc: '#d32f2f', dci: 'paracétamol · codéine', lab: 'UPSA', list: 'I', n: 'Boîte de 16 comprimés pelliculés' },
+};
 const ZIP_LOOK = { Tesla: ['#e53935', 'T'], Punisher: ['#1e88e5', '☠'], 'Blue Dolphin': ['#4fc3f7', '🐬'], Skull: ['#fdd835', '💀'], 'M30 bleus (contrefaçon)': ['#4fc3f7', 'M30'], 'Faux Percocet bleu': ['#29b6f6', 'M·30'] };
 
 /* Emploi légal (salaire déclaré, versé en banque) */
@@ -1153,12 +1310,19 @@ const Inventory = {
   qty: (d) => (S.stock[d] ? S.stock[d].qty : 0),
   q: (d) => (S.stock[d] ? S.stock[d].q : 0),
   list: () => Object.keys(S.stock).filter((d) => S.stock[d].qty > 0),
-  add(d, n, q, b) {
+  // x : { look } rendu d'un comprimé pressé maison, { cut } part de fentanyl dans le lot
+  add(d, n, q, b, x = null) {
     n = Math.floor(n); if (n <= 0) return;
     const s = S.stock[d] || { qty: 0, q };
     s.q = Math.round((s.q * s.qty + q * n) / (s.qty + n));
-    s.qty += n; if (b) s.b = b; S.stock[d] = s;
+    const cut = (x && x.cut) || 0;
+    if (cut || s.cut) s.cut = Math.round(((s.cut || 0) * s.qty + cut * n) / (s.qty + n) * 100) / 100;
+    s.qty += n; if (b) s.b = b;
+    if (x && x.look) s.look = { ...x.look, b };
+    S.stock[d] = s;
   },
+  cut: (d) => (S.stock[d] && S.stock[d].cut) || 0,
+  look(d, brand) { const s = S.stock[d]; return s && s.look && s.look.b === brand ? s.look : null; },
   brand: (d) => (S.stock[d] && S.stock[d].b) || DRUGS[d].brands[0],
   remove(d, n) {
     const s = S.stock[d]; if (!s) return 0;
@@ -1324,7 +1488,7 @@ const Actions = {
     if (D.roids) t.push('⚠️ agressivité, cœur & foie');
     return t.join(' · ') || 'Aucun effet notable';
   },
-  odRisk(d, mult, q) {
+  odRisk(d, mult, q, cut = 0) {
     const D = DRUGS[d]; if (!D.od) return 0;
     const used = Object.keys(S.used).filter((k) => DRUGS[k] && DRUGS[k].cat !== 'tabac');
     const opi = used.some((k) => DRUGS[k].opioid), benz = used.some((k) => DRUGS[k].benzo), stim = used.some((k) => DRUGS[k].stim);
@@ -1332,18 +1496,19 @@ const Actions = {
     if ((D.opioid && benz) || (D.benzo && opi)) combo = 3;
     else if ((D.opioid && stim) || (D.stim && opi)) combo = 2;
     const times = used.reduce((a, k) => a + S.used[k], 0);
-    const r = D.od * mult * (0.5 + q / 100) * combo * (1 + times * 0.4) * (S.health < 30 ? 1.6 : 1) * (1 - S.addiction / 300);
+    const r = D.od * mult * (0.5 + q / 100) * combo * (1 + times * 0.4) * (S.health < 30 ? 1.6 : 1) * (1 - S.addiction / 300) * (1 + cut * 3);
     return Math.round(U.clamp(r, 0, 95) * 10) / 10;
   },
   consumeMenu(d, after = null, onCancel = null) {
     const D = DRUGS[d], q = Inventory.q(d), cig = D.cat === 'tabac';
     const used = Object.keys(S.used);
     const combo = (D.opioid && used.some((k) => DRUGS[k].benzo)) || (D.benzo && used.some((k) => DRUGS[k].opioid));
-    const stock = `${U.num(Inventory.qty(d))} ${U.u(D, U.num(Inventory.qty(d)))}${cig && S.cigLoose ? ` + ${S.cigLoose} dans le paquet entamé` : ''}`;
+    const stock = `${U.num(Inventory.qty(d))} ${U.u(D, U.num(Inventory.qty(d)))}${cig && S.cigLoose ? ` + ${S.cigLoose} dans le paquet entamé` : ''}`, cut = Inventory.cut(d);
+    const snort = D.snort ? DOSES.slice(0, 2).map((ds, i) => ({ label: `💥 Écraser et sniffer — ${ds.label.toLowerCase()} (${ds.units} ${U.u(D, ds.units)})`, sub: `Effet plus fort et immédiat · overdose ~${this.odRisk(d, ds.mult * SNORT.od, q, cut)} %`, dis: !this.hasDose(d, i), cls: 'danger', fn: () => Ritual.start(d, i, false, after, 'snort') })) : [];
     UI.modal({ icon: D.icon, title: D.name, cls: 'drug',
-      text: `${U.esc(Inventory.brand(d))} · stock ${stock}${q ? ' · ' + U.q(q) : ''}<br>${this.fxText(D)}<br>Addictivité : ${'●'.repeat(Math.max(1, Math.ceil(D.add / 2)))}${combo ? '<br><b class="r">⚠️ Mélange opioïdes + benzos ce mois-ci : risque d\'overdose ×3 !</b>' : ''}`,
-      choices: DOSES.map((ds, i) => ({ label: this.doseLabel(d, i), sub: D.od ? `Risque d'overdose ~${this.odRisk(d, ds.mult, q)} %` : 'Aucun risque d\'overdose', dis: !this.hasDose(d, i), cls: i === 2 && D.od ? 'danger' : '', fn: () => Ritual.start(d, i, false, after) }))
-        .concat([{ label: 'Annuler', cls: 'ghost', fn: onCancel || undefined }]) });
+      text: `${U.esc(Inventory.brand(d))} · stock ${stock}${q ? ' · ' + U.q(q) : ''}<br>${this.fxText(D)}<br>Addictivité : ${'●'.repeat(Math.max(1, Math.ceil(D.add / 2)))}${combo ? '<br><b class="r">⚠️ Mélange opioïdes + benzos ce mois-ci : risque d\'overdose ×3 !</b>' : ''}${cut ? '<br><b class="r">☠️ Lot coupé au fentanyl : overdose bien plus probable.</b>' : ''}`,
+      choices: DOSES.map((ds, i) => ({ label: this.doseLabel(d, i), sub: D.od ? `Risque d'overdose ~${this.odRisk(d, ds.mult, q, cut)} %` : 'Aucun risque d\'overdose', dis: !this.hasDose(d, i), cls: i === 2 && D.od ? 'danger' : '', fn: () => Ritual.start(d, i, false, after) }))
+        .concat(snort, [{ label: 'Annuler', cls: 'ghost', fn: onCancel || undefined }]) });
   },
   // les cigarettes se fument à l'unité (paquets de 20 entamés au besoin)
   doseLabel(d, di) {
@@ -1358,39 +1523,50 @@ const Actions = {
     if (packs) Inventory.remove(d, packs);
     S.cigLoose = S.cigLoose + packs * 20 - n;
   },
-  consume(d, di, free = false, after = null) {
-    const D = DRUGS[d], ds = DOSES[di], cig = D.cat === 'tabac';
+  consume(d, di, free = false, after = null, mode = null) {
+    const D = DRUGS[d], ds = DOSES[di], cig = D.cat === 'tabac', sn = mode === 'snort' ? SNORT : null, em = ds.mult * (sn ? sn.fx : 1);
     const done = () => { if (after && S.alive && !S.jail) after(); };
     if (!free && !this.hasDose(d, di)) { UI.toast('Pas assez de produit.'); return done(); }
     const q = free ? U.ri(40, 80) : Inventory.q(d) || 50;
-    const risk = this.odRisk(d, ds.mult, q);
+    const risk = this.odRisk(d, ds.mult * (sn ? sn.od : 1), q, free ? 0 : Inventory.cut(d));
     if (!free) this.takeDose(d, di);
     const first = !S.used[d];
     S.used[d] = (S.used[d] || 0) + 1;
     S.stats.doses++;
-    const addGain = D.add * ds.mult * (0.7 + q / 150) * (D.subst ? 0.4 : 1);
+    const addGain = D.add * ds.mult * (0.7 + q / 150) * (D.subst ? 0.4 : 1) * (sn ? sn.add : 1);
     PlayerData.mod('addiction', addGain);
     if (D.roids) S.roids = Math.min(100, (S.roids || 0) + D.roids * ds.mult);
     if (cig) S.tobacco = Math.min(3000, (S.tobacco || 0) + CIG_DOSES[di]);
-    if (U.chance(risk)) { PlayerData.mod('stress', 10); this.overdose(d, ds.mult); if (Night.st) Night.end('Tu finis la nuit aux urgences.'); return; }
+    if (U.chance(risk)) { PlayerData.mod('stress', 10); this.overdose(d, ds.mult * (sn ? sn.od : 1)); if (Night.st) Night.end('Tu finis la nuit aux urgences.'); return; }
     const tol = U.clamp(1 - S.addiction / 200, 0.4, 1);
     const fx = [], E = D.fx;
-    if (E.health > 0) { const h = E.health * ds.mult * tol; PlayerData.heal(h); fx.push(`+${Math.round(h)} ❤️`); }
+    if (E.health > 0) { const h = E.health * em * tol; PlayerData.heal(h); fx.push(`+${Math.round(h)} ❤️`); }
     if (E.health < 0) {
-      const h = -E.health * ds.mult;
+      const h = -E.health * em;
       fx.push(`−${h < 1 ? String(Math.round(h * 10) / 10).replace('.', ',') : Math.round(h)} ❤️`);
       PlayerData.hurt(h, cig ? 'Cancer du poumon' : `Arrêt cardiaque (${D.name})`); if (!S.alive) return;
     }
-    if (E.stress) { const v = Math.round(E.stress * ds.mult * (cig ? 1 : tol)); if (v) { PlayerData.mod('stress', v); fx.push(`−${-v} 😰`); } }
-    if (E.force) { const f = E.force * ds.mult * (1 - S.force / 130); PlayerData.mod('force', f); fx.push(`+${f.toFixed(1).replace('.', ',')} 💪`); }
+    if (E.stress) { const v = Math.round(E.stress * em * (cig ? 1 : tol)); if (v) { PlayerData.mod('stress', v); fx.push(`−${-v} 😰`); } }
+    if (E.force) { const f = E.force * em * (1 - S.force / 130); PlayerData.mod('force', f); fx.push(`+${f.toFixed(1).replace('.', ',')} 💪`); }
     if (E.ap && first) { S.ap += E.ap; fx.push(`+${E.ap} ⚡`); }
-    if (E.crime) { const v = Math.round(E.crime * tol * (ds.mult >= 1 ? 1.3 : 1)); PlayerData.buff('crime', v, 1); fx.push(`+${v} % réussite crimes`); }
+    if (E.crime) { const v = Math.round(E.crime * tol * (em >= 1 ? 1.3 : 1)); PlayerData.buff('crime', v, 1); fx.push(`+${v} % réussite crimes`); }
     if (E.respect && first) { PlayerData.mod('respect', E.respect); fx.push(`+${E.respect} 👑`); }
+    if (sn) { PlayerData.hurt(1, 'Hémorragie nasale'); if (!S.alive) return; fx.push('−1 ❤️ (cloison nasale)'); }
     fx.push(`+${Math.round(addGain)} 💉 addiction`);
     const n = CIG_DOSES[di];
-    log(D.icon, `${cig ? `Tu fumes ${n === 1 ? 'une cigarette' : n + ' cigarettes'}` : `Tu consommes ${ds.units} ${U.u(D, ds.units)} ${U.de(D.name)} (Q${q})`}. ${D.txt}`, 'drug');
+    log(D.icon, `${cig ? `Tu fumes ${n === 1 ? 'une cigarette' : n + ' cigarettes'}` : `Tu ${sn ? 'écrases et sniffes' : 'consommes'} ${ds.units} ${U.u(D, ds.units)} ${U.de(D.name)} (Q${q})`}. ${D.txt}`, 'drug');
     UI.result(D.icon, D.name, `${D.txt}<br><br><b>${fx.join(' · ')}</b>`, 'drug');
     done();
+  },
+  // lots coupés au fentanyl : des clients font des overdoses, la police remonte la filière
+  cutFallout(d, n, c = Inventory.cut(d)) {
+    if (!c || n < 1 || !S.alive) return;
+    if (!U.chance(Math.min(60, n * c * 0.6))) return;
+    const dead = U.chance(30), D = DRUGS[d];
+    PlayerData.mod('heat', dead ? 15 : 8); PlayerData.mod('respect', -2);
+    log('🚑', dead ? `Un client meurt d'une overdose après avoir consommé ton produit coupé au fentanyl (${D.name}). Les enquêteurs remontent la filière (+15 🚨, −2 👑).`
+      : `Un client fait une overdose avec ton produit coupé au fentanyl (${D.name}) : il s'en sort de justesse (+8 🚨, −2 👑).`, 'bad');
+    if (dead && !S.jail && U.chance(10 * Police.level())) Actions.arrest({ charge: 'Trafic de stupéfiants ayant entraîné la mort', months: 60 });
   },
   overdose(d, mult) {
     S.stats.ods++;
@@ -1563,7 +1739,7 @@ const Actions = {
   doRetail(d, n) {
     const D = DRUGS[d]; n = Math.min(n, Inventory.qty(d)); if (n < 1) return;
     if (U.chance(this.retailRisk(d, n))) return this.retailBust(d, n);
-    const q = Inventory.q(d), rev = Math.round(n * MarketData.retail(S.city, d, q));
+    const q = Inventory.q(d), rev = Math.round(n * MarketData.retail(S.city, d, q)), cut = Inventory.cut(d);
     Inventory.remove(d, n); PlayerData.earn(rev);
     const k = S.city + ':' + d; S.market.sold[k] = (S.market.sold[k] || 0) + n;
     S.stats.sold += rev;
@@ -1573,6 +1749,7 @@ const Actions = {
     else if (q >= 80) { PlayerData.mod('respect', 0.6); extra = ' Ta came de qualité fait parler d\'elle.'; }
     else PlayerData.mod('respect', 0.25);
     log('🏪', `Vente de rue : ${U.num(n)} ${U.u(D, U.num(n))} ${U.de(D.name)} → <b>+${U.money(rev)}</b>.${extra}`, 'money');
+    this.cutFallout(d, n, cut);
   },
   retailBust(d, n) {
     const D = DRUGS[d], value = Inventory.streetValue(d, n), cops = CITIES[S.city].cops;
@@ -1608,8 +1785,9 @@ const Actions = {
           log('🕵️', `L'acheteur était un agent infiltré (${CITIES[c].cops}) !`, 'bad');
           return this.arrest({ charge: 'Trafic de stupéfiants en bande organisée', months: this.drugMonths(value) });
         }
-        const rev = Math.round(MarketData.sellValue(c, d, q, n));
+        const rev = Math.round(MarketData.sellValue(c, d, q, n)), cut = Inventory.cut(d);
         Inventory.remove(d, n); PlayerData.earn(rev); MarketData.impact(c, d, n, -1);
+        this.cutFallout(d, Math.round(n / 2), cut);
         S.stats.sold += rev; PlayerData.mod('heat', Math.min(8, n * D.bulk / 500)); PlayerData.mod('respect', Math.min(3, rev / 50000));
         log('🏭', `Vente en gros : ${U.num(n)} ${U.u(D, U.num(n))} ${U.de(D.name)} → <b>+${U.money(rev)}</b>.`, 'money');
       } });
@@ -1700,14 +1878,24 @@ const Actions = {
     const L = LABS[type];
     if (S.jail) return;
     if (S.rank < L.rank) return UI.toast(`🔒 Grade requis : ${RANKS[L.rank].name}`);
-    UI.pay({ icon: L.icon, title: L.name, text: `Production : ${U.num(L.out)} ${U.u(DRUGS[L.drug], U.num(L.out))}/mois ${U.de(DRUGS[L.drug].name)}<br>Frais mensuels : ${U.money(L.upkeep)}`, price: L.price,
-      onPay: () => { S.labs.push({ id: U.uid(), type, level: 1 }); log(L.icon, `Tu montes un nouveau laboratoire : <b>${L.name}</b>.`, 'good'); } });
+    UI.pay({ icon: L.icon, title: L.name, text: `Production : ${U.num(L.out)} ${U.u(DRUGS[L.drug], U.num(L.out))}/mois ${U.de(DRUGS[L.drug].name)}${L.input ? `<br>Matière première : ${U.num(L.input.qty)} ${U.u(DRUGS[L.input.drug], L.input.qty)} ${U.de(DRUGS[L.input.drug].name)}/mois` : ''}<br>Frais mensuels : ${U.money(L.upkeep)}${Labs.configurable(type) ? '<br><small class="m">Après l\'achat, tu choisis ce que tu produis.</small>' : ''}`, price: L.price,
+      onPay: () => {
+        const l = { id: U.uid(), type, level: 1, cfg: Labs.defaults(type) };
+        S.labs.push(l); log(L.icon, `Tu montes un nouveau laboratoire : <b>${L.name}</b>.`, 'good');
+        if (Labs.configurable(type)) Labs.setup(l.id, true);
+      } });
   },
   labMenu(id) {
     const l = S.labs.find((x) => x.id === id); if (!l) return;
-    const L = LABS[l.type], up = Math.round(L.price * 0.7 * l.level);
-    UI.modal({ icon: L.icon, title: `${L.name} (niv. ${l.level})`, text: `Production : ~${U.num(L.out * LAB_MULT[l.level - 1])} ${U.u(DRUGS[L.drug], U.num(L.out * LAB_MULT[l.level - 1]))}/mois<br>Frais : ${U.money(L.upkeep * (1 + (l.level - 1) * 0.5))}/mois`,
+    const L = LABS[l.type], up = Math.round(L.price * 0.7 * l.level), sp = Labs.spec(l), D = DRUGS[sp.drug], n = Math.round(L.out * LAB_MULT[l.level - 1] * sp.y);
+    const need = L.input ? Math.ceil(n * L.input.qty / L.out) : 0, I = L.input ? DRUGS[L.input.drug] : null;
+    const fneed = sp.fentaPer ? Math.ceil(n / sp.fentaPer) : 0;
+    UI.modal({ icon: L.icon, title: `${L.name} (niv. ${l.level})`,
+      text: `${sp.label ? sp.label + '<br>' : ''}Production : ~${U.num(n)} ${U.u(D, U.num(n))}/mois ${U.de(D.name)}<br>Frais : ${U.money(L.upkeep * (1 + (l.level - 1) * 0.5))}/mois${I ? `<br>Matière première : ${U.num(need)} ${U.u(I, need)} ${U.de(I.name)}/mois (stock : ${U.num(Inventory.qty(L.input.drug))})` : ''}${fneed ? `<br>Fentanyl : ${fneed} cp/mois (stock : ${U.num(Inventory.qty('fenta'))})` : ''}`,
       choices: [
+        ...(Labs.configurable(l.type) ? [{ label: '⚙️ Changer la production', sub: 'Variété, modèle, forme, couleur, étiquette…', fn: () => Labs.setup(l.id) }] : []),
+        ...(I ? [{ label: `🛒 Acheter ${U.de(I.name.toLowerCase())}`, sub: 'Au prix de gros de la ville', dis: !!S.jail, fn: () => this.buy(L.input.drug) }] : []),
+        ...(fneed ? [{ label: '☠️ Acheter du fentanyl', sub: 'Pour couper le sirop', dis: !!S.jail, fn: () => this.buy('fenta') }] : []),
         { label: `⬆️ Améliorer (${U.money(up)})`, sub: l.level >= 3 ? 'Niveau maximum' : '+60 % de production, +8 qualité', dis: l.level >= 3 || !PlayerData.can(up),
           fn: () => { PlayerData.pay(up); l.level++; log('⬆️', `Amélioration terminée : ${L.name} (niveau ${l.level}).`, 'good'); } },
         { label: `💰 Revendre (${U.money(L.price * 0.5)})`, cls: 'danger', fn: () => { S.labs = S.labs.filter((x) => x !== l); S.cash += Math.round(L.price * 0.5); log('💰', `Tu revends ton laboratoire (${L.name}).`, 'money'); } },
@@ -2169,7 +2357,7 @@ const Monthly = {
         const d = Crew.drugOf(m);
         if (!d) notes.push(`${m.name} attend de la marchandise`);
         else {
-          const D = DRUGS[d], q = Inventory.q(d), club = m.post === 'club' && clubs > 0;
+          const D = DRUGS[d], q = Inventory.q(d), club = m.post === 'club' && clubs > 0, cut = Inventory.cut(d);
           // en boîte : clientèle festive (CLUB_MULT), prix ×1,8 ; quota réglable par le patron
           const demand = club ? D.demand * (CLUB_MULT[d] || 0.2) * Math.min(2, clubs) * 0.8 : D.demand;
           const cap = Math.max(1, Math.round(demand * (0.35 + m.skill / 100) * (1 + 0.2 * S.territories) * (m.trait === 'bosseur' ? 1.25 : 1) * (m.quota || 100) / 100));
@@ -2181,6 +2369,7 @@ const Monthly = {
           }
           const r = Math.round(n * MarketData.retail(S.city, d, q) * (club ? 1.8 : 1) * 0.65 * (remote ? 1 : 0.5));
           rev += r; if (club) clubRev += r; sold += n;
+          Actions.cutFallout(d, n, cut);
           m.skill = Math.min(99, m.skill + (m.trait === 'ambitieux' ? 1 : 0.4));
           if (q < 25) PlayerData.mod('respect', -0.5);
           const risk = club && cops ? 0 : (2 + S.heat / 15 + n * D.bulk / 250) * Police.level() * (club ? 0.6 : 1) * (D.risk || 1) * (m.trait === 'discret' ? 0.55 : 1) * (1 - m.skill / 200);
@@ -2203,17 +2392,9 @@ const Monthly = {
     if (!S.labs.length) return;
     const out = [];
     for (const l of [...S.labs]) {
-      const L = LABS[l.type], mult = LAB_MULT[l.level - 1];
+      const L = LABS[l.type];
       if (!PlayerData.pay(Math.round(L.upkeep * (1 + (l.level - 1) * 0.5)))) { out.push(`${L.icon} à l'arrêt (frais impayés)`); continue; }
-      if (L.input) {
-        const need = Math.round(L.input.qty * mult);
-        if (Inventory.qty(L.input.drug) < need) { out.push(`${L.icon} en attente de ${need} ${U.u(DRUGS[L.input.drug], need)} ${U.de(DRUGS[L.input.drug].name)}`); continue; }
-        Inventory.remove(L.input.drug, need);
-      }
-      const n = Math.round(L.out * mult * U.rand(0.85, 1.15));
-      const q = U.clamp(U.ri(L.q[0], L.q[1]) + (l.level - 1) * 8, 1, 100);
-      Inventory.add(L.drug, n, q, 'Production maison');
-      out.push(`${L.icon} +${U.num(n)} ${U.u(DRUGS[L.drug], U.num(n))} (Q${q})`);
+      Labs.produce(l, out);
       if (L.boom && U.chance(L.boom)) { S.labs = S.labs.filter((x) => x !== l); PlayerData.mod('heat', 10); log('💥', `EXPLOSION ! Ton laboratoire (${L.name}) est parti en fumée.`, 'bad'); continue; }
       if (U.chance(L.risk * (1 + S.heat / 40) * Police.level())) { S.labs = S.labs.filter((x) => x !== l); PlayerData.mod('heat', 12); log('🚨', `La police a démantelé ton laboratoire : ${L.name} !`, 'bad'); }
     }
@@ -2671,17 +2852,24 @@ const Combat = {
 const Ritual = {
   _tripT: null,
   // rendu selon la marque (ex. Actavis → bouteille US, Xanax → flacon Rx)
-  formFor(d, brand) { const D = DRUGS[d]; return (D.forms && D.forms[brand]) || D.form; },
-  start(d, di, free = false, after = null) {
+  formFor(d, brand, mode = null) {
+    if (mode === 'snort') return 'crush';
+    const D = DRUGS[d];
+    if (Inventory.look(d, brand) && ['rxbottle', 'frbox', 'pill'].includes(D.form)) return 'ziplock'; // comprimés pressés maison : en sachet
+    return (D.forms && D.forms[brand]) || D.form;
+  },
+  start(d, di, free = false, after = null, mode = null) {
     const D = DRUGS[d];
     const brand = free ? U.pick(D.brands) : Inventory.brand(d);
-    const form = this.formFor(d, brand), R = RITUALS[form] || RITUALS.powder;
-    const st = { d, di, free, after, step: 0, R, form, brand, busy: false, el: null };
-    const red = form === 'cig' && /Contrebande/.test(brand) ? ' red' : '';
-    const vars = form === 'lean' ? (/Actavis/.test(brand) ? '--lc:#4b1170;--lm:#9b4dd4' : '--lc:#9e1b1f;--lm:#e2545e') : '';
-    UI.modal({ title: `${D.icon} ${D.name}`, cls: 'drug', text: `${U.esc(brand)} · ${Actions.doseLabel(d, di).toLowerCase()}`, html: '<div class="ritw"></div>', choices: [], onShow: (root) => {
+    const form = this.formFor(d, brand, mode), R = RITUALS[form] || RITUALS.powder;
+    const st = { d, di, free, after, mode, step: 0, R, form, brand, busy: false, el: null };
+    let cls = '', style = '';
+    if (form === 'cig') ({ cls, style } = Looks.cigAttrs(brand));
+    else if (form === 'lean') style = Looks.leanVars(brand);
+    else if (form === 'crush') style = `--pc:${Looks.pill(d, brand).c}`;
+    UI.modal({ title: `${D.icon} ${D.name}`, cls: 'drug', text: `${U.esc(brand)} · ${Actions.doseLabel(d, di).toLowerCase()}${mode === 'snort' ? ' · écrasé et sniffé' : ''}`, html: '<div class="ritw"></div>', choices: [], onShow: (root) => {
       st.el = root.querySelector('.ritw');
-      st.el.innerHTML = `<div class="stage ${R.cls}${red}" style="${vars}">${this.stage(form, brand, d)}</div><div class="r-cap">Prépare-toi…</div>
+      st.el.innerHTML = `<div class="stage ${R.cls}${cls}" style="${style}">${this.stage(form, brand, d)}</div><div class="r-cap">Prépare-toi…</div>
         <div class="r-steps">${R.steps.map(() => '<i></i>').join('')}</div><div class="m-choices"></div>`;
       st.el.addEventListener('click', (e) => { const b = e.target.closest('[data-ra]'); if (b && !b.disabled) this.act(st, b.dataset.ra); });
       this.buttons(st);
@@ -2689,39 +2877,36 @@ const Ritual = {
   },
   stage(form, brand, d) {
     const b = U.esc(brand), k = brand.split(' ')[0], mouth = '<div class="mouth">👄</div>';
-    if (form === 'rxbottle') { // flacon ambré américain, bouchon sécurité blanc, étiquette violette
-      const [pc, shape] = PILL_LOOK[brand] || ['#f4f4f4', 'round'];
-      return `${mouth}<div class="rcap"></div><div class="bot" style="--pc:${pc}"><div class="lb"><i>℞ Rx PHARMACY</i><b>${b}</b>QTY 60 · Dr. STONE<br>TAKE 1 TABLET<br>BY MOUTH</div></div><div class="pl ${shape}" style="--pc:${pc}"></div><div class="palm">🤚</div>`;
+    if (form === 'rxbottle') { // flacon ambré américain, bouchon sécurité blanc, étiquette de pharmacie
+      const pl = Looks.pill(d, brand);
+      return `${mouth}<div class="rcap"></div><div class="bot" style="--pc:${pl.c}"><div class="lb"><i>℞ Rx PHARMACY</i><b>${b}</b><span>${RX_LABEL[brand] || ''}</span>QTY 60 · Rx# 4827315<br>TAKE 1 TAB BY MOUTH</div></div>${Looks.html(pl)}<div class="palm">🤚</div>`;
     }
-    if (form === 'frbox') { // boîte de pharmacie française à bandeau coloré
-      const [bc, dci] = BOX_LOOK[k] || ['#1e88e5', ''], rest = U.esc(brand.slice(k.length).trim());
+    if (form === 'frbox') { // boîte de pharmacie française : bandeau, laboratoire, cadre réglementaire, blister
+      const X = BOX_LOOK[k] || { bc: '#1e88e5', dci: '', lab: '', list: 'I', n: '' }, rest = U.esc(brand.slice(k.length).trim()), pl = Looks.pill(d, brand);
       const unit = DRUGS[d] && DRUGS[d].unit === 'gél' ? 'gélules' : 'comprimés';
-      return `${mouth}<div class="flap"></div><div class="blister">${'<i></i>'.repeat(8)}</div><div class="bx" style="--bc:${bc}"><div class="band"></div><div class="nm">${U.esc(k)} <small>${rest}</small></div><div class="dci">${dci}</div><div class="qt">Boîte de 28 ${unit} · voie orale</div></div><div class="pill"></div>`;
+      const lab = X.lab ? `<span class="fr-lab${X.lab === 'Roche' ? ' roche' : ''}" style="--lgc:${X.bc}">${X.lab}</span>` : '';
+      return `${mouth}<div class="flap"></div><div class="blister${pl.s === 'round' ? '' : ' ob'}" style="--pc:${pl.c}">${'<i></i>'.repeat(8)}</div><div class="bx" style="--bc:${X.bc}"><div class="band"></div><div class="nm${brand.length > 14 ? ' lg2' : ''}">${U.esc(k)} <small>${rest}</small></div>${lab}<div class="dci">${X.dci}</div><span class="fr-rg">${X.list === 'stup' ? 'STUPÉFIANT' : 'LISTE ' + X.list}</span><div class="qt">${X.n || `Boîte de 28 ${unit}`}</div></div>${Looks.html(pl)}`;
     }
-    if (form === 'lean') { // vraie bouteille (Actavis ou Euphon), double cup, canette de Sprite, glaçons
-      const bottle = /Actavis/.test(brand)
-        ? '<div class="lbt act"><div class="cap"></div><div class="nk"></div><div class="body"><div class="lq"></div><div class="lb"><div class="ob">actavis</div><b>PROMETHAZINE<br>w/ CODEINE</b><span>6.25-10 mg / 5 mL</span><span>C-V · Rx only</span><em>16 FL OZ (473 mL)</em></div></div></div>'
-        : '<div class="lbt eup"><div class="cap"><i class="gd"></i></div><div class="nk"></div><div class="body"><div class="lb"><i class="bl"></i><b>EUPHON<sup>®</sup></b><span class="sy">sirop</span><i class="rs"></i><span>codéine · érysimum</span><span>flacon de 300 ml</span><em>MAYOLY SPINDLER</em></div></div></div>';
+    if (form === 'crush') return `<div class="mirror"></div>${Looks.html(Looks.pill(d, brand))}<div class="spn"></div><div class="dust"></div><div class="ln"></div><div class="card"></div><div class="bill"></div><div class="nose">👃</div>`;
+    if (form === 'lean') { // vraie bouteille (Actavis, Euphon ou maison), double cup, canette de Sprite, glaçons
       const ice = [[10, '18deg'], [24, '-14deg'], [37, '32deg']].map(([x, r]) => `<i class="ice" style="left:${x}px;--r:${r}"></i>`).join('');
-      return `${mouth}${bottle}<i class="strm"></i><div class="spr"><b>Sprite</b></div><i class="ss"></i><div class="dc"><div class="fc"></div><div class="op"><div class="sf">${'<i></i>'.repeat(5)}</div></div>${ice}</div>`;
+      return `${mouth}${Looks.leanBottle(brand)}<i class="strm"></i><div class="spr"><b>Sprite</b></div><i class="ss"></i><div class="dc"><div class="fc"></div><div class="op"><div class="sf">${'<i></i>'.repeat(5)}</div></div>${ice}</div>`;
     }
     if (form === 'inject') { // cuillère, briquet, seringue
       const pc = /Brown|Brune/.test(brand) ? '#8d5a2b' : '#f2efe6';
       return `<div class="spoon"><div class="bowl"><div class="pw" style="--pc:${pc}"></div><div class="lq"></div><i class="bub" style="left:20px;top:12px"></i><i class="bub" style="left:32px;top:10px;animation-delay:.4s"></i></div><div class="handle"></div></div>`
         + '<div class="lighter"><div class="fl"></div></div><div class="sy"><div class="rod"></div><div class="barrel"><div class="sf"></div></div><div class="needle"></div></div><div class="arm"></div>';
     }
-    if (form === 'ziplock') { // pochette zippée, cachets pressés au logo de la marque
-      const [pc, logo] = ZIP_LOOK[brand] || ['#ec407a', '★'];
-      const pos = [[12, 36], [52, 30], [92, 38], [28, 66], [68, 62]];
-      return `${mouth}<div class="bag"><i class="z1"></i><i class="z2"></i>${pos.map(([x, y]) => `<i class="tb" style="left:${x}px;top:${y}px;--pc:${pc}">${logo}</i>`).join('')}<span class="mark">${brand.length <= 12 ? b : logo}</span></div><i class="tb tk" style="--pc:${pc}">${logo}</i>`;
+    if (form === 'ziplock') { // pochette zippée : ecstasy au logo de la marque, ou comprimés pressés maison
+      const lk = Inventory.look(d, brand), zl = ZIP_LOOK[brand] || ['#ec407a', '★'];
+      const z = lk ? { c: lk.c, s: lk.s, t: lk.t } : { c: zl[0], s: 'round', t: zl[1] };
+      const pos = [[12, 36], [52, 30], [92, 38], [28, 66], [68, 62]], t = U.esc(z.t || '');
+      return `${mouth}<div class="bag"><i class="z1"></i><i class="z2"></i>${pos.map(([x, y]) => `<i class="tb ${z.s}" style="left:${x}px;top:${y}px;--pc:${z.c}">${t}</i>`).join('')}<span class="mark">${lk ? 'PRESSÉ' : brand.length <= 12 ? b : t}</span></div><i class="tb tk ${z.s}" style="--pc:${z.c}">${t}</i>`;
     }
-    if (form === 'cig') { // paquet neutre (tabac), volé, ou de contrebande
-      const smug = /Contrebande/.test(brand);
-      return `<div class="lid"></div><div class="filt"></div><div class="pk"><div class="br">${smug ? 'MARLBORO<br>duty free' : /volé/.test(brand) ? 'Marlboro<br>(lot volé)' : 'Marlboro<br>Red'}</div><div class="warn">${smug ? 'NUIT GRAVEMENT<br>À LA SANTÉ' : 'FUMER<br>TUE'}</div></div><div class="cg"><i class="ember"></i></div><div class="lighter"><div class="fl"></div></div><i class="smk"></i><i class="smk"></i><i class="smk"></i>`;
-    }
+    if (form === 'cig') return `<div class="lid"></div><div class="filt"></div>${Looks.cigPack(brand)}<div class="cg"><i class="ember"></i></div><div class="lighter"><div class="fl"></div></div><i class="smk"></i><i class="smk"></i><i class="smk"></i>`;
     if (form === 'pipe') return `<div class="rk"${/bleue/.test(brand) ? ' style="background:#bfe6ff"' : ''}></div><div class="bulb"><div class="fog"></div></div><div class="stem"><i></i></div><div class="lighter"><div class="fl"></div></div><i class="smk"></i><i class="smk"></i>`;
     if (form === 'vial') return `${mouth}<div class="vl"><div class="lb">${/GBL/.test(brand) ? 'GBL<br>99 %' : 'GHB<br>fiole'}</div></div><i class="dr"></i><i class="dr"></i><i class="dr"></i><div class="gl"><div class="liq"></div></div>`;
-    if (form === 'pill') return `<div class="mouth">👄</div><div class="lid"></div><div class="blister">${'<i></i>'.repeat(8)}</div><div class="box"><span>${b}</span></div><div class="pill"></div>`;
+    if (form === 'pill') { const pl = Looks.pill(d, brand); return `<div class="mouth">👄</div><div class="lid"></div><div class="blister" style="--pc:${pl.c}">${'<i></i>'.repeat(8)}</div><div class="box"><span>${b}</span></div>${Looks.html(pl)}`; }
     if (form === 'joint') return `<div class="bud">🌿</div>${[...Array(9)].map((_, i) => `<i class="crumb" style="--x:${U.ri(-60, 60)}px;--y:${U.ri(-22, 30)}px;--px:${-56 + i * 14}px"></i>`).join('')}<div class="paper"></div><div class="tip"></div><i class="smoke"></i><i class="smoke"></i><i class="smoke"></i>`;
     return '<div class="mirror"></div><div class="pile"></div><div class="line"></div><div class="card"></div>';
   },
@@ -2750,7 +2935,7 @@ const Ritual = {
     setTimeout(() => {
       if (!st.el.isConnected) return;
       st.busy = false;
-      if (st.step >= st.R.steps.length) UI.dismiss(() => Actions.consume(st.d, st.di, st.free, st.after));
+      if (st.step >= st.R.steps.length) UI.dismiss(() => Actions.consume(st.d, st.di, st.free, st.after, st.mode));
       else this.buttons(st);
     }, s.dur * CONFIG.anim);
   },
@@ -2851,8 +3036,8 @@ const Night = {
     this.complete(d, n);
   },
   complete(d, n) {
-    const D = DRUGS[d], rev = Math.round(n * this.clubPrice(d));
-    Inventory.remove(d, n); PlayerData.earn(rev); S.stats.sold += rev;
+    const D = DRUGS[d], rev = Math.round(n * this.clubPrice(d)), cut = Inventory.cut(d);
+    Inventory.remove(d, n); Actions.cutFallout(d, n, cut); PlayerData.earn(rev); S.stats.sold += rev;
     const k = 'club:' + S.city + ':' + d; S.market.sold[k] = (S.market.sold[k] || 0) + n;
     PlayerData.mod('heat', Math.min(6, n * D.bulk / 40 + 1)); PlayerData.mod('respect', 0.5);
     log('💊', `Vente aux fêtards : ${U.num(n)} ${U.u(D, U.num(n))} ${U.de(D.name)} → <b>+${U.money(rev)}</b>.`, 'money');
@@ -3177,6 +3362,144 @@ const Profile = {
       ...(cur ? [{ label: '🚫 Ne rien porter', fn: () => { delete S.equip[slot]; this.open(); } }] : []),
       { label: '↩️ Retour au profil', cls: 'ghost', fn: () => this.open() },
     ] });
+  },
+};
+
+/* ============================ RENDUS DES PRODUITS ============================ */
+const Looks = {
+  pill(d, brand) { return Inventory.look(d, brand) || PILL_LOOK[brand] || { c: '#f4f4f4', s: 'round', t: '' }; },
+  html(pl, extra = '') { return `<i class="pl ${pl.s || 'round'}${pl.sc ? ' sc' : ''}${extra}" style="--pc:${pl.c};--pc2:${pl.c2 || pl.c}"><em>${U.esc(pl.t || '')}</em></i>`; },
+  leanVars(brand) { return /Actavis/.test(brand) ? '--lc:#4b1170;--lm:#9b4dd4' : /maison/.test(brand) ? '--lc:#5d1a8a;--lm:#ab64d8' : '--lc:#9e1b1f;--lm:#e2545e'; },
+  leanBottle(brand) {
+    if (/Actavis/.test(brand)) return '<div class="lbt act"><div class="cap"></div><div class="nk"></div><div class="body"><div class="lq"></div><div class="lb"><div class="ob">actavis</div><b>PROMETHAZINE<br>w/ CODEINE</b><span>6.25-10 mg / 5 mL</span><span>C-V · Rx only</span><em>16 FL OZ (473 mL)</em></div></div></div>';
+    if (/maison/.test(brand)) return '<div class="lbt home"><div class="cap"></div><div class="nk"></div><div class="body"><div class="lq"></div><div class="tp">lean maison</div></div></div>';
+    return '<div class="lbt eup"><div class="cap"><i class="gd"></i></div><div class="nk"></div><div class="body"><div class="lb"><i class="bl"></i><b>EUPHON<sup>®</sup></b><span class="sy">sirop</span><i class="rs"></i><span>codéine · érysimum</span><span>flacon de 300 ml</span><em>MAYOLY SPINDLER</em></div></div></div>';
+  },
+  cigBrand(brand) { const m = /^Fausses (\S+)/.exec(brand); return m ? Object.values(CIG_BRANDS).find((x) => x.name === m[1]) || null : null; },
+  cigPack(brand) {
+    const smug = /Contrebande/.test(brand), fb = this.cigBrand(brand);
+    const br = fb ? fb.name : smug ? 'MARLBORO<br>duty free' : /volé/.test(brand) ? 'Marlboro<br>(lot volé)' : 'Marlboro<br>Red';
+    return `<div class="pk"><div class="br">${br}</div><div class="warn">${fb ? 'SMOKING<br>KILLS' : smug ? 'NUIT GRAVEMENT<br>À LA SANTÉ' : 'FUMER<br>TUE'}</div></div>`;
+  },
+  cigAttrs(brand) { const fb = this.cigBrand(brand); return fb ? { cls: ' brand', style: `--pk:${fb.pk};--pl:${fb.pl};--pt:${fb.pt}` } : { cls: /Contrebande/.test(brand) ? ' red' : '', style: '' }; },
+};
+
+/* ============================ LABOS : RÉGLAGES DE PRODUCTION ============================ */
+const Labs = {
+  configurable: (type) => ['serre', 'resine', 'presse', 'mdma', 'codeine', 'tabac'].includes(type),
+  defaults(type) {
+    return ({ serre: { strain: 'amnesia' }, resine: { plant: 'beldia', method: 'tamis' }, presse: { model: 'percocet', shape: 'oblong', color: '#f5d33b', imprint: 'PERCOCET' },
+      mdma: { logo: 'Tesla' }, codeine: { label: 'actavis', fenta: 0 }, tabac: { brand: 'marlboro' } })[type] || {};
+  },
+  cfg(l) { if (!l.cfg) l.cfg = this.defaults(l.type); return l.cfg; },
+  norm: (t) => String(t || '').toUpperCase().replace(/[^A-Z0-9]/g, ''),
+  colorName: (c) => (PRESS_COLORS.find((x) => x[0] === c) || [c, 'personnalisé'])[1],
+  // crédibilité d'une contrefaçon : couleur, forme et gravure identiques au modèle copié
+  credibility(c) {
+    const M = PRESS_MODELS[c.model] || PRESS_MODELS.percocet;
+    if (!M.look) return 45;
+    return 40 + (c.color === M.look.c ? 20 : 0) + (c.shape === M.look.s ? 20 : 0) + (this.norm(c.imprint) === this.norm(M.look.t) ? 20 : 0);
+  },
+  // caractéristiques de la production : produit, rendement, bonus de qualité, marque, rendu
+  spec(l) {
+    const L = LABS[l.type], c = this.cfg(l);
+    const sp = { drug: L.drug, y: 1, q: 0, brand: 'Production maison', look: null, label: '', fentaPer: 0, cutQ: 0, cut: 0, fake: false };
+    if (l.type === 'serre') { const s = STRAINS[c.strain] || STRAINS.amnesia; Object.assign(sp, { y: s.y, q: s.q, brand: s.name, label: `🌿 ${s.name} (${s.type.toLowerCase()})` }); }
+    else if (l.type === 'resine') { const pl = HASH_PLANTS[c.plant] || HASH_PLANTS.beldia, m = HASH_METHODS[c.method] || HASH_METHODS.tamis; Object.assign(sp, { y: pl.y * m.y, q: pl.q + m.q, brand: m.brand, label: `🟫 ${m.brand} · ${pl.name}` }); }
+    else if (l.type === 'presse') {
+      const M = PRESS_MODELS[c.model] || PRESS_MODELS.percocet, cr = this.credibility(c), t = String(c.imprint || '').toUpperCase().slice(0, 10);
+      Object.assign(sp, { drug: M.drug, q: Math.round((cr - 70) / 3), brand: `${M.name} (pressé)`, look: { c: c.color, s: c.shape, t },
+        label: `💊 ${M.look ? 'Copie ' : ''}${M.name} · ${PRESS_SHAPES[c.shape].toLowerCase()} ${this.colorName(c.color)}${t ? ` « ${U.esc(t)} »` : ''} · crédibilité ${cr} %` });
+    } else if (l.type === 'mdma') Object.assign(sp, { brand: c.logo, label: `💗 Logo ${c.logo}` });
+    else if (l.type === 'codeine') {
+      const lb = LEAN_LABELS[c.label] || LEAN_LABELS.actavis, f = FENTA_CUT[c.fenta] || FENTA_CUT[0];
+      Object.assign(sp, { q: lb.q, brand: lb.brand, fake: lb.fake, fentaPer: f.per, cutQ: f.q, cut: f.cut, label: `🧴 ${lb.name}${f.per ? ` · ☠️ ${f.name.toLowerCase()} au fentanyl` : ''}` });
+    } else if (l.type === 'tabac') { const b = CIG_BRANDS[c.brand] || CIG_BRANDS.marlboro; Object.assign(sp, { brand: `Fausses ${b.name} (usine)`, label: `🚬 Fausses ${b.name}` }); }
+    return sp;
+  },
+  // production mensuelle : matières premières, coupe au fentanyl, contrefaçons démasquées
+  produce(l, out) {
+    const L = LABS[l.type], mult = LAB_MULT[l.level - 1], sp = this.spec(l), D = DRUGS[sp.drug];
+    let n = Math.round(L.out * mult * sp.y * U.rand(0.85, 1.15));
+    if (L.input) {
+      const I = DRUGS[L.input.drug], per = L.input.qty / L.out, can = Math.floor(Inventory.qty(L.input.drug) / per);
+      if (can < 1) { const need = Math.ceil(n * per); out.push(`${L.icon} en attente de ${U.num(need)} ${U.u(I, need)} ${U.de(I.name.toLowerCase())}`); return; }
+      if (can < n) out.push(`${L.icon} tourne au ralenti (manque ${U.de(I.name.toLowerCase())})`);
+      n = Math.min(n, can);
+      Inventory.remove(L.input.drug, Math.ceil(n * per));
+    }
+    let q = U.clamp(U.ri(L.q[0], L.q[1]) + (l.level - 1) * 8 + sp.q, 1, 100), cut = 0, note = '';
+    if (sp.fentaPer) {
+      const need = Math.ceil(n / sp.fentaPer);
+      if (Inventory.qty('fenta') >= need) { Inventory.remove('fenta', need); cut = sp.cut; q = U.clamp(q + sp.cutQ, 1, 100); note = ` ☠️ coupé (${need} cp de fentanyl)`; }
+      else note = ' (pas assez de fentanyl : sirop non coupé)';
+    }
+    Inventory.add(sp.drug, n, q, sp.brand, { look: sp.look, cut });
+    out.push(`${L.icon} +${U.num(n)} ${U.u(D, U.num(n))} « ${U.esc(sp.brand)} » (Q${q})${note}`);
+    if (sp.fake && q < 55 && U.chance(15)) { PlayerData.mod('respect', -2); log('🕵️', `Des clients repèrent tes faux flacons (${sp.brand}) : sirop trop dilué. Ta réputation en prend un coup (−2 👑).`, 'bad'); }
+  },
+  /* ----- panneau de réglage (ouvert à l'achat ou depuis le menu du labo) ----- */
+  setup(id, first = false) {
+    const l = S.labs.find((x) => x.id === id); if (!l || !this.configurable(l.type)) return;
+    const L = LABS[l.type], cfg = { ...this.cfg(l) };
+    UI.modal({ icon: L.icon, title: first ? `${L.name} : que produis-tu ?` : `Réglages — ${L.name}`, cls: 'labcfg', html: '<div class="lcw"></div>',
+      choices: [{ label: first ? '✅ Lancer la production' : '✅ Enregistrer', cls: 'primary', fn: () => { l.cfg = cfg; log(L.icon, `${L.name} : production réglée — ${this.spec(l).label}.`, 'good'); } },
+        ...(first ? [] : [{ label: 'Annuler', cls: 'ghost' }])],
+      onShow: (root) => {
+        const el = root.querySelector('.lcw'), draw = () => { el.innerHTML = this.panel(l, cfg); };
+        el.addEventListener('click', (e) => { const b = e.target.closest('button[data-k]'); if (!b) return; this.set(l.type, cfg, b.dataset.k, b.dataset.v); draw(); });
+        el.addEventListener('input', (e) => { if (e.target.dataset.k !== 'imprint') return; cfg.imprint = e.target.value.toUpperCase().slice(0, 10); this.refresh(el, l, cfg); });
+        draw();
+      } });
+  },
+  set(type, cfg, k, v) {
+    cfg[k] = k === 'fenta' ? +v : v;
+    if (type === 'presse' && k === 'model') { const M = PRESS_MODELS[v]; if (M && M.look) Object.assign(cfg, { shape: M.look.s, color: M.look.c, imprint: M.look.t }); }
+  },
+  refresh(el, l, cfg) {
+    const pv = el.querySelector('.lc-prev'), inf = el.querySelector('.lc-info');
+    if (pv) pv.innerHTML = this.preview(l.type, cfg);
+    if (inf) inf.innerHTML = this.info(l, cfg);
+  },
+  panel(l, c) {
+    const t = l.type, sec = (x) => `<div class="lc-sec">${x}</div>`;
+    const o = (k, v, title, sub) => `<button type="button" class="lc-o${String(c[k]) === String(v) ? ' on' : ''}" data-k="${k}" data-v="${U.esc(v)}"><b>${title}</b>${sub ? `<small>${sub}</small>` : ''}</button>`;
+    const grid = (k, obj, fn) => `<div class="lc-opts">${Object.keys(obj).map((x) => fn(x, obj[x])).join('')}</div>`;
+    let h = `<div class="lc-prev">${this.preview(t, c)}</div>`;
+    if (t === 'serre') h += sec('Variété à planter') + grid('strain', STRAINS, (k, s) => o('strain', k, s.name, `${s.type} · ${s.desc}`));
+    if (t === 'resine') h += sec('Plantes cultivées') + grid('plant', HASH_PLANTS, (k, s) => o('plant', k, s.name, s.desc)) + sec('Méthode d\'extraction') + grid('method', HASH_METHODS, (k, m) => o('method', k, m.name, `« ${m.brand} » · ${m.desc}`));
+    if (t === 'presse') {
+      h += sec('Médicament à copier') + grid('model', PRESS_MODELS, (k, M) => o('model', k, M.name, `${DRUGS[M.drug].name}${M.look ? '' : ' · forme libre'}`));
+      h += sec('Forme') + `<div class="lc-opts">${Object.keys(PRESS_SHAPES).map((k) => o('shape', k, PRESS_SHAPES[k], '')).join('')}</div>`;
+      h += sec('Couleur') + `<div class="lc-sws">${PRESS_COLORS.map(([col, nm]) => `<button type="button" class="lc-sw${c.color === col ? ' on' : ''}" data-k="color" data-v="${col}" style="background:${col}" aria-label="${nm}"></button>`).join('')}</div>`;
+      h += sec('Inscription gravée') + `<input class="lc-in" data-k="imprint" maxlength="10" value="${U.esc(c.imprint || '')}" placeholder="ex. M 30, OP 80…" autocomplete="off">`;
+    }
+    if (t === 'mdma') h += sec('Logo pressé sur les cachets') + `<div class="lc-opts">${['Tesla', 'Punisher', 'Blue Dolphin', 'Skull'].map((x) => o('logo', x, `${ZIP_LOOK[x][1]} ${x}`, '')).join('')}</div>`;
+    if (t === 'codeine') {
+      h += sec('Étiquette (contrefaçon)') + grid('label', LEAN_LABELS, (k, x) => o('label', k, x.name, x.desc));
+      h += sec('Coupe au fentanyl') + `<div class="lc-opts">${FENTA_CUT.map((f, i) => o('fenta', i, f.name, f.desc)).join('')}</div>`;
+    }
+    if (t === 'tabac') h += sec('Marque imitée') + grid('brand', CIG_BRANDS, (k, b) => o('brand', k, b.name, 'Paquets contrefaits, tabac bas de gamme'));
+    return h + `<div class="lc-info">${this.info(l, c)}</div>`;
+  },
+  preview(t, c) {
+    if (t === 'serre') { const s = STRAINS[c.strain]; return `<div class="lc-bud" style="filter:${s.f}">🌿</div>`; }
+    if (t === 'resine') { const m = HASH_METHODS[c.method]; return `<div class="lc-hash" style="--hc:${m.color}">${m.stamp}</div>`; }
+    if (t === 'presse') return Looks.html({ c: c.color, s: c.shape, t: String(c.imprint || '').toUpperCase() });
+    if (t === 'mdma') { const z = ZIP_LOOK[c.logo]; return `<i class="tb" style="--pc:${z[0]}">${z[1]}</i>`; }
+    if (t === 'codeine') { const lb = LEAN_LABELS[c.label]; return `<div class="st-lean" style="${Looks.leanVars(lb.brand)}">${Looks.leanBottle(lb.brand)}</div>${c.fenta ? '<span class="lc-badge">☠️ fentanyl</span>' : ''}`; }
+    if (t === 'tabac') { const b = `Fausses ${CIG_BRANDS[c.brand].name} (usine)`, a = Looks.cigAttrs(b); return `<div class="st-cig${a.cls}" style="${a.style}">${Looks.cigPack(b)}</div>`; }
+    return '';
+  },
+  info(l, c) {
+    const L = LABS[l.type], sp = this.spec({ ...l, cfg: c }), D = DRUGS[sp.drug], n = Math.round(L.out * LAB_MULT[l.level - 1] * sp.y);
+    const q0 = U.clamp(L.q[0] + (l.level - 1) * 8 + sp.q, 1, 100), q1 = U.clamp(L.q[1] + (l.level - 1) * 8 + sp.q, 1, 100);
+    let h = `Production : <b>~${U.num(n)} ${U.u(D, U.num(n))}/mois</b> ${U.de(D.name.toLowerCase())} « ${U.esc(sp.brand)} »<br>Qualité : ${U.q(q0)} à ${U.q(q1)}${sp.cutQ ? ` (+${sp.cutQ} si coupé)` : ''}`;
+    if (l.type === 'presse') { const cr = this.credibility(c); h += `<br>Crédibilité de la copie : <b class="${cr >= 80 ? 'g' : cr >= 60 ? 'y' : 'r'}">${cr} %</b>${PRESS_MODELS[c.model].look ? ' <small class="m">(couleur, forme et gravure du vrai)</small>' : ''}`; }
+    if (L.input) { const need = Math.ceil(n * L.input.qty / L.out); h += `<br>Matière première : ${U.num(need)} ${U.u(DRUGS[L.input.drug], need)} ${U.de(DRUGS[L.input.drug].name.toLowerCase())}/mois (stock ${U.num(Inventory.qty(L.input.drug))})`; }
+    if (sp.fentaPer) h += `<br>Fentanyl : ${Math.ceil(n / sp.fentaPer)} cp/mois (stock ${U.num(Inventory.qty('fenta'))}) · <b class="r">risque d'overdoses chez tes clients</b>`;
+    if (sp.fake) h += '<br><small class="m">Contrefaçon : vendue au prix du vrai, mais un sirop trop dilué peut être démasqué.</small>';
+    return h;
   },
 };
 
@@ -3982,15 +4305,16 @@ const V = {
     if (S.labs.length) {
       h += H.sec('Mes laboratoires');
       for (const l of S.labs) {
-        const L = LABS[l.type];
-        h += H.row({ icon: L.icon, title: `${L.name} · niv. ${l.level}`, sub: `~${U.num(L.out * LAB_MULT[l.level - 1])} ${U.u(DRUGS[L.drug], U.num(L.out * LAB_MULT[l.level - 1]))}/mois · frais ${U.money(L.upkeep * (1 + (l.level - 1) * 0.5))}/mois${L.input ? ` · consomme ${Math.round(L.input.qty * LAB_MULT[l.level - 1])} ${U.u(DRUGS[L.input.drug], Math.round(L.input.qty * LAB_MULT[l.level - 1]))} ${U.de(DRUGS[L.input.drug].name)}` : ''}`, fn: () => Actions.labMenu(l.id) });
+        const L = LABS[l.type], sp = Labs.spec(l), D = DRUGS[sp.drug], n = Math.round(L.out * LAB_MULT[l.level - 1] * sp.y);
+        const need = L.input ? Math.ceil(n * L.input.qty / L.out) : 0;
+        h += H.row({ icon: L.icon, title: `${L.name} · niv. ${l.level}`, sub: `${sp.label ? sp.label + ' · ' : ''}~${U.num(n)} ${U.u(D, U.num(n))}/mois · frais ${U.money(L.upkeep * (1 + (l.level - 1) * 0.5))}/mois${L.input ? ` · consomme ${U.num(need)} ${U.u(DRUGS[L.input.drug], need)} ${U.de(DRUGS[L.input.drug].name.toLowerCase())}` : ''}`, fn: () => Actions.labMenu(l.id) });
       }
     }
     h += H.sec('Monter un laboratoire');
-    h += H.note('La production arrive dans ton stock chaque mois. Risque de démantèlement lié à la pression policière.');
+    h += H.note('La production arrive dans ton stock chaque mois. À l\'achat, un panneau te demande quoi produire : variété de weed, plantes et méthode pour le shit, modèle, forme, couleur et gravure des comprimés, étiquette du sirop… Risque de démantèlement lié à la pression policière.');
     for (const t in LABS) {
-      const L = LABS[t], lock = S.rank < L.rank;
-      h += H.row({ icon: L.icon, title: L.name, sub: `${lock ? `🔒 ${RANKS[L.rank].name} · ` : ''}${U.num(L.out)} ${U.u(DRUGS[L.drug], U.num(L.out))}/mois ${U.de(DRUGS[L.drug].name)} (Q${L.q[0]}–${L.q[1]}) · frais ${U.money(L.upkeep)}/mois${L.input ? ` · nécessite ${L.input.qty} g de cocaïne/mois` : ''}${L.boom ? ' · 💥 explosif' : ''}`,
+      const L = LABS[t], lock = S.rank < L.rank, D = DRUGS[L.drug];
+      h += H.row({ icon: L.icon, title: L.name, sub: `${lock ? `🔒 ${RANKS[L.rank].name} · ` : ''}${U.num(L.out)} ${U.u(D, U.num(L.out))}/mois ${U.de(D.name.toLowerCase())} (Q${L.q[0]}–${L.q[1]}) · frais ${U.money(L.upkeep)}/mois${L.input ? ` · nécessite ${U.num(L.input.qty)} ${U.u(DRUGS[L.input.drug], L.input.qty)} ${U.de(DRUGS[L.input.drug].name.toLowerCase())}/mois` : ''}${Labs.configurable(t) ? ' · ⚙️ réglable' : ''}${L.boom ? ' · 💥 explosif' : ''}`,
         right: U.money(L.price), dis: lock, fn: () => Actions.buyLab(t) });
     }
     return { title: '🧪 Laboratoires', html: h };
@@ -4422,7 +4746,7 @@ const Game = {
     for (const t in ARMS) if (S.arsenal[t] == null) S.arsenal[t] = 0;
     if (S.prison) { if (S.prison.cigs == null) S.prison.cigs = 0; if (S.prison.loose == null) S.prison.loose = 0; if (S.prison.phone === undefined) S.prison.phone = null; }
     S.businesses.forEach((b) => { if (BUSINESSES[b.type] && BUSINESSES[b.type].strip) Strip.ensure(b); });
-    if (S.stock.lean && !DRUGS.lean.brands.includes(S.stock.lean.b)) S.stock.lean.b = 'Euphon';
+    if (S.stock.lean && S.stock.lean.b === 'Maka') S.stock.lean.b = 'Euphon'; // ancienne marque fictive
     for (const c in CITIES) for (const d in DRUGS) if (!(S.market.brand[c][d] < DRUGS[d].brands.length)) S.market.brand[c][d] = 0;
     Vault.cleanup();
     for (const sl in SLOTS) if (!PlayerData.equipped(sl)) { const best = Shop.bestFor(sl); if (best) S.equip[sl] = best.id; }
