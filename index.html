@@ -217,22 +217,6 @@ body.jail .age-btn{border-color:#ffc27a;background:radial-gradient(circle at 30%
 .st-pill.s2 .mouth{opacity:1}
 .st-pill.s2 .pill{animation:pillTake 1.1s forwards}
 @keyframes pillTake{0%{opacity:1;transform:translate(-34px,-40px)}45%{opacity:1;transform:translate(-14px,-58px) scale(1.4)}100%{opacity:0;transform:translate(0,-66px) scale(.2)}}
-.st-syrup .bottle{position:absolute;left:64px;bottom:22px;width:44px;height:96px;border:2px solid rgba(255,255,255,.4);border-radius:10px 10px 8px 8px;
-  background:linear-gradient(90deg,rgba(255,255,255,.16),rgba(255,255,255,.04));overflow:hidden;transform-origin:50% 15%;transition:transform .8s .5s,opacity .5s;z-index:2}
-.st-syrup .bottle .liq{position:absolute;left:0;right:0;bottom:0;height:72%;background:linear-gradient(180deg,#a64dff,#5c0aa8);transition:height 1.2s 1s}
-.st-syrup .bottle .lbl{position:absolute;left:3px;right:3px;top:36%;background:#fff;color:#5c0aa8;font-size:8px;font-weight:900;text-align:center;padding:2px 0;border-radius:2px;z-index:1;white-space:nowrap;overflow:hidden}
-.st-syrup .cap{position:absolute;left:72px;bottom:116px;width:28px;height:14px;background:#f0f0f0;border-radius:3px;transition:transform .6s,opacity .6s;z-index:3}
-.st-syrup .cup{position:absolute;right:64px;bottom:22px;width:52px;height:66px;background:linear-gradient(90deg,#fbfbfb,#d6d6d6);clip-path:polygon(0 0,100% 0,86% 100%,14% 100%);overflow:hidden;transform-origin:50% 100%;transition:transform .6s;z-index:1}
-.st-syrup .cup .liq{position:absolute;left:0;right:0;bottom:0;height:0;background:linear-gradient(180deg,#b76bff,#7a1fd1);transition:height 1.2s 1.1s}
-.st-syrup .stream{position:absolute;right:88px;top:62px;width:5px;height:0;background:#8f33e8;border-radius:3px;opacity:1;transition:height .3s 1.05s,opacity .3s 2.1s}
-.st-syrup.s1 .cap{transform:translate(-26px,-30px) rotate(-220deg);opacity:0}
-.st-syrup.s1 .bottle{transform:translate(52px,-26px) rotate(-112deg)}
-.st-syrup.s1 .bottle .liq{height:22%}
-.st-syrup.s1 .stream{height:44px;opacity:0}
-.st-syrup.s1 .cup .liq{height:64%}
-.st-syrup.s2 .bottle{opacity:.2}
-.st-syrup.s2 .cup{transform:translate(-40px,-24px) rotate(-38deg)}
-.st-syrup.s2 .cup .liq{height:0;transition:height 1s .5s}
 .st-joint .bud{position:absolute;left:50%;top:34px;font-size:48px;margin-left:-26px;transition:transform .6s,opacity .6s}
 .st-joint .crumb{position:absolute;left:50%;top:62px;width:7px;height:7px;margin-left:-3px;border-radius:50%;background:#5aa02c;opacity:0;transition:transform .7s .25s,opacity .4s .2s}
 .st-joint .paper{position:absolute;left:50%;top:108px;width:140px;height:42px;margin-left:-70px;background:#f3eee2;border-radius:3px;opacity:0;transform:translateY(24px);transition:transform .5s,opacity .5s}
@@ -290,7 +274,7 @@ body.jail .age-btn{border-color:#ffc27a;background:radial-gradient(circle at 30%
 .stage .lighter::before{content:'';position:absolute;left:3px;right:3px;top:-6px;height:7px;background:#bdbdbd;border-radius:2px}
 .stage .fl{position:absolute;left:2px;top:-30px;width:16px;height:24px;border-radius:50% 50% 50% 50%/60% 60% 40% 40%;background:radial-gradient(ellipse at 50% 70%,#fff59d,#ffb300 45%,rgba(255,87,34,.85) 75%,transparent 80%);animation:flick .15s infinite alternate}
 @keyframes flick{from{transform:scale(1,1) rotate(-2deg)}to{transform:scale(.9,1.12) rotate(3deg)}}
-.st-rx.s3 .mouth,.st-fr.s3 .mouth,.st-zip.s3 .mouth,.st-sfr.s3 .mouth,.st-sus.s3 .mouth,.st-vial.s2 .mouth{opacity:1}
+.st-rx.s3 .mouth,.st-fr.s3 .mouth,.st-zip.s3 .mouth,.st-vial.s2 .mouth{opacity:1}
 /* comprimés : formes */
 .pl{position:absolute;left:50%;top:50%;opacity:0;z-index:4}
 .pl.round{width:15px;height:15px;margin:-7px;border-radius:50%;background:radial-gradient(circle at 35% 35%,#fff,var(--pc) 55%)}
@@ -332,40 +316,70 @@ body.jail .age-btn{border-color:#ffc27a;background:radial-gradient(circle at 30%
 .st-fr.s3 .blister i:first-child{background:#7d858f;box-shadow:inset 0 2px 4px rgba(0,0,0,.5)}
 .st-fr.s3 .pill{animation:frTake 1.1s forwards}
 @keyframes frTake{0%{opacity:1;transform:translate(-36px,-40px)}45%{opacity:1;transform:translate(-14px,-56px) scale(1.4)}100%{opacity:0;transform:translate(0,-64px) scale(.2)}}
-/* sirop français : flacon en verre brun + doseur */
-.st-sfr .gb{position:absolute;left:50%;bottom:20px;width:54px;height:80px;margin-left:-82px;border-radius:12px 12px 8px 8px;background:linear-gradient(90deg,#3a1c07,#7a3f14 45%,#2c1405);box-shadow:inset 0 0 10px rgba(0,0,0,.5);transition:transform .9s .1s,opacity .5s;z-index:2}
-.st-sfr .gb::before{content:'';position:absolute;left:17px;top:-15px;width:20px;height:17px;background:linear-gradient(90deg,#3a1c07,#7a3f14 45%,#2c1405);border-radius:3px 3px 0 0}
-.st-sfr .gb .lb{position:absolute;left:4px;right:4px;top:22px;height:38px;background:#fbfbf7;border-radius:2px;text-align:center;font-size:7px;color:#333;overflow:hidden}
-.st-sfr .gb .lb i{display:block;height:7px;background:var(--bc)}
-.st-sfr .gb .lb b{display:block;font-size:10px;font-weight:900;color:#111;margin-top:3px}
-.st-sfr .gcap{position:absolute;left:50%;bottom:113px;width:26px;height:14px;margin-left:-68px;border-radius:3px;background:linear-gradient(180deg,#d32f2f 0 55%,#fafafa 55%);box-shadow:0 2px 3px rgba(0,0,0,.4);transition:transform .8s,opacity .8s;z-index:3}
-.st-sfr .dos{position:absolute;left:50%;bottom:20px;margin-left:34px;width:34px;height:42px;border:2px solid rgba(255,255,255,.65);border-top:none;border-radius:0 0 7px 7px;background:repeating-linear-gradient(0deg,transparent 0 7px,rgba(255,255,255,.3) 7px 8px);overflow:hidden;transform-origin:50% 100%;transition:transform .7s;z-index:1}
-.st-sfr .dos .liq{position:absolute;left:0;right:0;bottom:0;height:0;background:linear-gradient(180deg,#c9731f,#8a430c);transition:height 1.1s 1s}
-.st-sfr .strm{position:absolute;left:50%;margin-left:49px;top:86px;width:4px;height:0;background:#a0521a;border-radius:2px;opacity:1;transition:height .3s .9s,opacity .3s 2.1s}
-.st-sfr.s1 .gcap{transform:translate(-26px,-30px) rotate(-240deg);opacity:0}
-.st-sfr.s2 .gb{transform:translate(54px,-42px) rotate(110deg)}
-.st-sfr.s2 .strm{height:20px;opacity:0}
-.st-sfr.s2 .dos .liq{height:62%}
-.st-sfr.s3 .gb{opacity:.15}
-.st-sfr.s3 .dos{transform:translate(-51px,-70px) rotate(-38deg)}
-.st-sfr.s3 .dos .liq{height:0;transition:height .9s .5s}
-/* sirop US : bouteille rectangulaire blanche/violette + double cup */
-.st-sus .wb{position:absolute;left:50%;bottom:20px;width:46px;height:92px;margin-left:-80px;border-radius:5px;background:linear-gradient(90deg,#e6e6e6,#fff 40%,#d8d8d8);box-shadow:inset 0 0 6px rgba(0,0,0,.25);transition:transform .9s .1s,opacity .5s;z-index:2}
-.st-sus .wb::before{content:'';position:absolute;left:14px;top:-12px;width:18px;height:13px;background:#f2f2f2;border-radius:3px 3px 0 0}
-.st-sus .wb .lb{position:absolute;left:3px;right:3px;top:22px;height:48px;background:#5e2b97;border-radius:2px;color:#fff;font-size:5.5px;text-align:center;line-height:1.3;padding-top:4px}
-.st-sus .wb .lb b{display:block;font-size:8px;font-weight:900;letter-spacing:.3px}
-.st-sus .pcap{position:absolute;left:50%;bottom:121px;width:24px;height:12px;margin-left:-69px;border-radius:3px;background:#4a1f7a;transition:transform .8s,opacity .8s;z-index:3}
-.st-sus .cup2{position:absolute;left:50%;bottom:20px;margin-left:30px;width:48px;height:62px;background:linear-gradient(90deg,#fbfbfb,#d8d8d8);clip-path:polygon(0 0,100% 0,86% 100%,14% 100%);overflow:hidden;transform-origin:50% 100%;transition:transform .7s;z-index:1}
-.st-sus .cup2::before{content:'';position:absolute;left:0;right:0;top:0;height:6px;background:#efefef;border-bottom:1px solid #c8c8c8;z-index:1}
-.st-sus .cup2 .liq{position:absolute;left:0;right:0;bottom:0;height:0;background:linear-gradient(180deg,#b76bff,#6a1fb8);transition:height 1.1s 1s}
-.st-sus .strm{position:absolute;left:50%;margin-left:52px;top:77px;width:4px;height:0;background:#8f33e8;border-radius:2px;opacity:1;transition:height .3s .9s,opacity .3s 2.1s}
-.st-sus.s1 .pcap{transform:translate(-26px,-30px) rotate(-240deg);opacity:0}
-.st-sus.s2 .wb{transform:translate(57px,-49px) rotate(112deg)}
-.st-sus.s2 .strm{height:16px;opacity:0}
-.st-sus.s2 .cup2 .liq{height:64%}
-.st-sus.s3 .wb{opacity:.15}
-.st-sus.s3 .cup2{transform:translate(-50px,-62px) rotate(-36deg)}
-.st-sus.s3 .cup2 .liq{height:0;transition:height 1s .5s}
+/* lean : sirop codéiné versé dans un double cup, complété au Sprite, avec glaçons */
+.st-lean .lbt{position:absolute;left:50%;bottom:18px;margin-left:-108px;width:46px;height:100px;transform-origin:50% 50%;transition:transform .9s cubic-bezier(.4,.1,.3,1),opacity .6s;z-index:4}
+.st-lean .lbt .body{position:absolute;inset:0;overflow:hidden}
+.st-lean .lbt .nk{position:absolute;left:14px;top:-12px;width:18px;height:13px}
+.st-lean .lbt .cap{position:absolute;left:10px;top:-24px;width:26px;height:13px;border-radius:3px;background:repeating-linear-gradient(90deg,#fff 0 3px,#d9d9d9 3px 4px);box-shadow:0 2px 3px rgba(0,0,0,.35);transition:transform .5s,opacity .5s}
+.st-lean .lb{position:absolute;left:0;right:0;top:20px;height:58px;background:#fbfbfb;text-align:center;color:#222;font-size:4.6px;line-height:1.3;overflow:hidden}
+.st-lean .lb span{display:block}
+.st-lean .lb em{display:block;font-style:normal;font-weight:800;margin-top:2px}
+/* Actavis : pinte en plastique transparent de 473 ml, sirop violet, étiquette orange et blanche */
+.st-lean .act .body{border-radius:10px 10px 7px 7px;border:1px solid rgba(255,255,255,.4);background:rgba(255,255,255,.08)}
+.st-lean .act .body::after{content:'';position:absolute;inset:0;background:linear-gradient(90deg,rgba(255,255,255,.3),transparent 22%,transparent 72%,rgba(255,255,255,.16));pointer-events:none}
+.st-lean .act .lq{position:absolute;left:0;right:0;bottom:0;height:90%;background:var(--lc);transition:height 1.2s .8s}
+.st-lean .act .nk{border:1px solid rgba(255,255,255,.4);border-bottom:none;background:rgba(255,255,255,.12)}
+.st-lean .act .ob{height:12px;line-height:12px;background:#f26522;color:#fff;font-size:8.5px;font-weight:900;font-style:italic;letter-spacing:.3px}
+.st-lean .act .lb b{display:block;margin:3px 1px 2px;font-size:5.6px;font-weight:900;color:#4a148c;line-height:1.15}
+/* Euphon : flacon en verre ambré de 300 ml, bouchon sécurité blanc et godet doseur, sirop rouge */
+.st-lean .eup .body{border-radius:15px 15px 8px 8px;background:linear-gradient(90deg,rgba(55,22,4,.97),rgba(150,74,20,.9) 42%,rgba(48,18,3,.97));box-shadow:inset 0 0 10px rgba(0,0,0,.55)}
+.st-lean .eup .nk{background:linear-gradient(90deg,#3a1704,#8a4515 45%,#2c1203)}
+.st-lean .eup .gd{position:absolute;left:1px;top:-12px;width:24px;height:12px;border:1.5px solid rgba(255,255,255,.75);border-bottom:none;border-radius:5px 5px 1px 1px;background:repeating-linear-gradient(0deg,rgba(255,255,255,.08) 0 3px,rgba(255,255,255,.45) 3px 4px)}
+.st-lean .eup .lb{top:24px;height:52px;border-radius:1px}
+.st-lean .eup .bl{display:block;height:5px;background:#1d4f9b}
+.st-lean .eup .lb b{display:block;margin-top:4px;font-size:8.5px;font-weight:900;color:#1d4f9b;letter-spacing:.3px;line-height:1}
+.st-lean .eup .lb sup{font-size:4px}
+.st-lean .eup .sy{font-style:italic;font-size:6px;color:#444}
+.st-lean .eup .rs{display:block;height:3px;margin:2px 5px;background:#c62828}
+.st-lean .eup .lb em{color:#888;font-size:4px}
+/* filets de sirop et de soda */
+.st-lean .strm,.st-lean .ss{position:absolute;left:50%;width:4px;height:0;border-radius:2px;opacity:1;z-index:3}
+.st-lean .strm{margin-left:6px;top:64px;background:var(--lc);transition:height .3s .8s,opacity .3s 2s}
+.st-lean .ss{margin-left:32px;top:70px;width:3px;background:rgba(215,255,225,.85);transition:height .3s .8s,opacity .3s 1.9s}
+/* canette de Sprite */
+.st-lean .spr{position:absolute;left:50%;bottom:16px;margin-left:70px;width:28px;height:52px;border-radius:4px;background:linear-gradient(90deg,#00632f,#00a651 42%,#2fd17d 58%,#00803c);box-shadow:0 4px 10px rgba(0,0,0,.45);transition:transform .9s cubic-bezier(.4,.1,.3,1),opacity .6s;z-index:4}
+.st-lean .spr::before{content:'';position:absolute;left:1px;right:1px;top:-4px;height:6px;border-radius:4px 4px 1px 1px;background:linear-gradient(90deg,#9aa4a8,#eceff1 45%,#90a4ae)}
+.st-lean .spr::after{content:'';position:absolute;left:4px;right:4px;bottom:7px;height:4px;border-radius:2px;background:#ffd400;transform:skewY(-12deg)}
+.st-lean .spr b{position:absolute;inset:0;display:grid;place-items:center;writing-mode:vertical-rl;transform:rotate(180deg);color:#fff;font-size:11px;font-weight:900;font-style:italic;letter-spacing:.5px;text-shadow:0 1px 1px rgba(0,0,0,.35)}
+/* double cup en polystyrène */
+.st-lean .dc{position:absolute;left:50%;bottom:16px;margin-left:-9px;width:58px;height:74px;transform-origin:50% 0;transition:transform .9s cubic-bezier(.4,.1,.3,1);z-index:2}
+.st-lean .dc .fc{position:absolute;left:0;right:0;top:7px;bottom:0;clip-path:polygon(0 0,100% 0,85% 100%,15% 100%);background:radial-gradient(circle,rgba(0,0,0,.04) 1px,transparent 1.5px) 0 0/4px 4px,linear-gradient(90deg,#cfcfcf,#fff 35%,#f4f4f4 62%,#c9c9c9);z-index:1}
+.st-lean .dc .fc::before{content:'';position:absolute;left:0;right:0;top:9px;height:3px;background:linear-gradient(180deg,rgba(0,0,0,.16),rgba(255,255,255,.9))}
+.st-lean .dc .op{position:absolute;left:0;top:0;width:58px;height:14px;border-radius:50%;border:2px solid #fdfdfd;box-sizing:border-box;background:radial-gradient(ellipse at 50% 30%,#bdbdbd,#e6e6e6 70%);overflow:hidden;z-index:2}
+.st-lean .sf{position:absolute;inset:1px;border-radius:50%;background:var(--lc);opacity:0;transform:scale(.15);transition:transform 1.2s .9s,opacity .4s .9s,background 1.2s .9s}
+.st-lean .sf i{position:absolute;width:3px;height:3px;border-radius:50%;background:rgba(255,255,255,.85);opacity:0}
+.st-lean .sf i:nth-child(1){left:8px;top:3px} .st-lean .sf i:nth-child(2){left:20px;top:5px} .st-lean .sf i:nth-child(3){left:31px;top:2px} .st-lean .sf i:nth-child(4){left:41px;top:5px} .st-lean .sf i:nth-child(5){left:14px;top:6px}
+.st-lean .ice{position:absolute;top:-2px;width:11px;height:11px;border-radius:2px;border:1px solid rgba(255,255,255,.9);background:linear-gradient(135deg,rgba(255,255,255,.95),rgba(170,215,255,.55) 60%,rgba(255,255,255,.75));box-shadow:0 1px 3px rgba(0,0,0,.25);opacity:0;z-index:3}
+.st-lean.s1 .lbt{transform:translate(39px,-69px) rotate(120deg)}
+.st-lean.s1 .cap{transform:translate(-16px,-34px) rotate(-170deg);opacity:0}
+.st-lean.s1 .act .lq{height:52%}
+.st-lean.s1 .strm{height:22px;opacity:0}
+.st-lean.s1 .sf{opacity:1;transform:scale(.8)}
+.st-lean.s2 .lbt{transform:none;opacity:.35}
+.st-lean.s2 .spr{transform:translate(-24px,-70px) rotate(-115deg)}
+.st-lean.s2 .ss{height:17px;opacity:0}
+.st-lean.s2 .sf{transform:scale(1);background:var(--lm)}
+.st-lean.s2 .sf i{animation:fizz 1s 1.1s infinite}
+.st-lean.s2 .sf i:nth-child(2n){animation-delay:1.4s}
+@keyframes fizz{0%,100%{opacity:0;transform:scale(.4)}50%{opacity:1;transform:scale(1)}}
+.st-lean.s3 .spr{transform:none;opacity:.35}
+.st-lean.s3 .ice{animation:iceDrop .7s cubic-bezier(.5,0,.7,1) forwards}
+.st-lean.s3 .ice:nth-of-type(2){animation-delay:.25s} .st-lean.s3 .ice:nth-of-type(3){animation-delay:.5s}
+@keyframes iceDrop{0%{opacity:1;transform:translateY(-130px) rotate(0)}80%{opacity:1;transform:translateY(3px) rotate(var(--r))}100%{opacity:1;transform:translateY(0) rotate(var(--r))}}
+.st-lean.s4 .mouth{opacity:1}
+.st-lean.s4 .lbt,.st-lean.s4 .spr{opacity:.12}
+.st-lean.s4 .dc{transform:translate(-40px,-60px) rotate(-28deg)}
+.st-lean.s4 .sf{transform:scale(.35);transition:transform 1.1s .6s}
 /* héroïne / injectable */
 .st-inj .spoon{position:absolute;left:50%;top:62px;width:150px;height:30px;margin-left:-86px;transition:opacity .6s;z-index:2}
 .st-inj .bowl{position:absolute;left:0;top:0;width:58px;height:28px;border-radius:50%;background:radial-gradient(ellipse at 40% 35%,#f4f4f4,#a9a9a9 60%,#6d6d6d);box-shadow:0 3px 8px rgba(0,0,0,.6);overflow:hidden}
@@ -571,7 +585,7 @@ function log(e, t, c = '') {
 const CONFIG = { anim: 1 }; // facteur de durée des animations (0 = instantané)
 const DRUGS = {
   oxy:   { form: 'rxbottle', name: 'Oxycodone', cat: 'med', icon: '💊', unit: 'cp', brands: ['Percocet 10 mg', 'OxyContin 80 mg'], base: 25, demand: 60, depth: 4000, bulk: 0.2, add: 7, od: 1.4, opioid: true, fx: { health: 4, stress: -5 }, txt: 'Une chaleur cotonneuse t\'enveloppe, la douleur disparaît.' },
-  lean:  { form: 'syrup_fr', forms: { Actavis: 'syrup_us' }, name: 'Sirop codéiné / Prométhazine', cat: 'med', icon: '🟣', unit: 'flacon', brands: ['Actavis', 'Euphon', 'Maka'], base: 120, demand: 10, depth: 400, bulk: 3, add: 5, od: 1.0, opioid: true, fx: { health: 1, respect: 1, stress: -6 }, txt: 'Double cup en main, le temps ralentit…' },
+  lean:  { form: 'lean', name: 'Sirop codéiné / Prométhazine', cat: 'med', icon: '🟣', unit: 'flacon', brands: ['Actavis', 'Euphon'], base: 120, demand: 10, depth: 400, bulk: 3, add: 5, od: 1.0, opioid: true, fx: { health: 1, respect: 1, stress: -6 }, txt: 'Double cup en main, le temps ralentit…' },
   benzo: { form: 'frbox', forms: { 'Xanax Bar 2 mg': 'rxbottle' }, name: 'Benzodiazépines', cat: 'med', icon: '💠', unit: 'cp', brands: ['Xanax Bar 2 mg', 'Valium 10 mg', 'Rivotril 2 mg'], base: 8, demand: 120, depth: 8000, bulk: 0.2, add: 5, od: 0.6, benzo: true, fx: { crime: 6, stress: -10 }, txt: 'Plus rien ne t\'atteint. Sang-froid total.' },
   rita:  { form: 'frbox', name: 'Méthylphénidate', cat: 'med', icon: '⚪', unit: 'cp', brands: ['Ritaline', 'Concerta'], base: 10, demand: 70, depth: 6000, bulk: 0.2, add: 3, od: 0.3, stim: true, fx: { ap: 1 }, txt: 'Concentration maximale, tu enchaînes les tâches.' },
   coke:  { form: 'powder', name: 'Cocaïne (poudre)', cat: 'dure', icon: '❄️', unit: 'g', brands: ['Écaille de poisson', 'Plaquette 90 %', 'Colombienne'], base: 70, demand: 40, depth: 4000, bulk: 1, add: 4, od: 0.8, stim: true, fx: { ap: 1, crime: 8, respect: 1, health: -2 }, txt: 'Tu te sens invincible, le roi du monde.' },
@@ -832,15 +846,11 @@ const RITUALS = {
     { btn: '💊 Sortir la plaquette', cap: () => 'Tu fais glisser la plaquette hors de la boîte.', dur: 1200 },
     { btn: '👄 Prendre le comprimé', cap: () => 'Tu perces l\'alvéole et avales le comprimé.', dur: 1200 },
   ] },
-  syrup_fr: { cls: 'st-sfr', fails: ['Le bouchon est collé par le sirop… Force encore.'], steps: [
-    { btn: '🔄 Dévisser le bouchon', cap: (b) => `Tu dévisses le flacon en verre brun (${b}).`, dur: 900 },
-    { btn: '🥄 Verser dans le doseur', cap: () => 'Le sirop épais coule dans le godet doseur…', dur: 2300 },
-    { btn: '🥤 Boire', cap: () => 'Tu avales le contenu du doseur d\'une traite.', dur: 1400 },
-  ] },
-  syrup_us: { cls: 'st-sus', fails: ['Le bouchon de sécurité résiste… Appuie et tourne encore.'], steps: [
-    { btn: '🔄 Dévisser le bouchon', cap: (b) => `Tu dévisses la bouteille (${b}).`, dur: 900 },
-    { btn: '🥤 Verser dans le double cup', cap: () => 'Le sirop violet coule lentement dans le double cup…', dur: 2300 },
-    { btn: '😌 Siroter', cap: () => 'Tu sirotes doucement. Le temps ralentit…', dur: 1500 },
+  lean: { cls: 'st-lean', fails: ['Tu en renverses à côté du gobelet… Recommence.', 'Le gobelet glisse, tu le rattrapes de justesse… Recommence.'], steps: [
+    { btn: '🧴 Verser le sirop dans le double cup', cap: (b) => `Tu dévisses le flacon (${b}) et verses le sirop dans le double cup…`, dur: 2300 },
+    { btn: '🥤 Verser le Sprite', cap: () => 'Tu complètes avec du Sprite : ça pétille, la couleur s\'éclaircit…', dur: 2200 },
+    { btn: '🧊 Ajouter des glaçons', cap: () => 'Trois glaçons tombent dans le gobelet. Tu touilles doucement.', dur: 1500 },
+    { btn: '😌 Siroter', cap: () => 'Tu sirotes lentement. Le temps ralentit…', dur: 1700 },
   ] },
   inject: { cls: 'st-inj', fails: ['Tes mains tremblent trop… Recommence.', 'Tu en renverses un peu… Concentre-toi.'], steps: [
     { btn: '🥄 Déposer la poudre dans la cuillère', cap: (b) => `Tu déposes un peu ${U.de(b.toLowerCase())} dans la cuillère.`, dur: 1100 },
@@ -2668,9 +2678,10 @@ const Ritual = {
     const form = this.formFor(d, brand), R = RITUALS[form] || RITUALS.powder;
     const st = { d, di, free, after, step: 0, R, form, brand, busy: false, el: null };
     const red = form === 'cig' && /Contrebande/.test(brand) ? ' red' : '';
+    const vars = form === 'lean' ? (/Actavis/.test(brand) ? '--lc:#4b1170;--lm:#9b4dd4' : '--lc:#9e1b1f;--lm:#e2545e') : '';
     UI.modal({ title: `${D.icon} ${D.name}`, cls: 'drug', text: `${U.esc(brand)} · ${Actions.doseLabel(d, di).toLowerCase()}`, html: '<div class="ritw"></div>', choices: [], onShow: (root) => {
       st.el = root.querySelector('.ritw');
-      st.el.innerHTML = `<div class="stage ${R.cls}${red}">${this.stage(form, brand, d)}</div><div class="r-cap">Prépare-toi…</div>
+      st.el.innerHTML = `<div class="stage ${R.cls}${red}" style="${vars}">${this.stage(form, brand, d)}</div><div class="r-cap">Prépare-toi…</div>
         <div class="r-steps">${R.steps.map(() => '<i></i>').join('')}</div><div class="m-choices"></div>`;
       st.el.addEventListener('click', (e) => { const b = e.target.closest('[data-ra]'); if (b && !b.disabled) this.act(st, b.dataset.ra); });
       this.buttons(st);
@@ -2687,11 +2698,13 @@ const Ritual = {
       const unit = DRUGS[d] && DRUGS[d].unit === 'gél' ? 'gélules' : 'comprimés';
       return `${mouth}<div class="flap"></div><div class="blister">${'<i></i>'.repeat(8)}</div><div class="bx" style="--bc:${bc}"><div class="band"></div><div class="nm">${U.esc(k)} <small>${rest}</small></div><div class="dci">${dci}</div><div class="qt">Boîte de 28 ${unit} · voie orale</div></div><div class="pill"></div>`;
     }
-    if (form === 'syrup_fr') { // flacon en verre brun, bouchon rouge et blanc, godet doseur
-      const bc = /Euphon/.test(brand) ? '#c62828' : '#2e7d32';
-      return `${mouth}<div class="gcap"></div><div class="gb" style="--bc:${bc}"><div class="lb"><i></i><b>${b}</b>sirop · 150 ml</div></div><i class="strm"></i><div class="dos"><div class="liq"></div></div>`;
+    if (form === 'lean') { // vraie bouteille (Actavis ou Euphon), double cup, canette de Sprite, glaçons
+      const bottle = /Actavis/.test(brand)
+        ? '<div class="lbt act"><div class="cap"></div><div class="nk"></div><div class="body"><div class="lq"></div><div class="lb"><div class="ob">actavis</div><b>PROMETHAZINE<br>w/ CODEINE</b><span>6.25-10 mg / 5 mL</span><span>C-V · Rx only</span><em>16 FL OZ (473 mL)</em></div></div></div>'
+        : '<div class="lbt eup"><div class="cap"><i class="gd"></i></div><div class="nk"></div><div class="body"><div class="lb"><i class="bl"></i><b>EUPHON<sup>®</sup></b><span class="sy">sirop</span><i class="rs"></i><span>codéine · érysimum</span><span>flacon de 300 ml</span><em>MAYOLY SPINDLER</em></div></div></div>';
+      const ice = [[10, '18deg'], [24, '-14deg'], [37, '32deg']].map(([x, r]) => `<i class="ice" style="left:${x}px;--r:${r}"></i>`).join('');
+      return `${mouth}${bottle}<i class="strm"></i><div class="spr"><b>Sprite</b></div><i class="ss"></i><div class="dc"><div class="fc"></div><div class="op"><div class="sf">${'<i></i>'.repeat(5)}</div></div>${ice}</div>`;
     }
-    if (form === 'syrup_us') return `${mouth}<div class="pcap"></div><div class="wb"><div class="lb"><b>${b.toUpperCase()}</b>PROMETHAZINE<br>W/ CODEINE<br>16 FL OZ</div></div><i class="strm"></i><div class="cup2"><div class="liq"></div></div>`;
     if (form === 'inject') { // cuillère, briquet, seringue
       const pc = /Brown|Brune/.test(brand) ? '#8d5a2b' : '#f2efe6';
       return `<div class="spoon"><div class="bowl"><div class="pw" style="--pc:${pc}"></div><div class="lq"></div><i class="bub" style="left:20px;top:12px"></i><i class="bub" style="left:32px;top:10px;animation-delay:.4s"></i></div><div class="handle"></div></div>`
@@ -4409,6 +4422,8 @@ const Game = {
     for (const t in ARMS) if (S.arsenal[t] == null) S.arsenal[t] = 0;
     if (S.prison) { if (S.prison.cigs == null) S.prison.cigs = 0; if (S.prison.loose == null) S.prison.loose = 0; if (S.prison.phone === undefined) S.prison.phone = null; }
     S.businesses.forEach((b) => { if (BUSINESSES[b.type] && BUSINESSES[b.type].strip) Strip.ensure(b); });
+    if (S.stock.lean && !DRUGS.lean.brands.includes(S.stock.lean.b)) S.stock.lean.b = 'Euphon';
+    for (const c in CITIES) for (const d in DRUGS) if (!(S.market.brand[c][d] < DRUGS[d].brands.length)) S.market.brand[c][d] = 0;
     Vault.cleanup();
     for (const sl in SLOTS) if (!PlayerData.equipped(sl)) { const best = Shop.bestFor(sl); if (best) S.equip[sl] = best.id; }
     for (const c in CITIES) for (const d in DRUGS) if (S.market.trend[c][d] == null) { S.market.trend[c][d] = 1; S.market.qual[c][d] = MarketData.rollQ(c, d); S.market.brand[c][d] = 0; }
