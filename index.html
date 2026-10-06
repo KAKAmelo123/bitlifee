@@ -584,6 +584,20 @@ body.trip #modal-root .stage{animation:trip 2.6s ease-in-out}
 .st-snus.s2 .sbox{transform:translateY(22px) scale(.85);opacity:.5}
 .snus-box{width:74px;height:74px;border-radius:12px;background:radial-gradient(circle at 35% 28%,rgba(255,255,255,.5),var(--sc,#2e7d32) 74%);display:grid;place-items:center;color:#fff;font-weight:900;position:relative;box-shadow:0 5px 14px rgba(0,0,0,.5)}
 .snus-box .lc-badge2{position:absolute;bottom:6px;font-size:8px}
+
+/* ---------- Flacons sirop Euphon / Paderyl / Maka ---------- */
+.st-lean .eup .bl{background:var(--bandc,#1d4f9b)}
+.st-lean .eup .lb b{color:var(--bandc,#1d4f9b)}
+.st-lean .maka .swiss{position:absolute;right:5px;top:22px;width:13px;height:13px;background:#da291c;border-radius:1px;z-index:3}
+.st-lean .maka .swiss::before,.st-lean .maka .swiss::after{content:'';position:absolute;background:#fff}
+.st-lean .maka .swiss::before{left:5.5px;top:2.5px;width:2px;height:8px}
+.st-lean .maka .swiss::after{left:2.5px;top:5.5px;width:8px;height:2px}
+/* ---------- Sélecteur de molécules (R&D) ---------- */
+.molrow{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:8px}
+.molchip{width:52px;height:52px;border-radius:12px;background:#17171c;border:1px solid #333;color:#cdbcff;font-size:20px;font-weight:800;cursor:pointer;display:flex;flex-direction:column;align-items:center;justify-content:center;line-height:1}
+.molchip small{font-size:9px;color:var(--mut);margin-top:2px}
+.molchip.on{border-color:var(--purple);color:#fff;background:#241a3a;box-shadow:0 0 10px rgba(180,92,255,.4)}
+.molchip:disabled{opacity:.35;cursor:default}
 </style>
 </head>
 <body>
@@ -1210,6 +1224,19 @@ const FLEET = {
   cargo: { name: 'Avion cargo léger', icon: '🛩️', price: 850000, risk: 0.6 },
 };
 const SUB_PERIODS = [1, 2, 3];
+const DW_VENDORS = [
+  { name: 'GreyPharma', mult: 0.74, rep: 4.0 },
+  { name: 'SilkPlug', mult: 0.86, rep: 4.6 },
+  { name: 'MedikRoyal', mult: 1.02, rep: 4.9 },
+  { name: 'DarkBazaar', mult: 0.8, rep: 4.3 },
+];
+const SHIP_TYPES = [
+  { id: 'post', name: 'Pli postal discret', icon: '✉️', max: 40, fee: 60, exposure: 0 },
+  { id: 'parcel', name: 'Colis express', icon: '📦', max: 500, fee: 350, relay: 1, exposure: 1 },
+  { id: 'van', name: 'Camionnette', icon: '🚐', max: 4000, fee: 1500, need: 'van', exposure: 3 },
+  { id: 'boat', name: 'Vedette rapide', icon: '🚤', max: 30000, fee: 9000, need: 'boat', exposure: 4 },
+  { id: 'cargo', name: 'Avion cargo léger', icon: '🛩️', max: 300000, fee: 40000, need: 'cargo', exposure: 6 },
+];
 
 /* Crypto & Dark Web */
 const CRYPTO = { btc: { name: 'Bitcoin', sym: '₿', lo: 42000, hi: 72000 }, xmr: { name: 'Monero', sym: 'ɱ', lo: 110, hi: 280 } };
@@ -1235,7 +1262,8 @@ const CARDING = [
 
 /* Pharma : marques certifiées (pureté 100 %) */
 const PHARMA = {
-  codeine: ['Euphon', 'Actavis', 'Maka', 'Paderyl'],
+  lean: ['Actavis', 'Euphon', 'Maka', 'Paderyl'],
+  codeine: ['Néo-Codion', 'Codoliprane', 'Dafalgan codéiné'],
   oxy: ['OxyContin 80 mg', 'Percocet 10 mg', 'Oxynorm 20 mg'],
   tramadol: ['Topalgic 50 mg', 'Tramadol génér.', 'Zaldiar'],
   skenan: ['Skenan LP 100 mg', 'Moscontin 60 mg'],
@@ -1250,10 +1278,10 @@ const BRAND_VAL = {
 const brandVal = (b) => BRAND_VAL[b] || { buy: 1, sell: 1, rare: 0.3 };
 
 /* R&D moléculaire */
-const MOLECULES = { alpha: { name: 'Précurseur α', sym: 'α', price: 2200 }, beta: { name: 'Réactif β', sym: 'β', price: 3400 }, gamma: { name: 'Catalyseur γ', sym: 'γ', price: 5200 }, delta: { name: 'Solvant δ', sym: 'δ', price: 1600 } };
+const MOLECULES = { alpha: { name: 'Précurseur α', sym: 'α', price: 2200 }, beta: { name: 'Réactif β', sym: 'β', price: 3400 }, gamma: { name: 'Catalyseur γ', sym: 'γ', price: 5200 }, delta: { name: 'Solvant δ', sym: 'δ', price: 1600 }, epsilon: { name: 'Amine ε', sym: 'ε', price: 4200 }, zeta: { name: 'Lysergide ζ', sym: 'ζ', price: 6800 }, eta: { name: 'Phényle η', sym: 'η', price: 3100 }, theta: { name: 'Opioïde θ', sym: 'θ', price: 7600 } };
 const RC_PREFIX = ['Blue', 'Pink', 'Ghost', 'Neon', 'Cosmic', 'Void', 'Hyper', 'Mad', 'Krypto', 'Nova'];
 const RC_SUFFIX = ['-25', '-X', 'caine', 'mol', 'phine', '-7', 'zine', 'drone', '-9', 'lin'];
-const RC_FORMS = ['powder', 'ziplock', 'pill'];
+const RC_FORMS = ['powder', 'ziplock', 'pill', 'inject', 'pipe'];
 
 /* Snus : personnalisation */
 const SNUS_DOSE = [6, 16, 30, 50, 100, 150];
@@ -1321,7 +1349,7 @@ const PlayerData = {
       arsenal: { pistol: 0, smg: 0, ak: 0, ghost: 0 }, mods: {}, factories: [],
       crypto: { btc: 0, xmr: 0 }, cryptoRate: null, pc: false, relays: 0, servers: 0, subs: [], fleet: { van: 0, boat: 0, container: 0, cargo: 0 },
       special: { explo: 0, jammer: 0 }, molecules: {}, rcDefs: [], snus: null, subchefs: [], loansOut: [], poker: { table: false, since: 0 },
-      partner: null, zones: null, exile: null, fakeId: 0,
+      partner: null, zones: null, exile: null, fakeId: 0, dwShip: [], dwOrders: [],
       stats: { crimes: 0, arrests: 0, jailMonths: 0, kills: 0, doses: 0, ods: 0, maxWorth: 0, sold: 0, bought: 0, wars: 0, fights: 0, fightsWon: 0, carsStolen: 0, jobMonths: 0, synth: 0, heists: 0, cardJobs: 0, conquered: 0 },
       log: [], logSeq: 0, alive: true, death: null,
     };
@@ -3542,11 +3570,14 @@ const Profile = {
 const Looks = {
   pill(d, brand) { return Inventory.look(d, brand) || PILL_LOOK[brand] || { c: '#f4f4f4', s: 'round', t: '' }; },
   html(pl, extra = '') { return `<i class="pl ${pl.s || 'round'}${pl.sc ? ' sc' : ''}${extra}" style="--pc:${pl.c};--pc2:${pl.c2 || pl.c}"><em>${U.esc(pl.t || '')}</em></i>`; },
-  leanVars(brand) { return /Actavis/.test(brand) ? '--lc:#4b1170;--lm:#9b4dd4' : /maison/.test(brand) ? '--lc:#5d1a8a;--lm:#ab64d8' : '--lc:#9e1b1f;--lm:#e2545e'; },
+  leanVars(brand) { return /Actavis/.test(brand) ? '--lc:#4b1170;--lm:#9b4dd4' : /maison/.test(brand) ? '--lc:#5d1a8a;--lm:#ab64d8' : /Paderyl/.test(brand) ? '--lc:#b23a0e;--lm:#e8814a' : /Maka/.test(brand) ? '--lc:#7a3b12;--lm:#c08043' : '--lc:#9e1b1f;--lm:#e2545e'; },
   leanBottle(brand) {
     if (/Actavis/.test(brand)) return '<div class="lbt act"><div class="cap"></div><div class="nk"></div><div class="body"><div class="lq"></div><div class="lb"><div class="ob">actavis</div><b>PROMETHAZINE<br>w/ CODEINE</b><span>6.25-10 mg / 5 mL</span><span>C-V · Rx only</span><em>16 FL OZ (473 mL)</em></div></div></div>';
     if (/maison/.test(brand)) return '<div class="lbt home"><div class="cap"></div><div class="nk"></div><div class="body"><div class="lq"></div><div class="tp">lean maison</div></div></div>';
-    return '<div class="lbt eup"><div class="cap"><i class="gd"></i></div><div class="nk"></div><div class="body"><div class="lb"><i class="bl"></i><b>EUPHON<sup>®</sup></b><span class="sy">sirop</span><i class="rs"></i><span>codéine · érysimum</span><span>flacon de 300 ml</span><em>MAYOLY SPINDLER</em></div></div></div>';
+    let band = '#1d4f9b', nm = 'EUPHON', sub = 'sirop', dci = 'codéine · érysimum', lab = 'MAYOLY SPINDLER', vol = 'flacon de 300 ml', cls = 'eup', extra = '';
+    if (/Paderyl/.test(brand)) { band = '#1b7a3a'; nm = 'PADERYL'; sub = '0,1 % sirop'; dci = 'codéine'; lab = 'Gerda'; vol = 'flacon de 150 ml'; }
+    else if (/Maka/.test(brand)) { band = '#c62828'; nm = 'Makatussin'; sub = 'gouttes'; dci = 'codéine'; lab = 'Gebro · Suisse'; vol = 'flacon 30 g'; cls = 'eup maka'; extra = '<i class="swiss"></i>'; }
+    return `<div class="lbt ${cls}" style="--bandc:${band}"><div class="cap"><i class="gd"></i></div><div class="nk"></div><div class="body"><div class="lb"><i class="bl"></i><b>${nm}<sup>®</sup></b><span class="sy">${sub}</span><i class="rs"></i><span>${dci}</span><span>${vol}</span><em>${lab}</em></div>${extra}</div></div>`;
   },
   cigBrand(brand) { const m = /^Fausses (\S+)/.exec(brand); return m ? Object.values(CIG_BRANDS).find((x) => x.name === m[1]) || null : null; },
   cigPack(brand) {
@@ -4116,43 +4147,56 @@ const DarkWeb = {
   buyPC() { UI.pay({ icon: '💻', title: 'PC sécurisé (Tails/Tor)', text: 'Un ordinateur chiffré pour accéder au Dark Web depuis chez toi.', price: 4000, onPay: () => { S.pc = true; log('💻', 'Tu montes un poste sécurisé : accès au Dark Web.', 'good'); } }); },
   buyRelay() { UI.pay({ icon: '📮', title: 'Boîte postale fantôme', text: 'Adresse relais pour expédier et recevoir sans être tracé. Nécessaire aux envois.', price: RELAY_COST, onPay: () => { S.relays++; log('📮', `Nouvelle adresse relais (${S.relays}).`, 'good'); } }); },
   buyServer() { Crypto.payModal({ title: '🖥️ Hub de serveurs clandestin', price: SERVER_COST, onPay: () => { S.servers++; log('🖥️', `Nouveau centre informatique clandestin (${S.servers}) : tes sous-fifres automatisent les commandes en ligne.`, 'good'); } }); },
-  buyMed(d, b) {
-    const unit = Math.round(DRUGS[d].base * 1.2 * brandVal(b).buy), max = Math.floor(Crypto.worth() / unit);
-    if (max < 1) return UI.toast('Solde crypto insuffisant.');
-    UI.qty({ icon: DRUGS[d].icon, title: b + ' (pur Q100)', text: `${U.unitPrice(unit)} / ${DRUGS[d].unit} · réglé en crypto`, max, init: Math.min(max, 50), unit: DRUGS[d].unit,
-      info: (n) => `Total ${U.money(n * unit)} crypto`, confirm: '🪙 Acheter',
-      onConfirm: (n) => { n = Math.min(n, Math.floor(Crypto.worth() / unit)); if (n < 1 || !Crypto.pay(n * unit)) return; Inventory.add(d, n, 100, b); log('💊', `Dark Web : ${U.num(n)} « ${b} » (Q100).`, 'good'); } });
+  vendorBuy(icon, title, baseUnit, unitLabel, onBuy) {
+    UI.modal({ icon, title: 'Vendeurs — ' + title, text: 'Plusieurs vendeurs, prix et réputations différents. Réglé en crypto.', choices: DW_VENDORS.map((v) => { const u = Math.max(1, Math.round(baseUnit * v.mult)); return { label: `${v.name} ⭐ ${v.rep}`, sub: `${U.unitPrice(u)} / ${unitLabel}`, fn: () => this.vendorQty(icon, title, u, unitLabel, v, onBuy) }; }).concat([{ label: 'Annuler', cls: 'ghost' }]) });
   },
-  buyRaw(d) {
-    const unit = Math.round(MarketData.buyUnit(S.city, d) * 1.1), max = Math.floor(Crypto.worth() / unit);
+  vendorQty(icon, title, u, unitLabel, v, onBuy) {
+    const max = Math.floor(Crypto.worth() / u);
     if (max < 1) return UI.toast('Solde crypto insuffisant.');
-    UI.qty({ icon: DRUGS[d].icon, title: 'Acheter ' + DRUGS[d].name, text: `${U.unitPrice(unit)} / ${DRUGS[d].unit} · crypto`, max, init: Math.min(max, 100), unit: DRUGS[d].unit,
-      info: (n) => `Total ${U.money(n * unit)} crypto`, confirm: '🪙 Acheter',
-      onConfirm: (n) => { n = Math.min(n, Math.floor(Crypto.worth() / unit)); if (n < 1 || !Crypto.pay(n * unit)) return; Inventory.add(d, n, S.market.qual[S.city][d], MarketData.brand(S.city, d)); log('🌿', `Dark Web : ${U.num(n)} ${U.u(DRUGS[d], n)} ${U.de(DRUGS[d].name)}.`, 'good'); } });
+    UI.qty({ icon, title: `${v.name} — ${title}`, text: `${U.unitPrice(u)} / ${unitLabel} · crypto`, max, init: Math.min(max, 50), unit: unitLabel, info: (n) => `Total ${U.money(n * u)} crypto`, confirm: '🪙 Acheter', onConfirm: (n) => { n = Math.min(n, Math.floor(Crypto.worth() / u)); if (n < 1 || !Crypto.pay(n * u)) return; onBuy(n, u); } });
   },
-  // débit en crypto de marchandise vendue en ligne
+  buyMed(d, b) { this.vendorBuy(DRUGS[d].icon, b + ' (pur Q100)', Math.max(1, Math.round(DRUGS[d].base * 0.85 * brandVal(b).buy)), DRUGS[d].unit, (n) => { Inventory.add(d, n, 100, b); log('💊', `Dark Web : ${U.num(n)} « ${b} » (Q100).`, 'good'); }); },
+  buyRaw(d) { this.vendorBuy(DRUGS[d].icon, DRUGS[d].name, Math.max(1, Math.round(MarketData.buyUnit(S.city, d) * 0.9)), DRUGS[d].unit, (n) => { Inventory.add(d, n, S.market.qual[S.city][d], MarketData.brand(S.city, d)); log('🌿', `Dark Web : ${U.num(n)} ${U.u(DRUGS[d], n)} ${U.de(DRUGS[d].name)}.`, 'good'); }); },
+  /* commandes de clients + expéditions suivies */
+  genOrders() {
+    const pool = Object.keys(DRUGS).filter((d) => DRUGS[d].cat !== 'tabac' && d !== 'fenta');
+    return Array.from({ length: U.ri(4, 7) }, () => { const d = U.pick(pool), city = U.pick(Object.keys(CITIES)), big = U.chance(35); const qty = big ? U.ri(1200, 25000) : U.ri(5, 600); const unit = Math.round(MarketData.retail(S.city, d, 60) * U.rand(1.3, 2.1)); return { id: U.uid(), d, city, qty, unit }; });
+  },
+  orders() { if (!S.dwOrders || !S.dwOrders.length) S.dwOrders = this.genOrders(); return S.dwOrders; },
+  transit(city) { const a = CITIES[S.city], b = CITIES[city]; return a === b ? 1 : a.country === b.country ? 1 : a.region === b.region ? 2 : 3; },
+  shipRiskFor(o, m) { const t = this.transit(o.city); return Math.round(U.clamp((4 + t * 3 + o.qty / 250 + m.exposure) * Police.customs() * (S.special.jammer ? 0.6 : 1) - S.servers * 2, 2, 72) * 10) / 10; },
   sellMenu() {
-    const list = Inventory.list();
     if (!S.relays) return UI.toast('📮 Achète d\'abord une adresse relais (onglet Envois).');
-    if (!list.length) return UI.toast('Rien à vendre.');
-    UI.modal({ icon: '🌐', title: 'Vendre en ligne (crypto)', text: 'Expédition via tes relais. Les serveurs augmentent le débit et la marge.', choices: list.map((d) => ({ label: `${DRUGS[d].icon} ${DRUGS[d].name}`, sub: `Stock ${U.num(Inventory.qty(d))}`, fn: () => this.sell(d) })).concat([{ label: 'Retour', cls: 'ghost' }]) });
+    const orders = this.orders();
+    UI.modal({ icon: '🌐', title: 'Commandes clients', text: 'Des acheteurs du monde entier réclament des produits précis, à des prix différents.', choices: orders.map((o) => { const have = Inventory.qty(o.d); return { label: `${CITIES[o.city].flag} ${DRUGS[o.d].icon} ${U.num(o.qty)} ${U.u(DRUGS[o.d], o.qty)} ${DRUGS[o.d].name}`, sub: `${U.unitPrice(o.unit)}/${DRUGS[o.d].unit} · ${CITIES[o.city].name} · en stock : ${U.num(have)}`, dis: have < o.qty, fn: () => this.fulfil(o) }; }).concat([{ label: 'Fermer', cls: 'ghost' }]) });
   },
-  sell(d) {
-    const D = DRUGS[d], have = Inventory.qty(d), q = Inventory.q(d);
-    const cap = (200 + S.servers * 600) * S.relays; // débit mensuel via la logistique
-    const unit = MarketData.retail(S.city, d, q) * (1.5 + S.servers * 0.15) * brandVal(Inventory.brand(d)).sell;
-    const max = Math.min(have, cap);
-    UI.qty({ icon: D.icon, title: `Vendre en ligne — ${D.name}`, text: `Prix net (international) : <b>${U.unitPrice(unit)}</b> / ${D.unit}<br>Capacité d'expédition : ${U.num(cap)} /mois · réglé en crypto`, max, init: max, unit: D.unit,
-      info: (n) => `Recette : <b class="g">${U.money(n * unit)}</b> en crypto · risque colis ${U.risk(this.shipRisk(n))}`, confirm: '🌐 Expédier',
-      onConfirm: (n) => {
-        n = Math.min(n, Inventory.qty(d)); if (n < 1) return;
-        Inventory.remove(d, n);
-        if (U.chance(this.shipRisk(n))) { PlayerData.mod('respect', -1); log('📭', `Un colis intercepté : ${U.num(n)} ${U.u(D, U.num(n))} ${U.de(D.name)} perdus. Une adresse relais est grillée.`, 'bad'); if (S.relays > 1 && U.chance(50)) S.relays--; return; }
-        const c = U.chance(50) ? 'xmr' : 'btc'; Crypto.credit(c, n * unit / Crypto.rate(c)); S.stats.sold += Math.round(n * unit);
-        log('🌐', `Vente en ligne : ${U.num(n)} ${U.u(D, U.num(n))} ${U.de(D.name)} → <b>+${U.money(n * unit)}</b> en ${CRYPTO[c].sym}.`, 'money');
-      } });
+  fulfil(o) {
+    if (Inventory.qty(o.d) < o.qty) return UI.toast('Stock insuffisant.');
+    const methods = SHIP_TYPES.filter((m) => o.qty <= m.max && (!m.need || (S.fleet[m.need] || 0) > 0) && (!m.relay || S.relays >= m.relay));
+    if (!methods.length) { const need = SHIP_TYPES.find((m) => o.qty <= m.max); return UI.toast(need && need.need ? `🚚 Grosse quantité : il te faut ${FLEET[need.need].name} (Logistique).` : 'Quantité trop grande pour tes moyens.'); }
+    UI.modal({ icon: '🚚', title: 'Mode d\'expédition', text: `${U.num(o.qty)} ${U.u(DRUGS[o.d], o.qty)} ${U.de(DRUGS[o.d].name)} → ${CITIES[o.city].flag} ${CITIES[o.city].name}<br><small class="m">La poste suffit pour les petites ventes ; les grosses exigent camionnette, vedette ou avion.</small>`, choices: methods.map((m) => ({ label: `${m.icon} ${m.name}`, sub: `frais ${U.money(m.fee)} · suivi ${this.transit(o.city)} mois · interception ~${this.shipRiskFor(o, m)} %`, fn: () => this.send(o, m) })).concat([{ label: 'Annuler', cls: 'ghost' }]) });
   },
-  shipRisk(n) { return Math.round(U.clamp((6 + n / 60) * Police.customs() * (S.special.jammer ? 0.6 : 1) - S.servers * 2, 2, 55) * 10) / 10; },
+  send(o, m) {
+    if (!PlayerData.pay(m.fee)) return UI.toast('Fonds insuffisants pour les frais.');
+    Inventory.remove(o.d, o.qty);
+    S.dwShip.push({ id: U.uid(), d: o.d, qty: o.qty, from: S.city, dest: o.city, method: m.id, unit: o.unit, arrive: S.ageMonths + this.transit(o.city), risk: this.shipRiskFor(o, m) });
+    S.dwOrders = S.dwOrders.filter((x) => x !== o);
+    log('🌐', `Colis expédié (${m.name}) vers ${CITIES[o.city].name} : ${U.num(o.qty)} ${U.u(DRUGS[o.d], o.qty)} ${U.de(DRUGS[o.d].name)}. Suivi en cours.`, 'money');
+  },
+  tracking() {
+    if (!S.dwShip || !S.dwShip.length) return UI.toast('Aucun colis en transit.');
+    UI.modal({ icon: '📦', title: 'Suivi des colis', choices: S.dwShip.map((sh) => ({ label: `${DRUGS[sh.d].icon} ${U.num(sh.qty)} ${U.u(DRUGS[sh.d], sh.qty)} → ${CITIES[sh.dest].flag} ${CITIES[sh.dest].name}`, sub: `${CITIES[sh.from].name} → ${CITIES[sh.dest].name} · arrive dans ${Math.max(0, sh.arrive - S.ageMonths)} mois · douane ~${sh.risk} %` })).concat([{ label: 'Fermer', cls: 'ghost' }]) });
+  },
+  monthly() {
+    if (!S.dwShip) { S.dwShip = []; S.dwOrders = []; return; }
+    for (const sh of [...S.dwShip]) {
+      if (sh.arrive > S.ageMonths) continue;
+      S.dwShip = S.dwShip.filter((x) => x !== sh); const D = DRUGS[sh.d]; if (!D) continue;
+      if (U.chance(sh.risk)) { PlayerData.mod('respect', -1); log('📭', `Colis intercepté à l'arrivée à ${CITIES[sh.dest].name} : ${U.num(sh.qty)} ${U.u(D, sh.qty)} ${U.de(D.name)} perdus.`, 'bad'); }
+      else { const rev = sh.qty * sh.unit, c = U.chance(50) ? 'xmr' : 'btc'; Crypto.credit(c, rev / Crypto.rate(c)); S.stats.sold += Math.round(rev); log('🌐', `Colis livré à ${CITIES[sh.dest].name} : <b>+${U.money(rev)}</b> en ${CRYPTO[c].sym}.`, 'money'); }
+    }
+    S.dwOrders = this.genOrders();
+  },
   /* armes rares & switches */
   arms() {
     UI.modal({ icon: '🔫', title: 'Armes & équipements spéciaux', text: 'Livraison en pièces détachées. Réglé en crypto.', choices: DARK_ARMS.map((a) => ({ label: `${a.icon} ${a.name}`, sub: `${a.desc} · ${U.money(a.price)}`, fn: () => this.buyArm(a) })).concat([{ label: 'Retour', cls: 'ghost' }]) });
@@ -4302,26 +4346,33 @@ const Chemistry = {
   has() { return !!S.rnd; },
   buyLab() { UI.pay({ icon: '🔬', title: 'Laboratoire de R&D moléculaire', text: 'Synthétise des drogues de synthèse (RC) à partir de molécules du Dark Web.', price: 180000, onPay: () => { S.rnd = true; log('🔬', 'Laboratoire de R&D monté.', 'good'); } }); },
   // stats générées à partir de la combinaison de molécules
+  _sel: [],
+  W: { alpha: [6, 2, 1, 'stim'], beta: [3, 4, 2, 'benzo'], gamma: [9, 3, 4, 'stim'], delta: [2, 1, 0, ''], epsilon: [7, 5, 3, 'opioid'], zeta: [4, 2, 5, 'psy'], eta: [11, 6, 2, 'stim'], theta: [1, 8, 1, 'opioid'] },
+  toggle(m) { const i = this._sel.indexOf(m); if (i >= 0) this._sel.splice(i, 1); else if (this._sel.length < 3) this._sel.push(m); if (UI.stack.length) UI.renderPanel(); },
   design(mix) {
-    const w = { alpha: [6, 2, 1], beta: [3, 4, 2], gamma: [9, 3, 4], delta: [2, 1, 0] }; // [puissance, addiction, létalité]
-    let pw = 20, ad = 1, od = 0.4;
-    for (const m of mix) { pw += w[m][0]; ad += w[m][1]; od += w[m][2] * 0.4; }
-    const seed = mix.join('');
-    let hsh = 0; for (const ch of seed) hsh = (hsh * 31 + ch.charCodeAt(0)) >>> 0;
+    const W = this.W; let pw = 18, ad = 1, od = 0.3; const tags = {};
+    for (const m of mix) { const w = W[m] || [5, 3, 2, '']; pw += w[0]; ad += w[1]; od += w[2] * 0.4; if (w[3]) tags[w[3]] = (tags[w[3]] || 0) + 1; }
+    const tag = Object.keys(tags).sort((a, b) => tags[b] - tags[a])[0] || '';
+    let hsh = 0; for (const ch of mix.join('')) hsh = (hsh * 31 + ch.charCodeAt(0)) >>> 0;
     const name = RC_PREFIX[hsh % RC_PREFIX.length] + RC_SUFFIX[(hsh >>> 4) % RC_SUFFIX.length];
-    return { name, pw: Math.round(pw), add: Math.round(ad * 10) / 10, od: Math.round(od * 10) / 10, value: Math.round(pw * 2.2), form: RC_FORMS[hsh % RC_FORMS.length] };
+    return { name, pw: Math.round(pw), add: Math.round(ad * 10) / 10, od: Math.round(od * 10) / 10, value: Math.round(pw * 2.2), form: RC_FORMS[hsh % RC_FORMS.length], tag };
   },
   synth(mix) {
+    mix = mix || this._sel.slice();
+    if (mix.length < 2) return UI.toast('Sélectionne 2 ou 3 molécules.');
     for (const m of mix) if ((S.molecules[m] || 0) < 1) return UI.toast(`Il manque ${MOLECULES[m].name}.`);
     const spec = this.design(mix);
     const key = 'rc_' + Math.random().toString(36).slice(2, 7);
-    const def = { form: spec.form, name: spec.name + ' (RC)', cat: 'dure', icon: '⚗️', unit: spec.form === 'pill' ? 'cp' : 'g', brands: [spec.name], base: spec.value, demand: 40, depth: 3000, bulk: 0.4, add: spec.add, od: spec.od, stim: true, fx: { crime: Math.round(spec.pw / 8), stress: -6, health: -2 }, txt: `Molécule inédite : sensations imprévisibles.` };
+    const flags = {}; if (spec.tag === 'opioid') flags.opioid = true; else if (spec.tag === 'benzo') flags.benzo = true; else flags.stim = true;
+    const fx = { crime: Math.round(spec.pw / 8), stress: -6, health: spec.tag === 'opioid' ? 2 : -2 };
+    if (spec.tag === 'psy') { fx.respect = 2; fx.stress = -10; }
+    const def = { form: spec.form, name: spec.name + ' (RC)', cat: 'dure', icon: '⚗️', unit: spec.form === 'pill' || spec.form === 'ziplock' ? 'cp' : 'g', brands: [spec.name], base: spec.value, demand: 40, depth: 3000, bulk: 0.4, add: spec.add, od: spec.od, ...flags, fx, txt: `Molécule inédite (${spec.tag || 'mixte'}) : sensations imprévisibles.` };
     registerDrug(key, def);
     S.rcDefs.push({ key, def });
     for (const m of mix) S.molecules[m]--;
     const qty = U.ri(200, 600);
     Inventory.add(key, qty, U.ri(55, 85), spec.name);
-    S.stats.synth++;
+    S.stats.synth++; this._sel = [];
     log('⚗️', `Synthèse réussie : <b>${spec.name}</b> (puissance ${spec.pw}, addiction ${spec.add}, OD ${spec.od}). +${U.num(qty)} ${def.unit}.`, 'drug');
     UI.result('⚗️', spec.name, `Nouvelle drogue de synthèse créée.<br><b>Puissance ${spec.pw} · Addiction ${spec.add} · Létalité ${spec.od} · Valeur ${U.money(spec.value)}</b><br>+${U.num(qty)} ${def.unit} en stock.`, 'drug');
   },
@@ -5356,11 +5407,12 @@ const V = {
       h += H.row({ icon: '💶', title: 'Encaisser des XMR', sub: 'Crypto → liquide', fn: () => Crypto.sell('xmr') });
     } else if (T === 'meds') {
       h += H.note('Médicaments certifiés 100 % purs, réglés en crypto. La marque fait la marge à la revente.');
-      for (const d in PHARMA) for (const b of PHARMA[d]) { const u = Math.round(DRUGS[d].base * 1.2 * brandVal(b).buy); h += H.row({ icon: DRUGS[d].icon, title: b, sub: `${DRUGS[d].name} · pur Q100 · revente ×${U.f2(brandVal(b).sell)}`, right: `${U.unitPrice(u)}`, fn: () => DarkWeb.buyMed(d, b) }); }
+      for (const d in PHARMA) for (const b of PHARMA[d]) { const u = Math.round(DRUGS[d].base * 0.85 * brandVal(b).buy * 0.74); h += H.row({ icon: DRUGS[d].icon, title: b, sub: `${DRUGS[d].name} · pur Q100 · revente ×${U.f2(brandVal(b).sell)}`, right: `dès ${U.unitPrice(u)}`, fn: () => DarkWeb.buyMed(d, b) }); }
     } else if (T === 'drugs') {
-      h += H.row({ icon: '🌐', title: 'Vendre mon stock en ligne', sub: S.relays ? `${S.relays} relais · ${S.servers} serveur(s)` : 'Nécessite une adresse relais (onglet Envois)', fn: () => DarkWeb.sellMenu() });
-      h += H.sec('Acheter (matières premières)');
-      for (const d of ['coke', 'weed', 'hash', 'mdma', 'keta', 'heroW']) h += H.row({ icon: DRUGS[d].icon, title: DRUGS[d].name, sub: `${U.unitPrice(Math.round(MarketData.buyUnit(S.city, d) * 1.1))}/${DRUGS[d].unit} · crypto`, fn: () => DarkWeb.buyRaw(d) });
+      h += H.row({ icon: '🌐', title: 'Vendre mon stock (commandes clients)', sub: S.relays ? `${DarkWeb.orders().length} client(s) · prix et lieux variés` : 'Nécessite une adresse relais (onglet Envois)', fn: () => DarkWeb.sellMenu() });
+      if (S.dwShip && S.dwShip.length) h += H.row({ icon: '📦', title: 'Suivi des colis', sub: `${S.dwShip.length} colis en transit`, fn: () => DarkWeb.tracking() });
+      h += H.sec('Acheter (plusieurs vendeurs)');
+      for (const d of ['coke', 'weed', 'hash', 'mdma', 'keta', 'heroW']) h += H.row({ icon: DRUGS[d].icon, title: DRUGS[d].name, sub: `dès ${U.unitPrice(Math.round(MarketData.buyUnit(S.city, d) * 0.9 * 0.74))}/${DRUGS[d].unit} · crypto`, fn: () => DarkWeb.buyRaw(d) });
     } else if (T === 'arms') {
       h += H.note('Armes rares & équipements spéciaux, réglés en crypto. Le switch se monte sur ton pistolet.');
       for (const a of DARK_ARMS) h += H.row({ icon: a.icon, title: a.name, sub: a.desc, right: U.money(a.price), fn: () => DarkWeb.buyArm(a) });
@@ -5396,10 +5448,10 @@ const V = {
   rnd() {
     if (!Chemistry.has()) { let h = H.card('🔬 <b>Laboratoire de R&D moléculaire</b><br><small class="m">Synthétise des drogues de synthèse (RC) à partir de molécules du Dark Web.</small>', 'accent'); h += H.row({ icon: '🔬', title: 'Monter le labo de R&D', right: U.money(180000), dis: !PlayerData.can(180000), fn: () => Chemistry.buyLab() }); return { title: '🔬 R&D', html: h }; }
     let h = H.card('🧪 Molécules : ' + Object.keys(MOLECULES).map((m) => `${MOLECULES[m].sym} ${S.molecules[m] || 0}`).join(' · ') + '<br><small class="m">Achète des molécules sur le Dark Web (onglet 🧪 Molécules).</small>', 'accent');
-    h += H.sec('Synthèse (combine 2 à 3 molécules)');
-    const mk = Object.keys(MOLECULES), combos = [];
-    for (let i = 0; i < mk.length; i++) for (let j = i + 1; j < mk.length; j++) { combos.push([mk[i], mk[j]]); for (let k = j + 1; k < mk.length; k++) combos.push([mk[i], mk[j], mk[k]]); }
-    for (const mix of combos) { const spec = Chemistry.design(mix), ok = mix.every((m) => (S.molecules[m] || 0) >= 1); h += H.row({ icon: '⚗️', title: mix.map((m) => MOLECULES[m].sym).join(' + '), sub: `→ ${spec.name} · puissance ${spec.pw} · addiction ${spec.add} · OD ${spec.od}`, dis: !ok, fn: () => Chemistry.synth(mix) }); }
+    h += H.sec('Synthèse — choisis 2 à 3 molécules');
+    h += '<div class="molrow">' + Object.keys(MOLECULES).map((m) => { const on = Chemistry._sel.includes(m), have = S.molecules[m] || 0; return `<button class="molchip${on ? ' on' : ''}" ${have < 1 ? 'disabled' : ''} data-cb="${cb(() => Chemistry.toggle(m))}">${MOLECULES[m].sym}<small>${have}</small></button>`; }).join('') + '</div>';
+    if (Chemistry._sel.length >= 2) { const spec = Chemistry.design(Chemistry._sel); h += H.card(`⚗️ <b>${spec.name}</b> (${spec.tag || 'mixte'})<br>Puissance ${spec.pw} · Addiction ${spec.add} · Létalité ${spec.od} · Valeur ${U.money(spec.value)}`); h += H.row({ icon: '⚗️', title: 'Synthétiser', sub: Chemistry._sel.map((m) => MOLECULES[m].sym).join(' + '), cls: 'hl', fn: () => Chemistry.synth() }); }
+    else h += H.note('Touche des molécules ci-dessus pour composer ta formule.');
     if (S.rcDefs.length) { h += H.sec('Tes drogues de synthèse'); for (const r of S.rcDefs) h += H.row({ icon: '⚗️', title: r.def.name, sub: `En stock : ${U.num(Inventory.qty(r.key))} ${r.def.unit}` }); }
     const cutable = Inventory.list().filter((d) => ['powder', 'pipe', 'ziplock', 'rxbottle', 'frbox', 'pill'].includes(DRUGS[d].form) && d !== 'fenta');
     h += H.sec('Coupe au fentanyl');
@@ -5535,7 +5587,7 @@ const Game = {
     S.buffs = S.buffs.filter((b) => --b.months > 0);
     const steps = [Monthly.jail, () => Monthly.addiction(consumed), Monthly.health, Monthly.fitness, Monthly.stress, Monthly.income, () => Jobs.monthly(),
       () => Police.monthly(), () => Monthly.crew(), () => Subchefs.monthly(), () => Districts.monthly(), Monthly.labs, () => Arsenal.monthly(), () => Snus.monthly(),
-      Monthly.business, () => Strip.monthly(), () => Logistics.monthly(), Monthly.upkeep, Monthly.imports, () => Cars.monthly(),
+      Monthly.business, () => Strip.monthly(), () => Logistics.monthly(), () => DarkWeb.monthly(), Monthly.upkeep, Monthly.imports, () => Cars.monthly(),
       () => Shark.monthly(), () => Poker.monthly(), () => Relations.monthly(), () => Relations.monthlyIntel(), () => Crypto.monthly(), () => Monthly.audit(),
       Monthly.debts, Monthly.heat, Monthly.refresh];
     for (const st of steps) { st.call(Monthly); if (!S.alive) break; }
@@ -5605,6 +5657,8 @@ const Game = {
     if (S.fakeId == null) S.fakeId = 0;
     if (S.snus === undefined) S.snus = null;
     if (!S.zones) S.zones = Districts.init();
+    if (!S.dwShip) S.dwShip = [];
+    if (!S.dwOrders) S.dwOrders = [];
     if (S.prison) { if (S.prison.cigs == null) S.prison.cigs = 0; if (S.prison.loose == null) S.prison.loose = 0; if (S.prison.phone === undefined) S.prison.phone = null; }
     S.businesses.forEach((b) => { if (BUSINESSES[b.type] && BUSINESSES[b.type].strip) Strip.ensure(b); });
     if (S.stock.lean && S.stock.lean.b === 'Maka') S.stock.lean.b = 'Euphon'; // ancienne marque fictive
