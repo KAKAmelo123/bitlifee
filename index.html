@@ -4164,7 +4164,7 @@ const DarkWeb = {
   },
   orders() { if (!S.dwOrders || !S.dwOrders.length) S.dwOrders = this.genOrders(); return S.dwOrders; },
   transit(city) { const a = CITIES[S.city], b = CITIES[city]; return a === b ? 1 : a.country === b.country ? 1 : a.region === b.region ? 2 : 3; },
-  shipRiskFor(o, m) { const t = this.transit(o.city); return Math.round(U.clamp((4 + t * 3 + o.qty / 250 + m.exposure) * Police.customs() * (S.special.jammer ? 0.6 : 1) - S.servers * 2, 2, 72) * 10) / 10; },
+  shipRiskFor(o, m) { const t = this.transit(o.city); return Math.round(U.clamp((3 + t * 2.5 + Math.sqrt(o.qty) / 9 + m.exposure) * Police.customs() * (S.special.jammer ? 0.6 : 1) - S.servers * 2, 2, 45) * 10) / 10; },
   sellMenu() {
     if (!S.relays) return UI.toast('📮 Achète d\'abord une adresse relais (onglet Envois).');
     const orders = this.orders();
