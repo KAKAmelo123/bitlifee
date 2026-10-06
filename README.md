@@ -50,6 +50,20 @@ La partie est sauvegardée automatiquement dans le `localStorage` du navigateur.
 - Justice : avocats (commis d'office → ténor du barreau), juge graissé ou acheté, casier judiciaire détaillé.
 - Énergie ⚡ : 4 actions par mois (plus avec des stimulants, une de moins avec un emploi légal).
 
+## Systèmes avancés (empire)
+
+- **🧅 Dark Web** (navigateur Tor rétro, monospace vert/ambre) : **portefeuille crypto** Bitcoin/Monero (cours fluctuant, insaisissable par la justice), marketplace (médicaments purs certifiés, matières premières, **armes rares** — SCAR-H, fusil .50, **switch full-auto pour Glock**, explosifs, brouilleur —, molécules), **envois** (adresses relais fantômes, hubs de serveurs, vente en ligne internationale), **services** (faux papiers qui effacent le casier, passeport diplomatique, carding). Accessible depuis un PC sécurisé, un smartphone de cellule ou en exil.
+- **🏗️ Logistique lourde** : entrepôts (box, hangar, entrepôt portuaire, dépôt frigorifique) qui démultiplient la capacité ; fret (palettes, conteneurs) ; **arrivages programmés récurrents** (prélèvement et livraison automatiques tous les 1/2/3 mois) ; flotte (camionnettes, vedettes, conteneurs, avion cargo) qui réduit le risque douanier.
+- **🏭 Pharma** : **braquage de dépôt pharmaceutique** (armes lourdes + soldats → butin pur Q100) et **corruption de grossistes** (volumes industriels sous le manteau, choix précis de la marque/variante : Euphon, Actavis, Maka, Paderyl ; OxyContin, Percocet, Oxynorm ; Tramadol, Skenan, Xanax…).
+- **🔬 R&D moléculaire** : synthèse de designer drugs en combinant 2–3 molécules (stats générées : puissance, addiction, overdose, valeur) ; **coupe au fentanyl** des poudres et comprimés.
+- **🟩 Usine de snus** : sachets de nicotine entièrement personnalisables (dosage 6→150 mg, format, parfum, couleur et nom de marque), vendus en gros/rue/boîte ou consommés.
+- **🎖️ Sous-chefs** : au grade Parrain, délègue à 2 lieutenants (recrutement, stocks, collecte automatiques) avec **rapport trimestriel** et recommandations validables en un clic.
+- **🏢 Blanchiment avancé** : commerces écrans (taxis, galerie d'art…) et **contrôle fiscal** si le train de vie dépasse les revenus déclarés (amendes et saisies).
+- **🦈 Usure & jeux** : prêts usuraires (15–25 %/mois, gestion des impayés : délai, hommes de main, saisie) ; **poker** clandestin (triche risquée) et tenue d'une table (rake mensuel).
+- **❤️ Relations & contre-espionnage** : partenaires (civils, gérantes, influenceuses), cadeaux, complicité, risque d'enlèvement ; **balances** parmi l'équipe (micros, détective, interrogatoire, élimination).
+- **🗺️ Quartiers** : carte en 4 zones (Nord, Centre, Affaires, Port) contrôlées par des syndicats rivaux — tribut ou **raid de conquête** pour un dividende mensuel passif.
+- **🛫 Cavale & exil** : avec un passeport diplomatique, fuir vers Dubaï, Bogotá ou Bangkok (sans extradition) — casier effacé, gestion à distance, imports à la source, contrôle affaibli.
+
 ## Architecture du code
 
 JavaScript vanille, structuré en objets dans la balise `<script>` :
@@ -61,7 +75,9 @@ JavaScript vanille, structuré en objets dans la balise `<script>` :
 - `GoFast`, `Crew`, `Shop` – mini-jeu go fast, gestion de l'équipe, boutiques et garde-robe
 - `Combat`, `Ritual`, `Night`, `Street`, `Gym`, `Prison`, `Profile` – combats au tour par tour, mini-jeux de consommation, vie nocturne, délits de rue, musculation, détention (cantine, téléphone, fouilles), profil & style
 - `Police`, `Jobs`, `Cars`, `Vault`, `Arsenal`, `Armory`, `Strip` – corruption, emploi légal, vol de véhicules, planques de cash, arsenal & ateliers, modifications d'armes, strip clubs
-- `Looks`, `Labs` – rendus réalistes des produits (comprimés, boîtes, bouteilles, paquets) et réglages de production des labos
+- `Looks`, `Labs` – rendus réalistes des produits et réglages de production des labos
+- `Crypto`, `DarkWeb`, `Logistics`, `Pharma`, `Chemistry`, `Snus` – crypto & dark web, fret & arrivages, braquages/corruption pharma, R&D moléculaire, usine de snus
+- `Subchefs`, `Shark`, `Poker`, `Relations`, `Districts`, `Exile` – délégation, usure & jeux, vie privée & indics, guerres de quartiers, exil à l'étranger
 - `Monthly` – boucle mensuelle (équipe, labos, blanchiment, charges, dettes, police…)
 - `Events` – événements aléatoires à choix multiples
 - `UI` / `V` – rendu (HUD, journal, panneaux, modales) et vues des onglets

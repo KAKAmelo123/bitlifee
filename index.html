@@ -566,6 +566,24 @@ body.trip #modal-root .stage{animation:trip 2.6s ease-in-out}
 .chip small{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 @media (max-width:360px){ .chip .opt{display:none} }
 @media (min-width:561px){ body{background:#0a0a0a} }
+
+/* ---------- Dark Web (terminal rétro) ---------- */
+.dwrap{font-family:ui-monospace,Menlo,Consolas,monospace;background:#0a0f0a;border:1px solid #1d3a1d;border-radius:12px;padding:10px;margin-bottom:10px;box-shadow:inset 0 0 30px rgba(0,255,120,.06)}
+.dw-head{color:#4dff9e;font-size:12px;line-height:1.5;text-shadow:0 0 6px rgba(77,255,158,.5)}
+.dw-dot{display:inline-block;width:8px;height:8px;border-radius:50%;background:#4dff9e;box-shadow:0 0 8px #4dff9e;animation:pulse 1.6s infinite}
+.dw-bal{margin-top:6px;color:#ffb74d;font-size:14px;font-weight:700;letter-spacing:.5px}
+.dw-tabs{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;margin-top:10px}
+.dw-tab{background:#11180f;border:1px solid #244a24;border-radius:8px;color:#8fdfa6;font:inherit;font-size:16px;padding:6px 2px;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:2px}
+.dw-tab small{font-size:7px;color:#5a8f68;font-family:system-ui,sans-serif;letter-spacing:.2px}
+.dw-tab.on{border-color:#4dff9e;color:#4dff9e;background:#14240f;box-shadow:0 0 10px rgba(77,255,158,.25)}
+/* ---------- Snus ---------- */
+.st-snus .sbox{position:absolute;left:50%;top:44px;margin-left:-45px;width:90px;height:90px;border-radius:16px;background:radial-gradient(circle at 35% 28%,rgba(255,255,255,.45),var(--sc,#2e7d32) 72%);box-shadow:0 6px 16px rgba(0,0,0,.5);display:grid;place-items:center;color:#fff;font-weight:900;font-size:14px;letter-spacing:.5px;transition:transform .6s}
+.st-snus .pouch{position:absolute;left:50%;top:22px;margin-left:-16px;width:32px;height:16px;border-radius:50%;background:#f3ead9;box-shadow:inset 0 -2px 3px rgba(0,0,0,.2);opacity:0;transition:transform .9s,opacity .4s}
+.st-snus.s1 .sbox{transform:translateY(8px) rotate(-7deg)}
+.st-snus.s2 .pouch{opacity:1;transform:translateY(-16px) scale(.9)}
+.st-snus.s2 .sbox{transform:translateY(22px) scale(.85);opacity:.5}
+.snus-box{width:74px;height:74px;border-radius:12px;background:radial-gradient(circle at 35% 28%,rgba(255,255,255,.5),var(--sc,#2e7d32) 74%);display:grid;place-items:center;color:#fff;font-weight:900;position:relative;box-shadow:0 5px 14px rgba(0,0,0,.5)}
+.snus-box .lc-badge2{position:absolute;bottom:6px;font-size:8px}
 </style>
 </head>
 <body>
@@ -657,9 +675,9 @@ function log(e, t, c = '') {
 /* =============================== DATA =============================== */
 const CONFIG = { anim: 1 }; // facteur de durée des animations (0 = instantané)
 const DRUGS = {
-  oxy:   { form: 'rxbottle', name: 'Oxycodone', cat: 'med', icon: '💊', unit: 'cp', brands: ['Percocet 10 mg', 'OxyContin 80 mg'], snort: true, base: 25, demand: 60, depth: 4000, bulk: 0.2, add: 7, od: 1.4, opioid: true, fx: { health: 4, stress: -5 }, txt: 'Une chaleur cotonneuse t\'enveloppe, la douleur disparaît.' },
-  lean:  { form: 'lean', name: 'Sirop codéiné / Prométhazine', cat: 'med', icon: '🟣', unit: 'flacon', brands: ['Actavis', 'Euphon'], base: 120, demand: 10, depth: 400, bulk: 3, add: 5, od: 1.0, opioid: true, fx: { health: 1, respect: 1, stress: -6 }, txt: 'Double cup en main, le temps ralentit…' },
-  benzo: { form: 'frbox', forms: { 'Xanax Bar 2 mg': 'rxbottle' }, name: 'Benzodiazépines', cat: 'med', icon: '💠', unit: 'cp', brands: ['Xanax Bar 2 mg', 'Valium 10 mg', 'Rivotril 2 mg'], base: 8, demand: 120, depth: 8000, bulk: 0.2, add: 5, od: 0.6, benzo: true, fx: { crime: 6, stress: -10 }, txt: 'Plus rien ne t\'atteint. Sang-froid total.' },
+  oxy:   { form: 'rxbottle', name: 'Oxycodone', cat: 'med', icon: '💊', unit: 'cp', brands: ['Percocet 10 mg', 'OxyContin 80 mg', 'Oxynorm 20 mg'], snort: true, base: 25, demand: 60, depth: 4000, bulk: 0.2, add: 7, od: 1.4, opioid: true, fx: { health: 4, stress: -5 }, txt: 'Une chaleur cotonneuse t\'enveloppe, la douleur disparaît.' },
+  lean:  { form: 'lean', name: 'Sirop codéiné / Prométhazine', cat: 'med', icon: '🟣', unit: 'flacon', brands: ['Actavis', 'Euphon', 'Maka', 'Paderyl'], base: 120, demand: 10, depth: 400, bulk: 3, add: 5, od: 1.0, opioid: true, fx: { health: 1, respect: 1, stress: -6 }, txt: 'Double cup en main, le temps ralentit…' },
+  benzo: { form: 'frbox', forms: { 'Xanax Bar 2 mg': 'rxbottle' }, name: 'Benzodiazépines', cat: 'med', icon: '💠', unit: 'cp', brands: ['Xanax Bar 2 mg', 'Valium 10 mg', 'Rivotril 2 mg', 'Alprazolam génér.'], base: 8, demand: 120, depth: 8000, bulk: 0.2, add: 5, od: 0.6, benzo: true, fx: { crime: 6, stress: -10 }, txt: 'Plus rien ne t\'atteint. Sang-froid total.' },
   rita:  { form: 'frbox', name: 'Méthylphénidate', cat: 'med', icon: '⚪', unit: 'cp', brands: ['Ritaline', 'Concerta'], base: 10, demand: 70, depth: 6000, bulk: 0.2, add: 3, od: 0.3, stim: true, fx: { ap: 1 }, txt: 'Concentration maximale, tu enchaînes les tâches.' },
   coke:  { form: 'powder', name: 'Cocaïne (poudre)', cat: 'dure', icon: '❄️', unit: 'g', brands: ['Écaille de poisson', 'Plaquette 90 %', 'Colombienne'], base: 70, demand: 40, depth: 4000, bulk: 1, add: 4, od: 0.8, stim: true, fx: { ap: 1, crime: 8, respect: 1, health: -2 }, txt: 'Tu te sens invincible, le roi du monde.' },
   crack: { form: 'pipe', name: 'Crack', cat: 'dure', icon: '🪨', unit: 'caillou', brands: ['Galette', 'Cailloux'], base: 20, demand: 70, depth: 4000, bulk: 0.3, add: 9, od: 1.5, stim: true, fx: { ap: 1, crime: 12, health: -5 }, txt: 'Un flash violent… puis l\'envie immédiate d\'y retourner.' },
@@ -678,6 +696,8 @@ const DRUGS = {
   skenan:  { form: 'frbox', name: 'Skenan (morphine)', cat: 'med', icon: '🔵', unit: 'gél', brands: ['Skenan LP 100 mg', 'Moscontin 60 mg'], base: 22, demand: 35, depth: 3000, bulk: 0.2, add: 9, od: 1.8, opioid: true, fx: { health: 5, stress: -8 }, txt: 'La morphine t\'enveloppe comme une couverture chaude.' },
   roofies: { form: 'frbox', name: 'Rohypnol (flunitrazépam)', cat: 'med', icon: '🟢', unit: 'cp', brands: ['Rohypnol 1 mg'], base: 10, demand: 30, depth: 3000, bulk: 0.2, add: 6, od: 1.0, benzo: true, fx: { stress: -12 }, txt: 'Tout devient flou. Des trous noirs dans ta soirée…' },
   codeine: { form: 'frbox', name: 'Cachets de codéine', cat: 'med', icon: '⚪', unit: 'cp', brands: ['Néo-Codion', 'Codoliprane', 'Dafalgan codéiné'], base: 1.2, demand: 120, depth: 30000, bulk: 0.1, add: 3, od: 0.4, opioid: true, fx: { health: 2, stress: -4 }, txt: 'Une douce torpeur : la douleur et la toux s\'effacent.' },
+  tramadol:{ form: 'frbox', name: 'Tramadol', cat: 'med', icon: '🟤', unit: 'cp', brands: ['Topalgic 50 mg', 'Tramadol génér.', 'Zaldiar'], base: 6, demand: 80, depth: 9000, bulk: 0.15, add: 4, od: 0.6, opioid: true, fx: { health: 2, stress: -5 }, txt: 'La douleur s\'efface, une légère ivresse monte.' },
+  snus:    { form: 'snus', name: 'Snus / sachets nicotine', cat: 'tabac', icon: '🟩', unit: 'boîte', brands: ['Snus maison'], base: 7, demand: 160, depth: 40000, bulk: 0.2, add: 1.5, od: 0, fx: { stress: -5, crime: 2 }, txt: 'Un sachet sous la lèvre : pic de nicotine, l\'esprit s\'éclaircit.' },
   clopes:  { form: 'cig', name: 'Cigarettes', cat: 'tabac', icon: '🚬', unit: 'paquet', brands: ['Marlboro Red (tabac)', 'Paquet volé (camion)', 'Contrebande (Algérie)'], base: 11, demand: 200, depth: 30000, bulk: 0.3, add: 1.5, od: 0, risk: 0.3, fx: { stress: -6, health: -0.5 }, txt: 'Une longue taffe. Les nerfs se relâchent un peu.' },
 };
 const CATS = { med: '💊 Médicaments détournés', dure: '💀 Drogues dures', douce: '🌿 Drogues douces', dope: '🏋️ Stéroïdes anabolisants', tabac: '🚬 Tabac (légal, volé, contrebande)' };
@@ -714,6 +734,18 @@ const CITIES = {
     mult: { coke: 1.3, crack: 1.2, oxy: 1.8, lean: 1.7, benzo: 1.5, meth: 1.2, heroW: 1.3, weed: 1.2, hash: 1.8, rita: 1.4, ster: 1.4, fenta: 0.8, adderall: 0.8, roofies: 1.3, clopes: 1.1, codeine: 1.8 }, spec: {},
     routes: ['Miami → Atlanta (I-95)', 'Houston → Miami (I-10)', 'Miami → New York'], gfCargo: ['coke', 'heroW', 'meth', 'weed'],
     intro: 'Tu as grandi à Liberty City, Miami. À 18 ans, un OG du block te propose de faire le lookout pour son corner.' },
+  dubai: { name: 'Dubaï', country: 'Émirats', flag: '🇦🇪', region: 'am', police: 0.9, customs: 1.1, names: 'us', cops: 'Police de Dubaï', club: 'Sky Lounge', exile: true, safe: true,
+    mult: { coke: 1.6, oxy: 1.5, lean: 1.6, hash: 1.2, mdma: 1.4, tramadol: 1.3 }, spec: {},
+    routes: ['Dubaï → Mascate', 'Dubaï → Karachi', 'Dubaï → Djibouti'], gfCargo: ['coke', 'hash', 'oxy'],
+    intro: 'Exil doré à Dubaï : marbre, gratte-ciels et comptes offshore.' },
+  bogota: { name: 'Bogotá', country: 'Colombie', flag: '🇨🇴', region: 'am', police: 0.7, customs: 1.3, names: 'latam', cops: 'Policía', club: 'La Candelaria', exile: true, safe: true,
+    mult: { coke: 0.2, crack: 0.3, weed: 0.4, mdma: 1.4 }, spec: { coke: 25 },
+    routes: ['Bogotá → Turbo', 'Cali → Buenaventura'], gfCargo: ['coke', 'coke', 'weed'],
+    intro: 'Exil à la source, en Colombie : au plus près des champs.' },
+  bangkok: { name: 'Bangkok', country: 'Thaïlande', flag: '🇹🇭', region: 'am', police: 0.8, customs: 1.1, names: 'us', cops: 'Police royale', club: 'Nana Nights', exile: true, safe: true,
+    mult: { meth: 0.3, keta: 0.5, weed: 0.5, mdma: 1.3 }, spec: { meth: 20, keta: 10 },
+    routes: ['Bangkok → Mae Sot', 'Chiang Rai → frontière'], gfCargo: ['meth', 'keta', 'weed'],
+    intro: 'Exil en Thaïlande : marchés de nuit et jet-skis.' },
 };
 
 const RANKS = [
@@ -837,6 +869,10 @@ const SHOP = {
     { id: 'loft', name: 'Loft en centre-ville', icon: '🌆', price: 420000, respect: 5, cap: 600, sec: 25, upkeep: 2200, vault: 400000, garage: 1 },
     { id: 'villa', name: 'Villa sécurisée', icon: '🏡', price: 1600000, respect: 10, cap: 3000, sec: 55, upkeep: 9000, vault: 2000000, garage: 4 },
     { id: 'hacienda', name: 'Hacienda fortifiée', icon: '🏰', price: 6500000, respect: 16, cap: 15000, sec: 85, upkeep: 30000, vault: 10000000, garage: 8 },
+    { id: 'boxdisc', name: 'Box discret (logistique)', icon: '🔒', price: 70000, respect: 0, cap: 4000, sec: 30, upkeep: 400, stash: true, vault: 120000, garage: 1, arms: 300, ware: true },
+    { id: 'hangar', name: 'Hangar de banlieue', icon: '🏚️', price: 350000, respect: 1, cap: 35000, sec: 25, upkeep: 2200, stash: true, vault: 600000, garage: 8, arms: 2000, ware: true },
+    { id: 'portuaire', name: 'Entrepôt portuaire', icon: '⚓', price: 900000, respect: 3, cap: 120000, sec: 35, upkeep: 6000, stash: true, vault: 1500000, garage: 4, arms: 6000, ware: true },
+    { id: 'frigo', name: 'Dépôt sécurisé (chambres froides)', icon: '❄️', price: 1800000, respect: 4, cap: 300000, sec: 60, upkeep: 12000, stash: true, vault: 3000000, garage: 6, arms: 12000, ware: true },
   ] },
   weapons: { label: 'Armurerie', icon: '🔫', cashOnly: true, items: [
     { id: 'couteau', name: 'Couteau papillon', icon: '🔪', price: 80, power: 6 },
@@ -847,6 +883,8 @@ const SHOP = {
     { id: 'ak', name: 'AK-47 (Kalachnikov)', icon: '🪖', price: 7500, power: 50 },
     { id: 'gilet', name: 'Gilet pare-balles', icon: '🦺', price: 2500, armor: 40 },
     { id: 'gilet4', name: 'Gilet lourd niveau IV', icon: '🛡️', price: 9000, armor: 70 },
+    { id: 'scar', name: 'Fusil d\'assaut SCAR-H', icon: '🪖', price: 28000, power: 62, dark: true },
+    { id: 'barrett', name: 'Fusil de précision .50', icon: '🎯', price: 60000, power: 85, dark: true },
   ] },
 };
 const RESALE = { clothes: 0.3, jewelry: 0.6, vehicles: 0.6, properties: 0.85, weapons: 0.4 };
@@ -875,6 +913,7 @@ const WEAPON_STATS = {
   couteau: { dmg: [9, 17], acc: 78, melee: true, verb: 'Poignarder' },
   glock: { dmg: [16, 28], acc: 66 }, revolver: { dmg: [20, 34], acc: 60 }, uzi: { dmg: [18, 32], acc: 62 },
   pompe: { dmg: [26, 44], acc: 58 }, ak: { dmg: [30, 48], acc: 62 },
+  scar: { dmg: [34, 54], acc: 66 }, barrett: { dmg: [55, 90], acc: 80 },
 };
 const FOES = {
   passant:    { name: 'Passant', role: 'Civil pas commode', icon: '🚶', hp: [28, 42], atk: [3, 8], acc: 55, w: 'ses poings' },
@@ -891,11 +930,14 @@ const FOES = {
   detenu:     { name: 'Détenu', role: 'Caïd du bâtiment', icon: '😠', hp: [50, 70], atk: [7, 14], acc: 64, w: 'ses poings' },
   proprio:    { name: 'Propriétaire', role: 'Furieux', icon: '😡', hp: [35, 50], atk: [5, 11], acc: 58, w: 'une barre de fer' },
   sicaire:    { name: 'Détenu infiltré', role: 'Tueur à gages', icon: '🔪', hp: [70, 90], atk: [12, 22], acc: 68, w: 'un surin' },
+  vigile:     { name: 'Vigile pharmaceutique', role: 'Sécurité du dépôt', icon: '💂', hp: [60, 85], atk: [8, 16], acc: 66, w: 'un fusil à pompe', gun: true },
+  ravisseur:  { name: 'Ravisseur', role: 'Envoyé d\'un cartel', icon: '🥷', hp: [55, 80], atk: [10, 20], acc: 64, w: 'un pistolet', gun: true },
+  tricheur:   { name: 'Joueur enragé', role: 'Il t\'a vu tricher', icon: '🃏', hp: [45, 65], atk: [7, 14], acc: 60, w: 'un couteau' },
 };
 
 /* Vie nocturne, rue, prison */
 const CLUB_MULT = { mdma: 1.4, coke: 1.1, keta: 0.9, weed: 0.5, hash: 0.3, lean: 0.7, benzo: 0.3, rita: 0.4, oxy: 0.3, crack: 0.05, heroB: 0.05, heroW: 0.1, meth: 0.25, ster: 0.15,
-  fenta: 0.05, ghb: 0.8, adderall: 0.3, subutex: 0.02, skenan: 0.05, roofies: 0.1, clopes: 0.8, codeine: 0.05 };
+  fenta: 0.05, ghb: 0.8, adderall: 0.3, subutex: 0.02, skenan: 0.05, roofies: 0.1, clopes: 0.8, codeine: 0.05, tramadol: 0.2, snus: 0.4 };
 const CLUB_DRUGS = ['mdma', 'coke', 'keta']; // stock récréatif écoulé par les dealeurs postés en boîte
 const SHOPS_RACKET = ['Épicerie de nuit', 'Kebab du coin', 'Tabac-presse', 'Salon de coiffure', 'Boulangerie', 'Garage auto', 'Boutique de téléphones', 'Laverie du quartier'];
 const PRISON_GANGS = ['Anciens du bâtiment B', 'Gars de la buanderie', 'Braqueurs de la vieille école', 'Longues Peines'];
@@ -962,6 +1004,10 @@ const RITUALS = {
     { btn: '🔨 Écraser le cachet', cap: (b) => `Tu poses le cachet (${b}) sur le miroir et l'écrases avec le dos d'une cuillère…`, dur: 1600 },
     { btn: '💳 Tirer un trait', cap: () => 'Tu affines la poudre à la carte et tires un trait bien net.', dur: 1300 },
     { btn: '💵 Sniffer', cap: () => 'Billet roulé, une longue inspiration… La brûlure dans le nez, puis la vague.', dur: 1600 },
+  ] },
+  snus: { cls: 'st-snus', fails: ['La boîte glisse de tes doigts… Recommence.'], steps: [
+    { btn: '🥫 Ouvrir la boîte', cap: (b) => `Tu ouvres la boîte (${b}) et pinces un sachet.`, dur: 900 },
+    { btn: '😶 Caler sous la lèvre', cap: () => 'Tu glisses le sachet sous la lèvre supérieure. Le picotement monte…', dur: 1500 },
   ] },
   powder: { cls: 'st-powder', fails: ['Tes mains tremblent… Recommence.'], steps: [
     { btn: '💳 Préparer la dose', cap: (b, n) => `Tu prépares une dose ${U.de(n)} sur le miroir…`, dur: 1300 },
@@ -1085,6 +1131,7 @@ const CAR_TARGETS = [
 
 /* Armes : modifications, arsenal de l'organisation, ateliers clandestins */
 const WEAPON_MODS = {
+  switch: { name: 'Switch full-auto (Glock)', icon: '🔩', price: 9000, dmg: 0.5, acc: -6, auto: true, dark: true, desc: 'Conversion automatique : rafales dévastatrices (+15 puissance de feu)' },
   silencieux: { name: 'Silencieux', icon: '🔇', price: 1200, acc: 3, silent: true, desc: 'Tirs discrets : pas de pression policière liée aux coups de feu' },
   tambour: { name: 'Chargeur tambour', icon: '🥁', price: 2000, dmg: 0.15, desc: '+15 % de dégâts' },
   laser: { name: 'Visée laser', icon: '🔴', price: 900, acc: 10, desc: '+10 de précision' },
@@ -1097,7 +1144,7 @@ const ARMS = {
   ghost: { name: 'Ghost guns (impression 3D)', icon: '🖨️', buy: 0, sell: 1500, mil: 1 },
 };
 const CRATES = [{ type: 'pistol', n: 10 }, { type: 'smg', n: 10 }, { type: 'ak', n: 10 }, { type: 'ak', n: 50 }];
-const ARMS_CITY = { marseille: 1.25, paris: 1.1, amsterdam: 0.9, medellin: 1.2, culiacan: 1.35, miami: 0.85 };
+const ARMS_CITY = { marseille: 1.25, paris: 1.1, amsterdam: 0.9, medellin: 1.2, culiacan: 1.35, miami: 0.85, dubai: 1.3, bogota: 1.1, bangkok: 1.0 };
 const FACTORIES = {
   printer: { name: 'Imprimantes 3D clandestines', icon: '🖨️', price: 60000, out: 8, upkeep: 3000, rank: 2, risk: 1.5 },
   usine: { name: 'Atelier d\'usinage clandestin', icon: '🏭', price: 280000, out: 30, smg: 5, upkeep: 14000, rank: 3, risk: 2 },
@@ -1127,8 +1174,10 @@ const BUSINESSES = {
   chicha:     { name: 'Bar à chicha', icon: '💨', price: 160000, cap: 32000, income: 1800, respect: 2 },
   club:       { name: 'Boîte de nuit', icon: '🪩', price: 480000, cap: 95000, income: 5000, respect: 5, club: true },
   strip:      { name: 'Strip club', icon: '💃', price: 750000, cap: 120000, income: 9000, respect: 6, club: true, strip: true },
+  taxis:      { name: 'Flotte de taxis', icon: '🚕', price: 220000, cap: 45000, income: 2600, respect: 2 },
   concession: { name: 'Concession auto de luxe', icon: '🚘', price: 1300000, cap: 260000, income: 12000, respect: 5 },
   casino:     { name: 'Casino clandestin', icon: '🎰', price: 3200000, cap: 650000, income: 30000, respect: 8 },
+  galerie:    { name: 'Galerie d\'art contemporain', icon: '🖼️', price: 2200000, cap: 420000, income: 9000, respect: 7, prestige: true },
 };
 const LAUNDER_FEE = 0.15;
 
@@ -1145,6 +1194,97 @@ const LOANS = [
   { id: 'milieu', lender: 'Maître Varenne (banquier du milieu)', amount: 100000, rate: 0.08, months: 8, respect: 45 },
   { id: 'cartel', lender: 'Don Esteban (cartel)', amount: 750000, rate: 0.06, months: 10, respect: 70 },
 ];
+
+/* ===================== NOUVEAUX SYSTÈMES : données ===================== */
+/* Logistique lourde : fret & arrivages programmés */
+const FREIGHT = [
+  { id: 'post', name: 'Pli postal discret', icon: '✉️', max: 300, fixed: 400, pct: 0.04, risk: 6, months: 1, relay: 1 },
+  { id: 'express', name: 'Colis express (semi-gros)', icon: '📦', max: 6000, fixed: 3500, pct: 0.06, risk: 9, months: 1, relay: 1 },
+  { id: 'palette', name: 'Palette aérienne', icon: '✈️', max: 40000, fixed: 22000, pct: 0.05, risk: 11, months: 2, rank: 2 },
+  { id: 'conteneur', name: 'Conteneur maritime (fret lourd)', icon: '🚢', max: 300000, fixed: 48000, pct: 0.04, risk: 13, months: 3, rank: 2 },
+];
+const FLEET = {
+  van: { name: 'Camionnette de livraison', icon: '🚐', price: 18000, risk: 0.9 },
+  boat: { name: 'Vedette rapide', icon: '🚤', price: 400000, risk: 0.7 },
+  container: { name: 'Conteneur maritime', icon: '🚢', price: 120000, risk: 0.8 },
+  cargo: { name: 'Avion cargo léger', icon: '🛩️', price: 850000, risk: 0.6 },
+};
+const SUB_PERIODS = [1, 2, 3];
+
+/* Crypto & Dark Web */
+const CRYPTO = { btc: { name: 'Bitcoin', sym: '₿', lo: 42000, hi: 72000 }, xmr: { name: 'Monero', sym: 'ɱ', lo: 110, hi: 280 } };
+const DW_FEE = 0.02;
+const RELAY_COST = 1800;
+const SERVER_COST = 90000, SERVER_UP = 4000;
+const DARK_ARMS = [
+  { id: 'scar', name: 'Fusil d\'assaut SCAR-H', icon: '🪖', price: 28000, kind: 'gun', desc: 'Puissance de feu 62' },
+  { id: 'barrett', name: 'Fusil de précision .50', icon: '🎯', price: 60000, kind: 'gun', desc: 'Puissance de feu 85 · tir à distance' },
+  { id: 'switch', name: 'Switch full-auto (Glock)', icon: '🔩', price: 9000, kind: 'switch', desc: '+15 puissance de feu sur ton pistolet' },
+  { id: 'explo', name: 'Explosifs & charges', icon: '🧨', price: 15000, kind: 'special', stat: 'explo', desc: 'Guerres & braquages : +8 puissance militaire /unité' },
+  { id: 'jammer', name: 'Brouilleur radio / GPS', icon: '📡', price: 22000, kind: 'special', stat: 'jammer', desc: 'Réduit le risque douanier des arrivages' },
+];
+const FAKE_ID = {
+  permis: { name: 'Papiers propres (permis, CNI)', icon: '🪪', price: 6000, clear: 1, desc: 'Efface 1 condamnation du casier' },
+  passeport: { name: 'Passeport diplomatique', icon: '🛂', price: 120000, clear: 99, dipl: true, desc: 'Casier effacé · requis pour l\'exil' },
+};
+const CARDING = [
+  { id: 'lot10', name: 'Lot de 10 cartes (CVV)', icon: '💳', price: 900, cash: [1500, 6000], bust: 30 },
+  { id: 'lot50', name: 'Lot de 50 cartes (fullz)', icon: '💳', price: 3500, cash: [8000, 30000], bust: 42 },
+  { id: 'dump', name: 'Dump bancaire premium', icon: '🏧', price: 12000, cash: [25000, 90000], bust: 55 },
+];
+
+/* Pharma : marques certifiées (pureté 100 %) */
+const PHARMA = {
+  codeine: ['Euphon', 'Actavis', 'Maka', 'Paderyl'],
+  oxy: ['OxyContin 80 mg', 'Percocet 10 mg', 'Oxynorm 20 mg'],
+  tramadol: ['Topalgic 50 mg', 'Tramadol génér.', 'Zaldiar'],
+  skenan: ['Skenan LP 100 mg', 'Moscontin 60 mg'],
+  benzo: ['Xanax Bar 2 mg', 'Valium 10 mg', 'Rivotril 2 mg', 'Alprazolam génér.'],
+};
+const BRAND_VAL = {
+  'OxyContin 80 mg': { buy: 1.4, sell: 1.5, rare: 0.8 }, 'Percocet 10 mg': { buy: 1.2, sell: 1.35, rare: 0.6 }, 'Oxynorm 20 mg': { buy: 1.1, sell: 1.2, rare: 0.5 },
+  'Actavis': { buy: 1.5, sell: 1.7, rare: 0.85 }, 'Euphon': { buy: 1.0, sell: 1.1, rare: 0.3 }, 'Maka': { buy: 1.3, sell: 1.5, rare: 0.7 }, 'Paderyl': { buy: 1.1, sell: 1.2, rare: 0.4 },
+  'Xanax Bar 2 mg': { buy: 1.3, sell: 1.5, rare: 0.7 }, 'Alprazolam génér.': { buy: 0.8, sell: 0.85, rare: 0.2 },
+  'Skenan LP 100 mg': { buy: 1.2, sell: 1.3, rare: 0.6 }, 'Topalgic 50 mg': { buy: 1.1, sell: 1.15, rare: 0.4 },
+};
+const brandVal = (b) => BRAND_VAL[b] || { buy: 1, sell: 1, rare: 0.3 };
+
+/* R&D moléculaire */
+const MOLECULES = { alpha: { name: 'Précurseur α', sym: 'α', price: 2200 }, beta: { name: 'Réactif β', sym: 'β', price: 3400 }, gamma: { name: 'Catalyseur γ', sym: 'γ', price: 5200 }, delta: { name: 'Solvant δ', sym: 'δ', price: 1600 } };
+const RC_PREFIX = ['Blue', 'Pink', 'Ghost', 'Neon', 'Cosmic', 'Void', 'Hyper', 'Mad', 'Krypto', 'Nova'];
+const RC_SUFFIX = ['-25', '-X', 'caine', 'mol', 'phine', '-7', 'zine', 'drone', '-9', 'lin'];
+const RC_FORMS = ['powder', 'ziplock', 'pill'];
+
+/* Snus : personnalisation */
+const SNUS_DOSE = [6, 16, 30, 50, 100, 150];
+const SNUS_FORMAT = { slim: 'Slim', large: 'Large', white: 'White' };
+const SNUS_FLAVOR = { mint: { name: 'Menthe glaciale', hue: 140 }, berry: { name: 'Baies', hue: 330 }, energy: { name: 'Énergisant', hue: 45 }, tobacco: { name: 'Tabac classique', hue: 22 } };
+const SNUS_COLORS = [['#2e7d32', 'vert'], ['#1565c0', 'bleu'], ['#c62828', 'rouge'], ['#111111', 'noir'], ['#e0e0e0', 'blanc'], ['#6a1b9a', 'violet']];
+
+/* Usure & jeux */
+const SHARK_CLIENTS = [
+  { name: 'un joueur criblé de dettes', risk: 42, max: 8000 }, { name: 'un gérant au bord du dépôt de bilan', risk: 25, max: 40000 },
+  { name: 'un petit dealer de quartier', risk: 35, max: 6000 }, { name: 'un «cousin» de confiance', risk: 18, max: 15000 }, { name: 'un entrepreneur ambitieux', risk: 30, max: 120000 },
+];
+const POKER_TABLES = [
+  { name: 'Partie de quartier', buy: 2000 }, { name: 'Table du milieu', buy: 20000 }, { name: 'Cercle VIP', buy: 150000 },
+];
+
+/* Vie sentimentale */
+const PARTNERS = [
+  { type: 'civil', label: 'quelqu\'un de « normal »', icon: '🧑', up: 1 },
+  { type: 'gerante', label: 'une gérante de bar', icon: '👩‍💼', up: 1.6, launder: true },
+  { type: 'influ', label: 'une influenceuse', icon: '🤳', up: 2.4, respect: true },
+];
+
+/* Carte des quartiers */
+const DISTRICTS = {
+  nord: { name: 'Banlieue Nord', icon: '🏙️', drugs: ['hash', 'coke'], income: [4000, 9000], str: 90, note: 'Points de deal massifs : résine et coke' },
+  centre: { name: 'Centre-ville branché', icon: '🌃', drugs: ['mdma', 'oxy'], income: [5000, 11000], str: 120, note: 'Clubs, pilules, oxy' },
+  affaires: { name: 'Quartier d\'affaires', icon: '🏦', drugs: ['coke'], income: [8000, 16000], str: 170, note: 'Ventes VIP, coke pure, gros volumes' },
+  port: { name: 'Zone portuaire', icon: '⚓', drugs: ['ak'], income: [6000, 13000], str: 150, note: 'Hub import/export d\'armes et conteneurs' },
+};
+const EXILE_CITIES = ['dubai', 'bogota', 'bangkok'];
 
 const RIVAL_NAMES = ['Les Tigres du 13', 'La Mafia des Docks', 'Le Clan Moreau', 'Los Serpientes', 'Le Gang des Balkans', 'La Familia Roja', 'Les Fantômes du Nord', 'Le Cartel del Pacífico', 'Les Loups de l\'Est'];
 const NAMES = {
@@ -1179,7 +1319,10 @@ const PlayerData = {
       rivals: [], market: null,
       stress: 20, tobacco: 0, cigLoose: 0, carSkill: 0, job: null, casier: [], corrupt: {}, garage: [], vault: {},
       arsenal: { pistol: 0, smg: 0, ak: 0, ghost: 0 }, mods: {}, factories: [],
-      stats: { crimes: 0, arrests: 0, jailMonths: 0, kills: 0, doses: 0, ods: 0, maxWorth: 0, sold: 0, bought: 0, wars: 0, fights: 0, fightsWon: 0, carsStolen: 0, jobMonths: 0 },
+      crypto: { btc: 0, xmr: 0 }, cryptoRate: null, pc: false, relays: 0, servers: 0, subs: [], fleet: { van: 0, boat: 0, container: 0, cargo: 0 },
+      special: { explo: 0, jammer: 0 }, molecules: {}, rcDefs: [], snus: null, subchefs: [], loansOut: [], poker: { table: false, since: 0 },
+      partner: null, zones: null, exile: null, fakeId: 0,
+      stats: { crimes: 0, arrests: 0, jailMonths: 0, kills: 0, doses: 0, ods: 0, maxWorth: 0, sold: 0, bought: 0, wars: 0, fights: 0, fightsWon: 0, carsStolen: 0, jobMonths: 0, synth: 0, heists: 0, cardJobs: 0, conquered: 0 },
       log: [], logSeq: 0, alive: true, death: null,
     };
   },
@@ -1222,8 +1365,9 @@ const PlayerData = {
   firepower() {
     const ws = this.items('weapons').filter((w) => w.power).map((w) => w.power).sort((a, b) => b - a);
     if (!ws.length) return 0;
-    const mods = this.items('weapons').reduce((a, w) => a + Armory.mods(w.id).length * 3, 0); // +3 par modification installée
-    return Math.round(ws[0] + ws.slice(1).reduce((a, b) => a + b * 0.15, 0) + mods);
+    let mods = 0, sw = 0;
+    for (const w of this.items('weapons')) { const m = Armory.mods(w.id); mods += m.length * 3; if (m.includes('switch')) sw += 15; } // switch full-auto
+    return Math.round(ws[0] + ws.slice(1).reduce((a, b) => a + b * 0.15, 0) + mods + sw);
   },
   armor() { return Math.max(0, ...this.items('weapons').map((w) => w.armor || 0)); },
   capacity() { return 50 + this.items('properties').reduce((a, p) => a + p.cap, 0); },
@@ -1248,7 +1392,7 @@ const PlayerData = {
   warPower() {
     return Math.round(20 + this.firepower() * 1.2 + this.armor() * 0.3
       + this.soldiers().reduce((a, c) => a + c.skill * (c.trait === 'violent' ? 1.35 : 0.9), 0)
-      + this.dealers().reduce((a, c) => a + c.skill * 0.2, 0) + this.respect() * 0.4 + S.force * 0.3 + this.crimeBuff() + Arsenal.usable() * 0.9);
+      + this.dealers().reduce((a, c) => a + c.skill * 0.2, 0) + this.respect() * 0.4 + S.force * 0.3 + this.crimeBuff() + Arsenal.usable() * 0.9 + ((S.special && S.special.explo) || 0) * 8);
   },
   netWorth() {
     let w = S.cash + S.bank + Inventory.value();
@@ -1256,7 +1400,7 @@ const PlayerData = {
     for (const b of S.businesses) w += BUSINESSES[b.type].price * 0.6;
     for (const l of S.labs) w += LABS[l.type].price * 0.5;
     for (const f of S.factories) w += FACTORIES[f.type].price * 0.5;
-    w += Vault.total() + Arsenal.value();
+    w += Vault.total() + Arsenal.value() + Crypto.worth();
     w -= S.debts.reduce((a, d) => a + d.amount, 0);
     return Math.round(w);
   },
@@ -1264,6 +1408,11 @@ const PlayerData = {
   addDebt(lender, amount, rate, months) { S.debts.push({ id: U.uid(), lender, amount: Math.round(amount), rate, due: S.ageMonths + months, overdue: 0 }); },
 };
 
+/* Enregistre une drogue de synthèse (R&D) dans le catalogue et le marché */
+function registerDrug(key, def, silent) {
+  if (!DRUGS[key]) DRUGS[key] = def;
+  if (S && S.market) MarketData.ensure();
+}
 /* ============================ MARKET DATA ============================ */
 const MarketData = {
   init() {
@@ -1279,6 +1428,14 @@ const MarketData = {
     return m;
   },
   rollQ(c, d) { const sp = (CITIES[c].spec || {})[d] || 0; return U.clamp(Math.round(U.rand(20, 72) + sp + U.rand(-5, 12)), 1, 100); },
+  // crée les entrées de marché manquantes (nouvelles villes d'exil, nouveaux produits, RC)
+  ensure() {
+    const m = S.market; if (!m) return;
+    for (const c in CITIES) {
+      if (!m.trend[c]) { m.trend[c] = {}; m.qual[c] = {}; m.brand[c] = {}; }
+      for (const d in DRUGS) if (m.trend[c][d] == null) { m.trend[c][d] = U.rand(0.85, 1.15); m.qual[c][d] = this.rollQ(c, d); m.brand[c][d] = U.ri(0, DRUGS[d].brands.length - 1); }
+    }
+  },
   cityMult(c, d) { return (CITIES[c].mult || {})[d] || 1; },
   qf: (q) => 0.5 + q / 100,
   brand(c, d) { return DRUGS[d].brands[S.market.brand[c][d]] || DRUGS[d].brands[0]; },
@@ -1500,7 +1657,7 @@ const Actions = {
     return Math.round(U.clamp(r, 0, 95) * 10) / 10;
   },
   consumeMenu(d, after = null, onCancel = null) {
-    const D = DRUGS[d], q = Inventory.q(d), cig = D.cat === 'tabac';
+    const D = DRUGS[d], q = Inventory.q(d), cig = D.form === 'cig';
     const used = Object.keys(S.used);
     const combo = (D.opioid && used.some((k) => DRUGS[k].benzo)) || (D.benzo && used.some((k) => DRUGS[k].opioid));
     const stock = `${U.num(Inventory.qty(d))} ${U.u(D, U.num(Inventory.qty(d)))}${cig && S.cigLoose ? ` + ${S.cigLoose} dans le paquet entamé` : ''}`, cut = Inventory.cut(d);
@@ -1513,18 +1670,18 @@ const Actions = {
   // les cigarettes se fument à l'unité (paquets de 20 entamés au besoin)
   doseLabel(d, di) {
     const D = DRUGS[d], ds = DOSES[di];
-    if (D.cat === 'tabac') { const n = CIG_DOSES[di]; return `${n === 1 ? 'Une cigarette' : n === 3 ? 'Quelques cigarettes' : 'Un demi-paquet'} (${n})`; }
+    if (D.form === 'cig') { const n = CIG_DOSES[di]; return `${n === 1 ? 'Une cigarette' : n === 3 ? 'Quelques cigarettes' : 'Un demi-paquet'} (${n})`; }
     return `${ds.label} (${ds.units} ${U.u(D, ds.units)})`;
   },
-  hasDose(d, di) { return DRUGS[d].cat === 'tabac' ? Inventory.qty(d) * 20 + (S.cigLoose || 0) >= CIG_DOSES[di] : Inventory.qty(d) >= DOSES[di].units; },
+  hasDose(d, di) { return DRUGS[d].form === 'cig' ? Inventory.qty(d) * 20 + (S.cigLoose || 0) >= CIG_DOSES[di] : Inventory.qty(d) >= DOSES[di].units; },
   takeDose(d, di) {
-    if (DRUGS[d].cat !== 'tabac') { Inventory.remove(d, DOSES[di].units); return; }
+    if (DRUGS[d].form !== 'cig') { Inventory.remove(d, DOSES[di].units); return; }
     const n = CIG_DOSES[di], packs = Math.ceil(Math.max(0, n - S.cigLoose) / 20);
     if (packs) Inventory.remove(d, packs);
     S.cigLoose = S.cigLoose + packs * 20 - n;
   },
   consume(d, di, free = false, after = null, mode = null) {
-    const D = DRUGS[d], ds = DOSES[di], cig = D.cat === 'tabac', sn = mode === 'snort' ? SNORT : null, em = ds.mult * (sn ? sn.fx : 1);
+    const D = DRUGS[d], ds = DOSES[di], cig = D.form === 'cig', sn = mode === 'snort' ? SNORT : null, em = ds.mult * (sn ? sn.fx : 1);
     const done = () => { if (after && S.alive && !S.jail) after(); };
     if (!free && !this.hasDose(d, di)) { UI.toast('Pas assez de produit.'); return done(); }
     const q = free ? U.ri(40, 80) : Inventory.q(d) || 50;
@@ -2463,6 +2620,21 @@ const Monthly = {
     if (b > PlayerData.capacity()) log('📦', `Ta planque déborde (${U.num(b)}/${U.num(PlayerData.capacity())}) : risque de descente accru !`, 'bad');
     if (S.respect > 60) S.respect -= 0.3;
   },
+  audit() {
+    if (S.jail || S.exile) return;
+    const lux = PlayerData.items('jewelry').reduce((a, i) => a + i.price, 0) + PlayerData.items('vehicles').reduce((a, i) => a + i.price, 0)
+      + PlayerData.items('clothes').reduce((a, i) => a + i.price, 0) + PlayerData.items('properties').filter((x) => !x.stash).reduce((a, i) => a + i.price, 0);
+    const declared = S.bank + S.businesses.reduce((a, b) => a + BUSINESSES[b.type].income, 0) * 12 + (S.job ? Jobs.salary(Jobs.cur()) * 12 : 0);
+    const shield = (S.partner && S.partner.complicit) ? 0.5 : 1;
+    if (lux < 120000 || lux < declared * 2.2) return;
+    if (!U.chance((5 + (S.businesses.length ? 0 : 5)) * shield)) return;
+    const fine = Math.round(Math.min(S.bank, lux * U.rand(0.08, 0.2)));
+    S.bank -= fine;
+    let seized = '';
+    if (U.chance(40)) { const cat = U.chance(50) ? 'vehicles' : 'jewelry'; const it = PlayerData.items(cat).sort((a, b) => b.price - a.price)[0]; if (it) { S.owned[cat] = S.owned[cat].filter((x) => x !== it.id); seized = ` Saisie : ${it.name}.`; } }
+    log('🧾', `Contrôle fiscal : train de vie disproportionné par rapport aux revenus déclarés. Redressement de <b>${U.money(fine)}</b>.${seized}`, 'bad');
+    UI.modal({ icon: '🧾', title: 'Contrôle fiscal', cls: 'bad', text: `Ton train de vie (${U.money(lux)}) dépasse largement tes revenus officiels. Redressement : <b>${U.money(fine)}</b>.${seized}<br><small class="m">Astuce : des commerces écrans et une partenaire complice réduisent le risque.</small>`, choices: [{ label: 'Encaisser' }] });
+  },
   refresh() {
     MarketData.monthly();
     if (S.ageMonths % 2 === 0 || !S.candidates.length) S.candidates = Crew.genList(3);
@@ -2906,6 +3078,7 @@ const Ritual = {
     if (form === 'cig') return `<div class="lid"></div><div class="filt"></div>${Looks.cigPack(brand)}<div class="cg"><i class="ember"></i></div><div class="lighter"><div class="fl"></div></div><i class="smk"></i><i class="smk"></i><i class="smk"></i>`;
     if (form === 'pipe') return `<div class="rk"${/bleue/.test(brand) ? ' style="background:#bfe6ff"' : ''}></div><div class="bulb"><div class="fog"></div></div><div class="stem"><i></i></div><div class="lighter"><div class="fl"></div></div><i class="smk"></i><i class="smk"></i>`;
     if (form === 'vial') return `${mouth}<div class="vl"><div class="lb">${/GBL/.test(brand) ? 'GBL<br>99 %' : 'GHB<br>fiole'}</div></div><i class="dr"></i><i class="dr"></i><i class="dr"></i><div class="gl"><div class="liq"></div></div>`;
+    if (form === 'snus') { const lk = (S.stock[d] && S.stock[d].look) || {}; return `${mouth}<div class="sbox" style="--sc:${lk.color || '#2e7d32'}">${U.esc((brand || '').split(' ')[0])}</div><i class="pouch"></i>`; }
     if (form === 'pill') { const pl = Looks.pill(d, brand); return `<div class="mouth">👄</div><div class="lid"></div><div class="blister" style="--pc:${pl.c}">${'<i></i>'.repeat(8)}</div><div class="box"><span>${b}</span></div>${Looks.html(pl)}`; }
     if (form === 'joint') return `<div class="bud">🌿</div>${[...Array(9)].map((_, i) => `<i class="crumb" style="--x:${U.ri(-60, 60)}px;--y:${U.ri(-22, 30)}px;--px:${-56 + i * 14}px"></i>`).join('')}<div class="paper"></div><div class="tip"></div><i class="smoke"></i><i class="smoke"></i><i class="smoke"></i>`;
     return '<div class="mirror"></div><div class="pile"></div><div class="line"></div><div class="card"></div>';
@@ -3820,7 +3993,7 @@ const Armory = {
     const ms = this.mods(it.id), st = this.stats({ id: it.id, name: it.name, ...WEAPON_STATS[it.id] });
     UI.modal({ icon: it.icon, title: it.name, text: `💥 Dégâts ${Math.round(st.dmg[0])}–${Math.round(st.dmg[1])} · 🎯 Précision ${st.acc}${st.silent ? ' · 🔇 silencieux' : ''}<br>Modifications : ${ms.length ? ms.map((m) => `${WEAPON_MODS[m].icon} ${WEAPON_MODS[m].name}`).join(', ') : 'aucune'}<br><small class="m">Armurier clandestin, liquide uniquement. +3 puissance de feu par modification.</small>`,
       choices: [
-        ...Object.keys(WEAPON_MODS).map((m) => { const M = WEAPON_MODS[m], has = ms.includes(m); return { label: `${M.icon} ${M.name}${has ? ' ✔' : ''}`, sub: has ? 'Installé' : `${U.money(M.price)} · ${M.desc}`, dis: has || S.cash < M.price, fn: () => this.install(it, m) }; }),
+        ...Object.keys(WEAPON_MODS).filter((m) => !WEAPON_MODS[m].dark).map((m) => { const M = WEAPON_MODS[m], has = ms.includes(m); return { label: `${M.icon} ${M.name}${has ? ' ✔' : ''}`, sub: has ? 'Installé' : `${U.money(M.price)} · ${M.desc}`, dis: has || S.cash < M.price, fn: () => this.install(it, m) }; }),
         { label: `💰 Revendre (${U.money(it.price * RESALE.weapons)})`, cls: 'danger', fn: () => Shop.sell('weapons', it) },
         { label: 'Fermer', cls: 'ghost' },
       ] });
@@ -3888,6 +4061,540 @@ const Strip = {
     log('🚨', `Descente de ${brig} dans ton strip club : ${n} escorte${n > 1 ? 's' : ''} auditionnée${n > 1 ? 's' : ''}${seized ? `, ${U.money(seized)} saisis dans le coffre` : ''} (+25 🚨).`, 'bad');
     if (!S.jail && U.chance(Police.bought() ? 15 : 55)) Actions.arrest({ charge: 'Proxénétisme aggravé', months: U.ri(48, 96) });
     else UI.result('🚨', 'Descente au club', `Les enquêteurs ont auditionné tout le personnel.${seized ? ` ${U.money(seized)} saisis dans le coffre.` : ''} ${Police.bought() ? 'Tes contacts dans la police ont étouffé l\'affaire.' : 'Faute de preuves directes, tu échappes aux poursuites… cette fois.'}`, 'bad');
+  },
+};
+
+/* ============================== CRYPTO ============================== */
+const Crypto = {
+  rate(c) { return Math.round((S.cryptoRate && S.cryptoRate[c]) || (c === 'btc' ? 55000 : 180)); },
+  amt(c) { return (S.crypto && S.crypto[c]) || 0; },
+  fmt(c) { return this.amt(c).toFixed(c === 'btc' ? 5 : 3); },
+  worth() { return Math.round(this.amt('btc') * this.rate('btc') + this.amt('xmr') * this.rate('xmr')); },
+  can(amount) { return this.worth() >= amount; },
+  monthly() {
+    if (!S.cryptoRate) return;
+    for (const c of ['btc', 'xmr']) { let r = this.rate(c) * U.rand(0.8, 1.28); S.cryptoRate[c] = Math.round(U.clamp(r, CRYPTO[c].lo * 0.55, CRYPTO[c].hi * 2)); }
+  },
+  // paie un montant en € avec la crypto (XMR en priorité, puis BTC). Renvoie true si réglé.
+  pay(amount) {
+    if (!this.can(amount)) return false;
+    let need = amount;
+    for (const c of ['xmr', 'btc']) {
+      if (need <= 0) break;
+      const rate = this.rate(c), use = Math.min(this.amt(c), need / rate);
+      S.crypto[c] -= use; need -= use * rate;
+    }
+    return true;
+  },
+  credit(c, coins) { S.crypto[c] = this.amt(c) + coins; },
+  buy(c) {
+    const rate = this.rate(c), max = Math.floor(S.cash + S.bank);
+    if (max < 1) return UI.toast('Aucun fonds à convertir.');
+    UI.qty({ icon: CRYPTO[c].sym, title: `Acheter du ${CRYPTO[c].name}`, text: `Cours : <b>${U.money(rate)}</b> / ${CRYPTO[c].sym} · frais ${Math.round(DW_FEE * 100)} %`, max, init: Math.min(max, 2000), unit: '€ investis',
+      info: (n) => `Tu reçois ≈ <b class="g">${(n * (1 - DW_FEE) / rate).toFixed(c === 'btc' ? 5 : 3)} ${CRYPTO[c].sym}</b>`, confirm: '🪙 Convertir',
+      onConfirm: (n) => { n = Math.min(n, S.cash + S.bank); if (!PlayerData.pay(n)) return; this.credit(c, n * (1 - DW_FEE) / rate); log('🪙', `Conversion : ${U.money(n)} → ${(n * (1 - DW_FEE) / rate).toFixed(c === 'btc' ? 5 : 3)} ${CRYPTO[c].sym} (insaisissable).`, 'money'); } });
+  },
+  sell(c) {
+    const rate = this.rate(c), have = this.amt(c), maxE = Math.floor(have * rate);
+    if (maxE < 1) return UI.toast(`Aucun ${CRYPTO[c].sym}.`);
+    UI.qty({ icon: CRYPTO[c].sym, title: `Encaisser du ${CRYPTO[c].name}`, text: `Cours : <b>${U.money(rate)}</b> / ${CRYPTO[c].sym}`, max: maxE, init: maxE, unit: '€ reçus',
+      info: (n) => `Tu débites ≈ ${(n / rate).toFixed(c === 'btc' ? 5 : 3)} ${CRYPTO[c].sym} · reçois <b class="g">${U.money(n * (1 - DW_FEE))}</b> en liquide`, confirm: '💵 Encaisser',
+      onConfirm: (n) => { const coins = Math.min(have, n / rate); S.crypto[c] -= coins; S.cash += Math.round(coins * rate * (1 - DW_FEE)); log('🪙', `Tu encaisses ${coins.toFixed(c === 'btc' ? 5 : 3)} ${CRYPTO[c].sym} en liquide.`, 'money'); } });
+  },
+  payModal({ title, price, onPay }) {
+    const can = this.can(price);
+    UI.modal({ icon: '🪙', title, text: `Prix : <b class="y">${U.money(price)}</b> en crypto<br>Portefeuille : ${this.fmt('btc')} ₿ + ${this.fmt('xmr')} ɱ ≈ ${U.money(this.worth())}`,
+      choices: [{ label: '🪙 Payer en crypto', dis: !can, sub: can ? 'Insaisissable' : 'Solde crypto insuffisant', fn: () => { if (this.pay(price)) onPay(); } }, { label: 'Annuler', cls: 'ghost' }] });
+  },
+};
+
+/* ============================== DARK WEB ============================== */
+const DarkWeb = {
+  tab: 'wallet',
+  access() { return S.jail ? !!(S.prison && S.prison.phone) : (S.pc || !!S.exile); },
+  setTab(t) { this.tab = t; UI.renderPanel(); },
+  buyPC() { UI.pay({ icon: '💻', title: 'PC sécurisé (Tails/Tor)', text: 'Un ordinateur chiffré pour accéder au Dark Web depuis chez toi.', price: 4000, onPay: () => { S.pc = true; log('💻', 'Tu montes un poste sécurisé : accès au Dark Web.', 'good'); } }); },
+  buyRelay() { UI.pay({ icon: '📮', title: 'Boîte postale fantôme', text: 'Adresse relais pour expédier et recevoir sans être tracé. Nécessaire aux envois.', price: RELAY_COST, onPay: () => { S.relays++; log('📮', `Nouvelle adresse relais (${S.relays}).`, 'good'); } }); },
+  buyServer() { Crypto.payModal({ title: '🖥️ Hub de serveurs clandestin', price: SERVER_COST, onPay: () => { S.servers++; log('🖥️', `Nouveau centre informatique clandestin (${S.servers}) : tes sous-fifres automatisent les commandes en ligne.`, 'good'); } }); },
+  buyMed(d, b) {
+    const unit = Math.round(DRUGS[d].base * 1.2 * brandVal(b).buy), max = Math.floor(Crypto.worth() / unit);
+    if (max < 1) return UI.toast('Solde crypto insuffisant.');
+    UI.qty({ icon: DRUGS[d].icon, title: b + ' (pur Q100)', text: `${U.unitPrice(unit)} / ${DRUGS[d].unit} · réglé en crypto`, max, init: Math.min(max, 50), unit: DRUGS[d].unit,
+      info: (n) => `Total ${U.money(n * unit)} crypto`, confirm: '🪙 Acheter',
+      onConfirm: (n) => { n = Math.min(n, Math.floor(Crypto.worth() / unit)); if (n < 1 || !Crypto.pay(n * unit)) return; Inventory.add(d, n, 100, b); log('💊', `Dark Web : ${U.num(n)} « ${b} » (Q100).`, 'good'); } });
+  },
+  buyRaw(d) {
+    const unit = Math.round(MarketData.buyUnit(S.city, d) * 1.1), max = Math.floor(Crypto.worth() / unit);
+    if (max < 1) return UI.toast('Solde crypto insuffisant.');
+    UI.qty({ icon: DRUGS[d].icon, title: 'Acheter ' + DRUGS[d].name, text: `${U.unitPrice(unit)} / ${DRUGS[d].unit} · crypto`, max, init: Math.min(max, 100), unit: DRUGS[d].unit,
+      info: (n) => `Total ${U.money(n * unit)} crypto`, confirm: '🪙 Acheter',
+      onConfirm: (n) => { n = Math.min(n, Math.floor(Crypto.worth() / unit)); if (n < 1 || !Crypto.pay(n * unit)) return; Inventory.add(d, n, S.market.qual[S.city][d], MarketData.brand(S.city, d)); log('🌿', `Dark Web : ${U.num(n)} ${U.u(DRUGS[d], n)} ${U.de(DRUGS[d].name)}.`, 'good'); } });
+  },
+  // débit en crypto de marchandise vendue en ligne
+  sellMenu() {
+    const list = Inventory.list();
+    if (!S.relays) return UI.toast('📮 Achète d\'abord une adresse relais (onglet Envois).');
+    if (!list.length) return UI.toast('Rien à vendre.');
+    UI.modal({ icon: '🌐', title: 'Vendre en ligne (crypto)', text: 'Expédition via tes relais. Les serveurs augmentent le débit et la marge.', choices: list.map((d) => ({ label: `${DRUGS[d].icon} ${DRUGS[d].name}`, sub: `Stock ${U.num(Inventory.qty(d))}`, fn: () => this.sell(d) })).concat([{ label: 'Retour', cls: 'ghost' }]) });
+  },
+  sell(d) {
+    const D = DRUGS[d], have = Inventory.qty(d), q = Inventory.q(d);
+    const cap = (200 + S.servers * 600) * S.relays; // débit mensuel via la logistique
+    const unit = MarketData.retail(S.city, d, q) * (1.5 + S.servers * 0.15) * brandVal(Inventory.brand(d)).sell;
+    const max = Math.min(have, cap);
+    UI.qty({ icon: D.icon, title: `Vendre en ligne — ${D.name}`, text: `Prix net (international) : <b>${U.unitPrice(unit)}</b> / ${D.unit}<br>Capacité d'expédition : ${U.num(cap)} /mois · réglé en crypto`, max, init: max, unit: D.unit,
+      info: (n) => `Recette : <b class="g">${U.money(n * unit)}</b> en crypto · risque colis ${U.risk(this.shipRisk(n))}`, confirm: '🌐 Expédier',
+      onConfirm: (n) => {
+        n = Math.min(n, Inventory.qty(d)); if (n < 1) return;
+        Inventory.remove(d, n);
+        if (U.chance(this.shipRisk(n))) { PlayerData.mod('respect', -1); log('📭', `Un colis intercepté : ${U.num(n)} ${U.u(D, U.num(n))} ${U.de(D.name)} perdus. Une adresse relais est grillée.`, 'bad'); if (S.relays > 1 && U.chance(50)) S.relays--; return; }
+        const c = U.chance(50) ? 'xmr' : 'btc'; Crypto.credit(c, n * unit / Crypto.rate(c)); S.stats.sold += Math.round(n * unit);
+        log('🌐', `Vente en ligne : ${U.num(n)} ${U.u(D, U.num(n))} ${U.de(D.name)} → <b>+${U.money(n * unit)}</b> en ${CRYPTO[c].sym}.`, 'money');
+      } });
+  },
+  shipRisk(n) { return Math.round(U.clamp((6 + n / 60) * Police.customs() * (S.special.jammer ? 0.6 : 1) - S.servers * 2, 2, 55) * 10) / 10; },
+  /* armes rares & switches */
+  arms() {
+    UI.modal({ icon: '🔫', title: 'Armes & équipements spéciaux', text: 'Livraison en pièces détachées. Réglé en crypto.', choices: DARK_ARMS.map((a) => ({ label: `${a.icon} ${a.name}`, sub: `${a.desc} · ${U.money(a.price)}`, fn: () => this.buyArm(a) })).concat([{ label: 'Retour', cls: 'ghost' }]) });
+  },
+  buyArm(a) {
+    Crypto.payModal({ title: `${a.icon} ${a.name}`, price: a.price, onPay: () => {
+      if (a.kind === 'gun') { if (!S.owned.weapons.includes(a.id)) S.owned.weapons.push(a.id); log(a.icon, `Arme rare reçue : <b>${a.name}</b>.`, 'good'); }
+      else if (a.kind === 'switch') { const gun = PlayerData.items('weapons').find((w) => Armory.isGun(w.id) && !Armory.mods(w.id).includes('switch')); if (!gun) return UI.toast('Il te faut un pistolet non modifié (ex. Glock).'); S.mods[gun.id] = [...Armory.mods(gun.id), 'switch']; log('🔩', `Switch full-auto monté sur ${gun.name}.`, 'good'); }
+      else { S.special[a.stat] = (S.special[a.stat] || 0) + 1; log(a.icon, `${a.name} : +1 (${S.special[a.stat]}).`, 'good'); }
+    } });
+  },
+  /* molécules pour la R&D */
+  molecules() {
+    UI.modal({ icon: '🧪', title: 'Molécules & précurseurs', text: 'Réactifs bruts pour ton laboratoire de R&D.', choices: Object.keys(MOLECULES).map((m) => ({ label: `${MOLECULES[m].sym} ${MOLECULES[m].name}`, sub: `En stock : ${S.molecules[m] || 0} · ${U.money(MOLECULES[m].price)}/u (crypto)`, fn: () => this.buyMol(m) })).concat([{ label: 'Retour', cls: 'ghost' }]) });
+  },
+  buyMol(m) {
+    const M = MOLECULES[m], max = Math.floor(Crypto.worth() / M.price);
+    if (max < 1) return UI.toast('Solde crypto insuffisant.');
+    UI.qty({ icon: M.sym, title: M.name, text: `${U.money(M.price)} / unité (crypto)`, max, init: Math.min(max, 10), unit: 'unités',
+      info: (n) => `Total : ${U.money(n * M.price)} en crypto`, confirm: '🧪 Commander',
+      onConfirm: (n) => { n = Math.min(n, Math.floor(Crypto.worth() / M.price)); if (n < 1 || !Crypto.pay(n * M.price)) return; S.molecules[m] = (S.molecules[m] || 0) + n; log(M.sym, `${n} × ${M.name} livrés.`, 'good'); } });
+  },
+  /* services : faux papiers, carding */
+  services() {
+    UI.modal({ icon: '🪪', title: 'Services', choices: [
+      { label: `${FAKE_ID.permis.icon} ${FAKE_ID.permis.name}`, sub: `${FAKE_ID.permis.desc} · ${U.money(FAKE_ID.permis.price)}`, dis: S.record < 1, fn: () => this.fakeId('permis') },
+      { label: `${FAKE_ID.passeport.icon} ${FAKE_ID.passeport.name}`, sub: `${FAKE_ID.passeport.desc} · ${U.money(FAKE_ID.passeport.price)}`, fn: () => this.fakeId('passeport') },
+      ...CARDING.map((c) => ({ label: `${c.icon} ${c.name}`, sub: `${U.money(c.price)} → ${U.money(c.cash[0])}–${U.money(c.cash[1])} · litige ${c.bust} %`, fn: () => this.card(c) })),
+      { label: 'Retour', cls: 'ghost' },
+    ] });
+  },
+  fakeId(k) {
+    const F = FAKE_ID[k];
+    Crypto.payModal({ title: `${F.icon} ${F.name}`, price: F.price, onPay: () => {
+      if (k === 'passeport') { S.fakeId++; log('🛂', 'Passeport diplomatique obtenu : casier judiciaire effacé, exil possible.', 'good'); }
+      S.record = Math.max(0, S.record - F.clear); if (S.casier) S.casier = S.casier.slice(0, Math.max(0, S.casier.length - F.clear));
+      log(F.icon, k === 'permis' ? 'Papiers propres : une condamnation disparaît du casier.' : 'Identité blanchie.', 'good');
+    } });
+  },
+  card(c) {
+    Crypto.payModal({ title: `${c.icon} ${c.name}`, price: c.price, onPay: () => {
+      S.stats.cardJobs++;
+      if (U.chance(c.bust)) { log('💳', `Carding : lot ${U.chance(50) ? 'bloqué par la banque' : 'déjà grillé'}, mise perdue.`, 'bad'); UI.result('💳', 'Litige bancaire', 'Les cartes ont sauté avant encaissement. Mise perdue.', 'bad'); return; }
+      const g = U.ri(c.cash[0], c.cash[1]); S.cash += g; log('💳', `Carding : ${U.money(g)} retirés en liquide via mules.`, 'money'); UI.result('💳', 'Cash récupéré', `+${U.money(g)} en liquide.`, 'good');
+    } });
+  },
+};
+
+/* ============================== LOGISTIQUE (fret & abonnements) ============================== */
+const Logistics = {
+  warehouses() { return PlayerData.items('properties').filter((p) => p.ware); },
+  fleetRisk() { let r = 1; for (const f in S.fleet) if (S.fleet[f]) r *= FLEET[f].risk; return r * (S.special.jammer ? 0.7 : 1); },
+  freightRisk(from, m) { return Math.round(U.clamp(m.risk * (Police.customs(from) + Police.customs()) / 2 * this.fleetRisk(), 1, 85)); },
+  order(from, d, m, sub) {
+    const D = DRUGS[d];
+    const cost = (n) => MarketData.buyCost(from, d, n) * (1 + m.pct) + m.fixed;
+    const room = Math.floor((PlayerData.capacity() - Inventory.bulk()) / D.bulk);
+    const max = U.maxQty(cost, S.cash + S.bank, Math.min(Math.floor(m.max / D.bulk), room || 1));
+    if (max < 1) return UI.toast(room < 1 ? '📦 Entrepôt plein.' : '💵 Fonds insuffisants.');
+    const q = S.market.qual[from][d], risk = this.freightRisk(from, m);
+    UI.qty({ icon: m.icon, title: `${m.name} — ${D.name}`, text: `${MarketData.brand(from, d)} · ${U.q(q)} · ${U.unitPrice(MarketData.buyUnit(from, d))}/${D.unit}<br>Arrivée : ${m.months} mois · saisie ${U.risk(risk)}${sub ? '<br><b>Abonnement : prélèvement automatique récurrent.</b>' : ''}`,
+      max, init: Math.max(1, Math.floor(max / 2)), unit: D.unit,
+      info: (n) => `Total : <b class="y">${U.money(cost(n))}</b>${sub ? ' / livraison' : ''}`,
+      confirm: sub ? '🔁 Programmer' : '📦 Commander', onConfirm: (n) => {
+        const total = Math.round(cost(n));
+        if (sub) return this.askPeriod(from, d, m, n, total);
+        if (!PlayerData.pay(total)) return UI.toast('Fonds insuffisants.');
+        S.stats.bought += total; MarketData.impact(from, d, n, 1);
+        S.imports.push({ id: U.uid(), d, qty: n, q, b: MarketData.brand(from, d), from, method: m.id, arrive: S.ageMonths + m.months, risk });
+        log(m.icon, `Fret lancé : ${U.num(n)} ${U.u(D, U.num(n))} ${U.de(D.name)} depuis ${CITIES[from].name} → −${U.money(total)}.`, 'money');
+      } });
+  },
+  askPeriod(from, d, m, n, total) {
+    UI.modal({ icon: '🔁', title: 'Fréquence de livraison', text: `Arrivage automatique de ${U.num(n)} ${U.u(DRUGS[d], U.num(n))} ${U.de(DRUGS[d].name)} depuis ${CITIES[from].name}.<br>${U.money(total)} prélevés à chaque échéance.`,
+      choices: SUB_PERIODS.map((pr) => ({ label: pr === 1 ? 'Tous les mois' : `Tous les ${pr} mois`, fn: () => { S.subs.push({ id: U.uid(), from, d, method: m.id, qty: n, period: pr, next: S.ageMonths + pr }); log('🔁', `Abonnement programmé : ${U.num(n)} ${U.u(DRUGS[d], U.num(n))} ${U.de(DRUGS[d].name)} tous les ${pr} mois.`, 'good'); } })).concat([{ label: 'Annuler', cls: 'ghost' }]) });
+  },
+  cancelSub(id) { S.subs = S.subs.filter((x) => x.id !== id); UI.toast('🔁 Abonnement annulé'); UI.renderPanel(); },
+  buyFleet(f) { const F = FLEET[f]; UI.pay({ icon: F.icon, title: F.name, text: `Réduit le risque douanier de tes arrivages.`, price: F.price, onPay: () => { S.fleet[f]++; log(F.icon, `Flotte : +1 ${F.name} (${S.fleet[f]}).`, 'good'); } }); },
+  newOrder() {
+    UI.modal({ icon: '🌍', title: 'Origine du fret', choices: Object.keys(CITIES).filter((c) => c !== S.city).map((c) => ({ label: `${CITIES[c].flag} ${CITIES[c].name}`, sub: `douanes ×${U.f2(Police.customs(c))}`, fn: () => this.pickDrug(c) })).concat([{ label: 'Annuler', cls: 'ghost' }]) });
+  },
+  pickDrug(from) {
+    UI.modal({ icon: '📦', title: `Fret depuis ${CITIES[from].name}`, text: 'Quel produit faire venir ?', choices: Object.keys(DRUGS).map((d) => ({ label: `${DRUGS[d].icon} ${DRUGS[d].name}`, sub: `${U.unitPrice(MarketData.buyUnit(from, d))}/${DRUGS[d].unit}`, fn: () => this.pickMethod(from, d) })).concat([{ label: 'Annuler', cls: 'ghost' }]) });
+  },
+  pickMethod(from, d) {
+    const avail = FREIGHT.filter((m) => !m.rank || S.rank >= m.rank);
+    const ch = [];
+    for (const m of avail) {
+      ch.push({ label: `${m.icon} ${m.name}`, sub: `max ${U.num(m.max)} · ${m.months} mois · saisie ~${this.freightRisk(from, m)} %`, fn: () => this.order(from, d, m, false) });
+      ch.push({ label: `🔁 ${m.name} — abonnement`, sub: 'Livraison récurrente automatique', fn: () => this.order(from, d, m, true) });
+    }
+    ch.push({ label: 'Annuler', cls: 'ghost' });
+    UI.modal({ icon: '🚢', title: `${DRUGS[d].name} · ${CITIES[from].name}`, choices: ch });
+  },
+  monthly() {
+    for (const s of [...S.subs]) {
+      if (s.next > S.ageMonths) continue;
+      s.next += s.period;
+      const m = FREIGHT.find((x) => x.id === s.method) || IMPORT_METHODS.find((x) => x.id === s.method); if (!m) continue;
+      const D = DRUGS[s.d], q = S.market.qual[s.from][s.d], total = Math.round(MarketData.buyCost(s.from, s.d, s.qty) * (1 + m.pct) + m.fixed);
+      if (!PlayerData.pay(total)) { log('🔁', `Abonnement (${D.name}) impayé : livraison annulée ce cycle.`, 'bad'); continue; }
+      const risk = this.freightRisk(s.from, m);
+      S.imports.push({ id: U.uid(), d: s.d, qty: s.qty, q, b: MarketData.brand(s.from, s.d), from: s.from, method: m.id, arrive: S.ageMonths + m.months, risk });
+      log('🔁', `Arrivage programmé parti de ${CITIES[s.from].name} : ${U.num(s.qty)} ${U.u(D, U.num(s.qty))} ${U.de(D.name)} (−${U.money(total)}).`, 'money');
+    }
+  },
+};
+
+/* ============================== PHARMA (braquages & corruption) ============================== */
+const Pharma = {
+  pure(d, brand, qty) { Inventory.add(d, qty, 100, brand); log('💊', `Lot certifié pur : ${U.num(qty)} ${U.u(DRUGS[d], U.num(qty))} « ${brand} » (Q100).`, 'good'); },
+  pickBrand(title, onPick) {
+    const rows = [];
+    for (const d in PHARMA) for (const b of PHARMA[d]) rows.push({ d, b });
+    UI.modal({ icon: '💊', title, text: 'Choisis la gamme (la marque fait le prix et la marge).', choices: rows.map((r) => ({ label: `${DRUGS[r.d].icon} ${r.b}`, sub: `${DRUGS[r.d].name} · marge revente ×${U.f2(brandVal(r.b).sell)}${brandVal(r.b).rare > 0.6 ? ' · rare' : ''}`, fn: () => onPick(r.d, r.b) })).concat([{ label: 'Annuler', cls: 'ghost' }]) });
+  },
+  heist() {
+    if (S.jail) return;
+    if (PlayerData.firepower() < 40 || PlayerData.soldiers().length < 2) return UI.toast('🔒 Il te faut une puissance de feu ≥ 40 et 2 soldats.');
+    if (!PlayerData.useAP(2)) return;
+    S.stats.crimes++;
+    const base = 55 + PlayerData.soldiers().length * 4 + S.special.explo * 8 + PlayerData.firepower() * 0.1 - 10;
+    UI.confirm('🏭', 'Braquer un dépôt pharmaceutique', `Opération lourde : vigiles armés, coffres de principes actifs purs.<br>Chances estimées : ${U.pct(U.clamp(base, 5, 92))} · 2 ⚡`, '💥 Donner l\'assaut', () => {
+      Combat.start({ foe: 'vigile', over: {}, ctx: { arms: 'all', lethal: false, flee: 35, place: 'Dépôt pharmaceutique', intro: 'Les vigiles ouvrent le feu dès l\'entrée de l\'entrepôt.' }, onEnd: (res) => {
+        if (res !== 'win') { if (res === 'lose' && U.chance(45)) Actions.arrest({ charge: 'Braquage à main armée (dépôt pharmaceutique)', months: U.ri(48, 96) }); else log('🏃', 'Braquage avorté : repli sous les tirs.', 'bad'); return; }
+        if (!U.chance(U.clamp(base, 5, 92))) { log('🚔', 'Le butin est sécurisé juste avant votre arrivée au coffre.', 'bad'); return; }
+        S.stats.heists++; PlayerData.mod('respect', 6);
+        this.pickBrand('Butin : choisis le lot pillé', (d, b) => { const qty = Math.round(U.rand(2000, 9000) * (1 + S.rank * 0.2)); this.pure(d, b, qty); UI.result('🏭', 'Dépôt pillé', `Vous repartez avec <b>${U.num(qty)} ${U.u(DRUGS[d], U.num(qty))}</b> ${U.de(DRUGS[d].name)} pures (Q100).`, 'good'); });
+      } });
+    }, 'danger');
+  },
+  bribe() {
+    if (S.jail) return UI.toast('⛓️ Impossible depuis ta cellule.');
+    if (S.rank < 3) return UI.toast('🔒 Grade Boss local requis.');
+    this.pickBrand('Commande « sous le manteau »', (d, b) => {
+      const V = brandVal(b), unit = DRUGS[d].base * 1.1 * V.buy, max = U.maxQty((n) => n * unit + 50000, S.cash + S.bank, 200000 / DRUGS[d].bulk);
+      if (max < 1) return UI.toast('💵 Fonds insuffisants (pot-de-vin 50 000 €).');
+      UI.qty({ icon: '🤝', title: `${b} — volume industriel`, text: `Pureté 100 % certifiée · pot-de-vin fixe 50 000 €<br>${U.unitPrice(unit)}/${DRUGS[d].unit}`, max, init: Math.max(1, Math.floor(max / 2)), unit: DRUGS[d].unit,
+        info: (n) => `Total : <b class="y">${U.money(n * unit + 50000)}</b>`, confirm: '🤝 Commander',
+        onConfirm: (n) => { const total = Math.round(n * unit + 50000); if (!PlayerData.pay(total)) return UI.toast('Fonds insuffisants.'); S.stats.bought += total; this.pure(d, b, n); PlayerData.mod('respect', 1); } });
+    });
+  },
+};
+
+/* ============================== CHIMIE (R&D & coupe) ============================== */
+const Chemistry = {
+  has() { return !!S.rnd; },
+  buyLab() { UI.pay({ icon: '🔬', title: 'Laboratoire de R&D moléculaire', text: 'Synthétise des drogues de synthèse (RC) à partir de molécules du Dark Web.', price: 180000, onPay: () => { S.rnd = true; log('🔬', 'Laboratoire de R&D monté.', 'good'); } }); },
+  // stats générées à partir de la combinaison de molécules
+  design(mix) {
+    const w = { alpha: [6, 2, 1], beta: [3, 4, 2], gamma: [9, 3, 4], delta: [2, 1, 0] }; // [puissance, addiction, létalité]
+    let pw = 20, ad = 1, od = 0.4;
+    for (const m of mix) { pw += w[m][0]; ad += w[m][1]; od += w[m][2] * 0.4; }
+    const seed = mix.join('');
+    let hsh = 0; for (const ch of seed) hsh = (hsh * 31 + ch.charCodeAt(0)) >>> 0;
+    const name = RC_PREFIX[hsh % RC_PREFIX.length] + RC_SUFFIX[(hsh >>> 4) % RC_SUFFIX.length];
+    return { name, pw: Math.round(pw), add: Math.round(ad * 10) / 10, od: Math.round(od * 10) / 10, value: Math.round(pw * 2.2), form: RC_FORMS[hsh % RC_FORMS.length] };
+  },
+  synth(mix) {
+    for (const m of mix) if ((S.molecules[m] || 0) < 1) return UI.toast(`Il manque ${MOLECULES[m].name}.`);
+    const spec = this.design(mix);
+    const key = 'rc_' + Math.random().toString(36).slice(2, 7);
+    const def = { form: spec.form, name: spec.name + ' (RC)', cat: 'dure', icon: '⚗️', unit: spec.form === 'pill' ? 'cp' : 'g', brands: [spec.name], base: spec.value, demand: 40, depth: 3000, bulk: 0.4, add: spec.add, od: spec.od, stim: true, fx: { crime: Math.round(spec.pw / 8), stress: -6, health: -2 }, txt: `Molécule inédite : sensations imprévisibles.` };
+    registerDrug(key, def);
+    S.rcDefs.push({ key, def });
+    for (const m of mix) S.molecules[m]--;
+    const qty = U.ri(200, 600);
+    Inventory.add(key, qty, U.ri(55, 85), spec.name);
+    S.stats.synth++;
+    log('⚗️', `Synthèse réussie : <b>${spec.name}</b> (puissance ${spec.pw}, addiction ${spec.add}, OD ${spec.od}). +${U.num(qty)} ${def.unit}.`, 'drug');
+    UI.result('⚗️', spec.name, `Nouvelle drogue de synthèse créée.<br><b>Puissance ${spec.pw} · Addiction ${spec.add} · Létalité ${spec.od} · Valeur ${U.money(spec.value)}</b><br>+${U.num(qty)} ${def.unit} en stock.`, 'drug');
+  },
+  cut(d) {
+    const D = DRUGS[d], have = Inventory.qty(d); if (!have) return;
+    if (!Inventory.qty('fenta')) return UI.toast('☠️ Il te faut du fentanyl en stock.');
+    const need = Math.max(1, Math.round(have / 8));
+    UI.confirm('☠️', `Couper ${D.name} au fentanyl`, `Consomme ${need} cp de fentanyl.<br><b>+40 % de quantité</b>, dépendance accrue, mais <b class="r">overdoses mortelles possibles chez tes clients</b> (réputation).`, '☠️ Couper', () => {
+      if (Inventory.qty('fenta') < need) return UI.toast('Pas assez de fentanyl.');
+      Inventory.remove('fenta', need);
+      const s = S.stock[d]; const add = Math.round(s.qty * 0.4); s.qty += add;
+      s.cut = Math.round((((s.cut || 0) * (s.qty - add) + 1 * (add + need)) / s.qty) * 100) / 100;
+      log('☠️', `Tu coupes ${D.name} au fentanyl : +${U.num(add)} ${U.u(D, add)}. Lot dangereux.`, 'drug');
+    });
+  },
+};
+
+/* ============================== SNUS ============================== */
+const Snus = {
+  has() { return !!S.snus; },
+  defaults() { return { dose: 16, format: 'slim', flavor: 'mint', color: '#2e7d32', brand: 'NordPouch', level: 1 }; },
+  buy() { UI.pay({ icon: '🟩', title: 'Usine de snus', text: 'Atelier de sachets de nicotine, entièrement personnalisables.', price: 60000, onPay: () => { S.snus = this.defaults(); log('🟩', 'Usine de snus ouverte.', 'good'); Snus.setup(true); } }); },
+  qual() { const c = S.snus; return U.clamp(40 + (c.dose >= 100 ? 20 : c.dose >= 30 ? 10 : 0) + (c.format === 'white' ? 8 : 0) + (S.snus.level - 1) * 10, 1, 100); },
+  out() { return Math.round(2500 * (1 + (S.snus.level - 1) * 0.6)); },
+  monthly() {
+    if (!S.snus) return;
+    if (!PlayerData.pay(3000 * S.snus.level)) { log('🟩', 'Usine de snus à l\'arrêt (frais impayés).', 'bad'); return; }
+    const n = Math.round(this.out() * U.rand(0.85, 1.15));
+    Inventory.add('snus', n, this.qual(), `${S.snus.brand} ${SNUS_DOSE.includes(S.snus.dose) ? S.snus.dose + 'mg' : ''}`, { look: { color: S.snus.color, flavor: S.snus.flavor } });
+    log('🟩', `Usine de snus : +${U.num(n)} boîtes « ${S.snus.brand} » (${S.snus.dose} mg, ${SNUS_FLAVOR[S.snus.flavor].name}).`, 'money');
+  },
+  setup(first) {
+    if (!S.snus) return;
+    const c = { ...S.snus };
+    UI.modal({ icon: '🟩', title: first ? 'Personnalise ton snus' : 'Réglages du snus', cls: 'labcfg', html: '<div class="lcw"></div>',
+      choices: [{ label: first ? '✅ Lancer' : '✅ Enregistrer', cls: 'primary', fn: () => { S.snus = c; log('🟩', `Snus réglé : ${c.brand} ${c.dose} mg ${SNUS_FLAVOR[c.flavor].name}.`, 'good'); } }, ...(first ? [] : [{ label: 'Annuler', cls: 'ghost' }])],
+      onShow: (root) => {
+        const el = root.querySelector('.lcw'), draw = () => { el.innerHTML = this.panel(c); };
+        el.addEventListener('click', (e) => { const b = e.target.closest('button[data-k]'); if (!b) return; c[b.dataset.k] = b.dataset.k === 'dose' ? +b.dataset.v : b.dataset.v; draw(); });
+        el.addEventListener('input', (e) => { if (e.target.dataset.k === 'brand') { c.brand = e.target.value.slice(0, 16) || 'NordPouch'; const pv = el.querySelector('.lc-badge2'); if (pv) pv.textContent = c.brand; } });
+        draw();
+      } });
+  },
+  panel(c) {
+    const o = (k, v, t) => `<button type="button" class="lc-o${String(c[k]) === String(v) ? ' on' : ''}" data-k="${k}" data-v="${U.esc(v)}"><b>${t}</b></button>`;
+    let h = `<div class="lc-prev" style="background:radial-gradient(circle at 50% 60%, ${c.color}, #141417 80%)"><div class="snus-box" style="--sc:${c.color};filter:hue-rotate(${SNUS_FLAVOR[c.flavor].hue}deg)">${SNUS_DOSE.includes(c.dose) ? c.dose + 'mg' : ''}<span class="lc-badge2">${U.esc(c.brand)}</span></div></div>`;
+    h += '<div class="lc-sec">Dosage nicotine</div><div class="lc-opts">' + SNUS_DOSE.map((d) => o('dose', d, d + ' mg' + (d >= 100 ? ' 🔥' : ''))).join('') + '</div>';
+    h += '<div class="lc-sec">Format</div><div class="lc-opts">' + Object.keys(SNUS_FORMAT).map((f) => o('format', f, SNUS_FORMAT[f])).join('') + '</div>';
+    h += '<div class="lc-sec">Parfum</div><div class="lc-opts">' + Object.keys(SNUS_FLAVOR).map((f) => o('flavor', f, SNUS_FLAVOR[f].name)).join('') + '</div>';
+    h += '<div class="lc-sec">Couleur de la boîte</div><div class="lc-sws">' + SNUS_COLORS.map(([col, nm]) => `<button type="button" class="lc-sw${c.color === col ? ' on' : ''}" data-k="color" data-v="${col}" style="background:${col}" aria-label="${nm}"></button>`).join('') + '</div>';
+    h += '<div class="lc-sec">Nom de marque</div><input class="lc-in" data-k="brand" maxlength="16" value="' + U.esc(c.brand) + '">';
+    return h;
+  },
+};
+
+/* ============================== SOUS-CHEFS (délégation) ============================== */
+const Subchefs = {
+  max: 2,
+  can() { return S.rank >= 4; },
+  promote() {
+    if (!this.can()) return UI.toast('🔒 Grade Parrain requis.');
+    if (S.subchefs.length >= this.max) return UI.toast('Déjà 2 sous-chefs.');
+    const pool = PlayerData.soldiers().filter((m) => m.loyalty >= 70).sort((a, b) => b.skill - a.skill);
+    if (!pool.length) return UI.toast('Il te faut un soldat loyal (loyauté ≥ 70).');
+    UI.modal({ icon: '🎖️', title: 'Nommer un sous-chef', text: 'Un lieutenant de confiance gérera une partie du réseau en autonomie.', choices: pool.slice(0, 5).map((m) => ({ label: `${m.name}`, sub: `talent ${Math.round(m.skill)} · loyauté ${Math.round(m.loyalty)}`, fn: () => { Crew.remove(m); S.subchefs.push({ id: U.uid(), name: m.name, skill: m.skill, loyalty: m.loyalty, focus: 'Équilibré' }); log('🎖️', `${m.name} devient ton sous-chef : il gère recrutement, stocks et collecte.`, 'good'); } })).concat([{ label: 'Annuler', cls: 'ghost' }]) });
+  },
+  dismiss(id) { const s = S.subchefs.find((x) => x.id === id); if (!s) return; S.subchefs = S.subchefs.filter((x) => x !== id && x.id !== id); log('🚪', `${s.name} n'est plus sous-chef.`, ''); UI.back(); },
+  monthly() {
+    if (!S.subchefs.length) return;
+    let rev = 0, loss = 0;
+    for (const s of S.subchefs) {
+      const base = Math.round(s.skill * 140 * (1 + S.rank * 0.15) * (1 + (S.zones ? Object.values(S.zones).filter((z) => z.mine).length : 0) * 0.1));
+      if (U.chance(8)) { loss += Math.round(base * 0.5); continue; } // pertes/arrestations d'équipe gérées par le sous-chef
+      rev += base;
+    }
+    if (rev) { PlayerData.earn(rev); S.stats.sold += rev; }
+    if (rev || loss) log('🎖️', `Réseaux délégués : <b>+${U.money(rev)}</b>${loss ? ` (pertes ${U.money(loss)})` : ''}.`, 'money');
+    // rapport trimestriel
+    if (S.ageMonths % 3 === 0) this.report(rev, loss);
+  },
+  report(rev, loss) {
+    const recos = ['Augmenter les effectifs à l\'Est', 'Changer le produit prioritaire pour la coke', 'Se concentrer sur les clubs du centre', 'Lever le pied : la pression monte', 'Monter les prix de 10 %'];
+    const reco = U.pick(recos), bonus = U.ri(3000, 20000) * (1 + S.rank);
+    UI.modal({ icon: '📋', title: 'Rapport trimestriel des sous-chefs', cls: 'accent',
+      text: `Bilan du trimestre :<br>${H.kv([['Chiffre d\'affaires', U.money(rev * 3)], ['Pertes', U.money(loss * 3)], ['Sous-chefs', S.subchefs.length]])}<br>Recommandation : « <b>${reco}</b> »`,
+      choices: [
+        { label: '✅ Valider la recommandation', sub: `Réajustement : +${U.money(bonus)} estimé`, fn: () => { PlayerData.earn(bonus); PlayerData.mod('respect', 1); log('📋', `Tu valides : « ${reco} ». +${U.money(bonus)}.`, 'money'); } },
+        { label: '🙅 Garder le cap', fn: () => log('📋', 'Tu maintiens la stratégie actuelle.', '') },
+      ] });
+  },
+};
+
+/* ============================== USURE & JEUX ============================== */
+const Shark = {
+  lend() {
+    const c = U.pick(SHARK_CLIENTS), max = Math.min(c.max, S.cash);
+    if (max < 500) return UI.toast('Pas assez de liquide à prêter.');
+    const rate = U.pick([0.15, 0.18, 0.2, 0.25]);
+    UI.qty({ icon: '🦈', title: `Prêter à ${c.name}`, text: `Taux : <b>${Math.round(rate * 100)} %/mois</b> · risque de défaut ${c.risk} %`, max, init: Math.floor(max / 2), unit: '€',
+      info: (n) => `Intérêts : ~${U.money(n * rate)}/mois`, confirm: '🦈 Prêter',
+      onConfirm: (n) => { n = Math.min(n, S.cash); if (n < 1) return; S.cash -= n; S.loansOut.push({ id: U.uid(), who: c.name, principal: n, rate, risk: c.risk, overdue: 0 }); log('🦈', `Tu prêtes ${U.money(n)} à ${c.name} (${Math.round(rate * 100)} %/mois).`, 'money'); } });
+  },
+  monthly() {
+    for (const l of [...S.loansOut]) {
+      if (U.chance(l.risk)) { l.overdue++; this.defaultEvent(l); }
+      else { const interest = Math.round(l.principal * l.rate); PlayerData.earn(interest); if (U.chance(25)) { PlayerData.earn(l.principal); S.loansOut = S.loansOut.filter((x) => x !== l); log('🦈', `${l.who} rembourse tout (+${U.money(l.principal + interest)}).`, 'money'); } else log('🦈', `Intérêts de ${l.who} : +${U.money(interest)}.`, 'money'); }
+    }
+  },
+  defaultEvent(l) {
+    UI.modal({ icon: '⚠️', title: 'Impayé', cls: 'bad', text: `<b>${l.who}</b> ne peut pas payer ce mois-ci (dette : ${U.money(l.principal)}).`, choices: [
+      { label: '⏳ Accorder un délai', sub: '+intérêts, risque qu\'il disparaisse', fn: () => { l.principal = Math.round(l.principal * (1 + l.rate)); if (l.overdue >= 3 && U.chance(40)) { S.loansOut = S.loansOut.filter((x) => x !== l); log('💨', `${l.who} a disparu dans la nature. Créance perdue.`, 'bad'); } else log('⏳', `Délai accordé à ${l.who}. Dette : ${U.money(l.principal)}.`, ''); } },
+      { label: '👊 Envoyer les hommes', sub: 'Passage à tabac : recouvre souvent', fn: () => { if (U.chance(U.clamp(45 + PlayerData.soldiers().length * 8 + S.force * 0.2, 20, 90))) { const got = Math.round(l.principal * U.rand(0.6, 1)); PlayerData.earn(got); S.loansOut = S.loansOut.filter((x) => x !== l); PlayerData.mod('respect', 1); log('👊', `Tes hommes récupèrent ${U.money(got)} chez ${l.who}.`, 'money'); } else { log('🤕', `${l.who} s'est défendu, rien récupéré.`, 'bad'); } } },
+      { label: '🚗 Saisir un bien', sub: 'Voiture ou cash de force', fn: () => { const got = Math.round(l.principal * U.rand(0.5, 0.9)); S.cash += got; S.loansOut = S.loansOut.filter((x) => x !== l); log('🚗', `Tu saisis de force l'équivalent de ${U.money(got)} chez ${l.who}.`, 'money'); } },
+    ] });
+  },
+};
+const Poker = {
+  play(t) {
+    if (S.cash < t.buy) return UI.toast('Cave insuffisante.');
+    UI.modal({ icon: '🃏', title: t.name, text: `Cave : ${U.money(t.buy)}. Tu peux jouer franc-jeu ou tenter de tricher.`, choices: [
+      { label: '🎲 Jouer franc-jeu', sub: 'Victoire ~45 %', fn: () => this.hand(t, false) },
+      { label: '🤫 Tricher', sub: 'Gros gain · risque d\'altercation armée', fn: () => this.hand(t, true) },
+      { label: 'Annuler', cls: 'ghost' },
+    ] });
+  },
+  hand(t, cheat) {
+    S.cash -= t.buy;
+    const winP = cheat ? 78 : 45;
+    if (cheat && U.chance(35)) {
+      log('🃏', 'Tu t\'es fait prendre à tricher !', 'bad');
+      return Combat.start({ foe: 'tricheur', ctx: { arms: 'all', flee: 40, place: t.name, intro: '« Tricheur ! » La table se renverse, les armes sortent.' }, onEnd: (res) => { if (res === 'win') { const g = t.buy * 3; PlayerData.earn(g); PlayerData.mod('respect', 2); log('🃏', `Tu t'imposes par la force et rafles le pot (+${U.money(g)}).`, 'money'); } else if (res === 'lose') log('🤕', 'Tabassé et délesté de ta cave.', 'bad'); } });
+    }
+    if (U.chance(winP)) { const g = Math.round(t.buy * U.rand(1.5, 3)); PlayerData.earn(g); log('🃏', `${t.name} : tu rafles <b>+${U.money(g)}</b>.`, 'money'); UI.result('🃏', 'Gagné', `Tu quittes la table avec ${U.money(g + t.buy)}.`, 'good'); }
+    else { log('🃏', `${t.name} : tu perds ta cave (${U.money(t.buy)}).`, 'bad'); UI.result('🃏', 'Perdu', 'La soirée a coûté cher.', 'bad'); }
+  },
+  table() {
+    if (S.poker.table) return UI.toast('Tu tiens déjà une table.');
+    UI.pay({ icon: '♠️', title: 'Tenir une table clandestine', text: 'Encaisse une commission (rake) mensuelle sur les parties.', price: 80000, onPay: () => { S.poker.table = true; S.poker.since = S.ageMonths; log('♠️', 'Tu ouvres une table de poker clandestine : rake mensuel.', 'good'); } });
+  },
+  monthly() {
+    if (!S.poker.table) return;
+    const rake = U.ri(4000, 18000) * (1 + S.rank * 0.2);
+    PlayerData.earn(Math.round(rake));
+    log('♠️', `Rake de ta table de poker : +${U.money(Math.round(rake))}.`, 'money');
+    if (U.chance(5)) { log('🔫', 'Une partie dégénère : bagarre, la table ferme un temps.', 'bad'); S.poker.table = false; }
+  },
+};
+
+/* ============================== RELATIONS & CONTRE-ESPIONNAGE ============================== */
+const Relations = {
+  meet() {
+    if (S.partner) return UI.toast('Tu es déjà en couple.');
+    const reg = NAMES[CITIES[S.city].names];
+    UI.modal({ icon: '❤️', title: 'Faire une rencontre', text: 'Qui veux-tu séduire ?', choices: PARTNERS.map((P) => ({ label: `${P.icon} ${P.label}`, sub: P.launder ? 'Peut devenir complice (blanchiment)' : P.respect ? 'Fait grimper ton standing' : 'Discrète', fn: () => { S.partner = { name: `${U.pick(reg.first)}`, type: P.type, icon: P.icon, aff: 50, complicit: false, months: 0 }; log('❤️', `Tu entames une relation avec ${S.partner.name}.`, 'good'); UI.back(); } })).concat([{ label: 'Annuler', cls: 'ghost' }]) });
+  },
+  gift() {
+    if (!S.partner) return;
+    UI.modal({ icon: '🎁', title: `Gâter ${S.partner.name}`, choices: [
+      { label: '💐 Petite attention (500 €)', sub: '+8 affection', dis: S.cash < 500, fn: () => this.give(500, 8) },
+      { label: '👜 Virée shopping de luxe (12 000 €)', sub: '+22 affection', dis: S.cash < 12000, fn: () => this.give(12000, 22) },
+      { label: '💎 Cadeau d\'exception (80 000 €)', sub: '+45 affection', dis: S.cash < 80000, fn: () => this.give(80000, 45) },
+      { label: 'Annuler', cls: 'ghost' },
+    ] });
+  },
+  give(cost, aff) { S.cash -= cost; S.partner.aff = Math.min(100, S.partner.aff + aff); PlayerData.mod('stress', -3); log('🎁', `${S.partner.name} est ravi·e (+${aff} affection).`, 'good'); },
+  leave() { if (!S.partner) return; UI.confirm('💔', 'Rompre ?', `Quitter ${S.partner.name} ?`, '💔 Rompre', () => { log('💔', `Tu romps avec ${S.partner.name}.`, ''); S.partner = null; UI.back(); }, 'danger'); },
+  makeComplicit() {
+    const P = S.partner; if (!P) return;
+    if (P.aff < 75) return UI.toast('Affection trop faible (75 requise).');
+    P.complicit = true; log('🤝', `${P.name} devient complice de tes affaires (bonus de blanchiment).`, 'good');
+  },
+  monthly() {
+    const P = S.partner; if (!P) return;
+    P.months++; P.aff = U.clamp(P.aff - 3, 0, 100);
+    if (P.aff <= 10 && U.chance(40)) { log('💔', `${P.name} te quitte, lassé·e d'être délaissé·e.`, 'bad'); S.partner = null; return; }
+    if (P.aff >= 60) PlayerData.mod('stress', -2);
+    // menace d'enlèvement par un rival si tu es exposé
+    if (S.rivals.length && S.respect > 50 && U.chance(4)) this.kidnap();
+  },
+  kidnap() {
+    const P = S.partner, rv = U.pick(S.rivals).name, ransom = Math.round(U.rand(80000, 400000) * (1 + S.rank * 0.3));
+    UI.modal({ icon: '🚨', title: 'Enlèvement !', cls: 'bad', text: `<b>${rv}</b> a enlevé ${P.name} pour faire pression. Rançon : <b>${U.money(ransom)}</b>.`, choices: [
+      { label: `💰 Payer la rançon (${U.money(ransom)})`, dis: !PlayerData.can(ransom), fn: () => { PlayerData.pay(ransom); P.aff = Math.min(100, P.aff + 20); log('💰', `Tu paies la rançon : ${P.name} est libéré·e.`, 'money'); } },
+      { label: '🔫 Tenter un sauvetage', sub: `Victoire ~${Combat.estimate('ravisseur', { arms: 'all' })} %`, fn: () => Combat.start({ foe: 'ravisseur', ctx: { arms: 'all', lethal: true, flee: 30, place: 'Sauvetage', cause: 'Tué en tentant de sauver son/sa partenaire', intro: 'Tu fonces sur la planque des ravisseurs.' }, onEnd: (res) => { if (res === 'win') { P.aff = Math.min(100, P.aff + 30); PlayerData.mod('respect', 5); log('🔫', `Sauvetage réussi : ${P.name} est libre, ta légende grandit.`, 'good'); } else if (res === 'lose') { log('💀', `Le sauvetage tourne mal… ${P.name} disparaît.`, 'bad'); S.partner = null; } } }) },
+    ] });
+  },
+  // contre-espionnage sur un membre
+  intel(id) {
+    const m = Crew.get(id); if (!m) return;
+    UI.modal({ icon: '🕵️', title: `Soupçons sur ${m.name}`, text: `Loyauté : ${Math.round(m.loyalty)}${m.snitch ? '<br><b class="r">⚠️ Indic avéré</b>' : ''}`, choices: [
+      { label: '🎙️ Poser un micro (2 000 €)', dis: S.cash < 2000, fn: () => { S.cash -= 2000; m.watched = true; log('🎙️', `Tu mets ${m.name} sur écoute.`, ''); UI.back(); } },
+      { label: '🔎 Engager un détective (8 000 €)', dis: S.cash < 8000, fn: () => { S.cash -= 8000; if (m.loyalty < 40 && U.chance(60)) { m.snitch = true; log('🔎', `Le détective le confirme : ${m.name} parle aux flics.`, 'bad'); } else log('🔎', `Rien de probant sur ${m.name}.`, ''); UI.back(); } },
+      { label: '👊 Interrogatoire musclé', fn: () => { if (U.chance(55)) { m.loyalty = U.clamp(m.loyalty + 15, 0, 100); m.snitch = false; log('👊', `${m.name} jure fidélité (loyauté +15).`, ''); } else { m.loyalty = U.clamp(m.loyalty - 10, 0, 100); log('👊', `${m.name} encaisse sans parler (loyauté −10).`, 'bad'); } UI.back(); } },
+      ...(m.snitch ? [{ label: '☠️ Éliminer la balance', cls: 'danger', fn: () => { Crew.remove(m); S.stats.kills++; PlayerData.mod('respect', 4); log('☠️', `${m.name}, balance avérée, ne parlera plus.`, 'bad'); UI.back(); } }] : []),
+      { label: 'Fermer', cls: 'ghost' },
+    ] });
+  },
+  monthlyIntel() {
+    for (const m of S.crew) {
+      if (m.loyalty < 30 && !m.snitch && U.chance(m.watched ? 2 : 6)) {
+        m.snitch = true;
+        if (m.watched) log('🎙️', `Tes écoutes démasquent ${m.name} : il allait te balancer.`, 'bad');
+        else { PlayerData.mod('respect', -2); log('🐀', `Une fuite : ${m.name} parle à la concurrence (−2 👑). Surveille ton équipe.`, 'bad'); }
+      }
+    }
+  },
+};
+
+/* ============================== QUARTIERS (guerres dynamiques) ============================== */
+const Districts = {
+  init() { const names = U.shuffle(RIVAL_NAMES); const z = {}; let i = 0; for (const k in DISTRICTS) { z[k] = { owner: names[i % names.length], mine: false, tribute: 0 }; i++; } return z; },
+  owned() { return S.zones ? Object.keys(S.zones).filter((k) => S.zones[k].mine) : []; },
+  raid(k) {
+    const z = S.zones[k], D = DISTRICTS[k];
+    if (z.mine) return;
+    if (S.rank < 2) return UI.toast('🔒 Grade Lieutenant requis.');
+    if (!PlayerData.useAP(2)) return;
+    const chance = U.clamp(PlayerData.warPower() / (D.str + (S.rivals.find((r) => r.name === z.owner) || { strength: 0 }).strength * 0.2) * 55, 8, 92);
+    S.stats.wars++;
+    if (U.chance(chance)) {
+      z.mine = true; z.owner = null; S.territories++; S.stats.conquered++;
+      PlayerData.mod('respect', 6);
+      log('🗺️', `Tu conquiers <b>${D.name}</b> ! Dividende mensuel passif débloqué (+6 👑).`, 'good');
+      UI.result(D.icon, 'Quartier conquis', `${D.name} est à toi. Dividende mensuel régulier.`, 'good');
+    } else {
+      const dmg = Math.round(U.ri(15, 45) * (1 - PlayerData.armor() / 150)); S.wounded = true;
+      const dead = PlayerData.soldiers().filter(() => U.chance(25)); S.crew = S.crew.filter((c) => !dead.includes(c));
+      log('💀', `Raid repoussé à ${D.name} : −${dmg} ❤️${dead.length ? `, ${dead.length} soldat(s) perdu(s)` : ''}.`, 'bad');
+      PlayerData.hurt(dmg, `Tué en tentant de prendre ${D.name}`);
+    }
+  },
+  tribute(k) {
+    const z = S.zones[k], D = DISTRICTS[k], cost = Math.round(D.income[1] * 1.5);
+    if (z.mine) return;
+    UI.confirm('💶', `Droit de passage — ${D.name}`, `Payer <b>${U.money(cost)}</b> au syndicat ${U.deN(z.owner)} pour y trafiquer librement 6 mois (petit revenu d'accès).`, '💶 Payer le tribut', () => {
+      if (!PlayerData.pay(cost)) return UI.toast('Fonds insuffisants.');
+      z.tribute = S.ageMonths + 6; log('💶', `Tribut versé ${U.aN(z.owner)} : accès à ${D.name} pour 6 mois.`, 'money');
+    });
+  },
+  monthly() {
+    if (!S.zones) return;
+    let div = 0, acc = 0;
+    for (const k in S.zones) {
+      const z = S.zones[k], D = DISTRICTS[k];
+      if (z.mine) {
+        const d = Math.round(U.rand(D.income[0], D.income[1]) * (1 + S.rank * 0.1)); div += d;
+        if (!S.exile && U.chance(Math.max(1, 7 - PlayerData.warPower() / 70))) { z.mine = false; z.owner = U.pick(RIVAL_NAMES); S.territories = Math.max(0, S.territories - 1); log('🏴', `Un syndicat rival reprend ${D.name} !`, 'bad'); }
+      } else if (z.tribute > S.ageMonths) acc += Math.round(U.rand(D.income[0], D.income[1]) * 0.3);
+    }
+    if (div) { PlayerData.earn(div); log('🗺️', `Dividendes des quartiers contrôlés : <b>+${U.money(div)}</b>.`, 'money'); }
+    if (acc) { PlayerData.earn(acc); }
+  },
+};
+
+/* ============================== EXIL ============================== */
+const Exile = {
+  can() { return S.fakeId > 0; },
+  flee() {
+    if (S.jail) return UI.toast('⛓️ Impossible depuis ta cellule.');
+    if (!this.can()) return UI.toast('🛂 Procure-toi un passeport diplomatique (Dark Web → Services).');
+    UI.modal({ icon: '🛫', title: 'Cavale & exil', text: 'Fuir vers un pays sans accord d\'extradition. Tu piloteras tes affaires à distance, avec un contrôle affaibli sur les troupes.', choices: EXILE_CITIES.map((c) => ({ label: `${CITIES[c].flag} ${CITIES[c].name}`, sub: `Vol privé / bateau · ${U.money(60000)}`, dis: !PlayerData.can(60000), fn: () => this.go(c) })).concat([{ label: 'Annuler', cls: 'ghost' }]) });
+  },
+  go(c) {
+    if (!PlayerData.pay(60000)) return UI.toast('Fonds insuffisants.');
+    S.fakeId--; const from = S.city; S.city = c; S.exile = c; S.heat = Math.max(0, S.heat - 40);
+    S.record = 0; if (S.casier) S.casier = [];
+    log('🛫', `Tu fuis ${CITIES[from].name} et t'exiles à <b>${CITIES[c].flag} ${CITIES[c].name}</b>. Casier effacé, hors de portée de la justice.`, 'good');
+    UI.result('🛫', 'En exil', `Installé à ${CITIES[c].name}. Tu diriges à distance (revenus de rue réduits), mais tu es intouchable et tu importes au plus près de la source.`, 'good');
+    UI.closePanel();
+  },
+  home() {
+    if (!S.exile) return;
+    UI.confirm('🏠', 'Rentrer au pays', 'Revenir reprendre la main en personne ? Tu redeviens exposé à la justice.', '🏠 Rentrer', () => { S.exile = null; S.city = 'marseille'; log('🏠', 'Tu rentres au pays reprendre les opérations en main propre.', ''); UI.closePanel(); });
   },
 };
 
@@ -4094,10 +4801,15 @@ const V = {
     h += H.row({ icon: '🧘', title: 'Cure de désintox', sub: `Addiction : ${Math.round(S.addiction)} %`, fn: () => UI.open('rehab') });
     h += H.row({ icon: '🏥', title: 'Hôpital / Soins', sub: `Santé : ${Math.round(S.health)} %${S.wounded ? ' · 🩸 blessure par balle' : ''}`, fn: () => UI.open('heal') });
     h += H.row({ icon: '🔪', title: 'Chirurgie', sub: 'Esthétique, nouveau visage, empreintes', fn: () => UI.open('surgery') });
+    h += H.sec('Grosses opérations');
+    h += H.row({ icon: '🏭', title: 'Braquer un dépôt pharmaceutique', sub: 'Armes lourdes + 2 soldats · butin pur Q100 · 2 ⚡', fn: () => Pharma.heist() });
     h += H.sec('Quotidien');
     const job = Jobs.cur();
     h += H.row({ icon: '💼', title: 'Emploi légal', sub: job ? `${job.icon} ${job.name} · ${U.money(Jobs.salary(job))}/mois en banque` : `Salaire propre · casier : ${S.record} condamnation${S.record > 1 ? 's' : ''}`, fn: () => UI.open('jobs') });
     h += H.row({ icon: '🌳', title: 'Se mettre au vert', sub: 'Faire profil bas : pression policière et stress ↓', right: '1 ⚡', fn: () => Actions.lowProfile() });
+    h += H.sec('Vie privée & cavale');
+    h += H.row({ icon: S.partner ? S.partner.icon : '❤️', title: 'Vie sentimentale', sub: S.partner ? `${S.partner.name} · affection ${Math.round(S.partner.aff)}${S.partner.complicit ? ' · complice' : ''}` : 'Faire une rencontre', fn: () => UI.open('relations') });
+    h += H.row({ icon: S.exile ? '🏠' : '🛫', title: S.exile ? `Exil à ${CITIES[S.city].name}` : 'Cavale & exil', sub: S.exile ? 'Rentrer au pays' : (Exile.can() ? 'Fuir à l\'étranger (sans extradition)' : 'Nécessite un passeport diplomatique'), fn: () => (S.exile ? Exile.home() : Exile.flee()) });
     return { title: '🎯 Activités', html: h };
   },
   steal() {
@@ -4185,9 +4897,14 @@ const V = {
     h += H.sec('Logistique');
     h += H.row({ icon: '🏎️', title: 'Go Fast', sub: `${S.gofasts.length} contrat(s) disponible(s) · 2 ⚡`, fn: () => UI.open('gofast') });
     h += H.row({ icon: '🚢', title: 'Importations', sub: S.rank < 1 ? '🔒 Grade Dealeur requis' : `${S.imports.length} cargaison(s) en route`, fn: () => UI.open('imports') });
+    h += H.row({ icon: '🏗️', title: 'Fret & arrivages programmés', sub: `Entrepôts, conteneurs, abonnements · ${S.subs.length} abonnement(s)`, fn: () => UI.open('logistics') });
     h += H.row({ icon: '✈️', title: 'Voyager', sub: 'Changer de ville (prix, police et douanes différents)', fn: () => UI.open('travel') });
     h += H.sec('Production');
     h += H.row({ icon: '🧪', title: 'Laboratoires', sub: `${S.labs.length} labo(s) · augmente ta marge chaque mois`, fn: () => UI.open('labs') });
+    h += H.row({ icon: '🔬', title: 'Labo de R&D moléculaire', sub: Chemistry.has() ? 'Synthèse de designer drugs · coupe au fentanyl' : 'Créer des drogues de synthèse inédites', fn: () => UI.open('rnd') });
+    h += H.row({ icon: '🟩', title: 'Usine de snus', sub: Snus.has() ? `${S.snus.brand} ${S.snus.dose} mg · personnalisable` : 'Sachets de nicotine personnalisés', fn: () => UI.open('snus') });
+    h += H.sec('Cyber');
+    h += H.row({ icon: '🧅', title: 'Dark Web', sub: DarkWeb.access() ? `₿ ${Crypto.fmt('btc')} · marketplace, crypto, envois` : (S.pc ? 'Accès sécurisé' : 'Nécessite un PC sécurisé (4 000 €)'), fn: () => UI.open('darkweb') });
     return { title: '💊 Trafic & Marché', html: h };
   },
   stock() {
@@ -4331,6 +5048,10 @@ const V = {
     h += H.row({ icon: '➕', title: 'Recruter des sous-fifres', sub: r.crew ? `${S.candidates.length} profil(s) disponible(s)` : '🔒 Grade Dealeur requis', fn: () => UI.open('recruit') });
     h += H.row({ icon: '⚔️', title: 'Guerre de territoire', sub: S.rank < 2 ? '🔒 Grade Lieutenant requis' : `${S.rivals.length} gang(s) rival(aux)`, fn: () => UI.open('war') });
     h += H.row({ icon: '🪖', title: 'Arsenal & trafic d\'armes', sub: `Puissance militaire ${Arsenal.military()} · ${Arsenal.count()} arme(s) · ${S.factories.length} atelier(s)`, fn: () => UI.open('arsenal') });
+    h += H.row({ icon: '🗺️', title: 'Carte des quartiers', sub: `${Districts.owned().length}/4 zones contrôlées · guerres & tributs`, fn: () => UI.open('districts') });
+    h += H.row({ icon: '🏭', title: 'Corruption pharmaceutique', sub: S.rank < 3 ? '🔒 Grade Boss local requis' : 'Volumes industriels purs sous le manteau', fn: () => Pharma.bribe() });
+    h += H.row({ icon: '🎖️', title: 'Sous-chefs (délégation)', sub: Subchefs.can() ? `${S.subchefs.length}/2 · gestion automatique` : '🔒 Grade Parrain requis', fn: () => UI.open('subchefs') });
+    h += H.row({ icon: '🦈', title: 'Usure & jeux', sub: `${S.loansOut.length} prêt(s) en cours${S.poker.table ? ' · table de poker' : ''}`, fn: () => UI.open('sharking') });
     h += H.sec('Business & finances');
     h += H.row({ icon: '🏢', title: 'Clubs & Entreprises', sub: `${S.businesses.length} commerce(s) · façades légales`, fn: () => UI.open('biz') });
     h += H.row({ icon: '🧼', title: 'Blanchiment', sub: `Objectif : ${S.launderTarget == null ? 'max' : U.money(S.launderTarget)}/mois · capacité ${U.money(cap)}`, fn: () => UI.open('launder') });
@@ -4502,6 +5223,7 @@ const V = {
     else if (cat === 'vehicles') h += H.note('La vitesse aide à fuir (go fast, contrôles), la discrétion à passer inaperçu. Seul ton meilleur véhicule compte pour le respect. Entretien mensuel : 0,4 % du prix.');
     for (const it of C.items) {
       const own = S.owned[cat].includes(it.id);
+      if (it.dark && !own) continue; // armes rares : uniquement sur le Dark Web
       h += H.row({ icon: it.icon, title: it.name, sub: Shop.statLine(cat, it) + (own ? ` · revente ${U.money(it.price * RESALE[cat])}` : ''), right: own ? `<span class="g">${cat === 'weapons' && Armory.isGun(it.id) ? '⚙️ Modifier' : '✔ Possédé'}</span>` : U.money(it.price), cls: own ? 'owned' : '',
         fn: () => (own ? Shop.ownedMenu(cat, it) : Shop.buy(cat, it)) });
     }
@@ -4610,9 +5332,127 @@ const V = {
     h += H.sec('Marché noir (paiement en cigarettes)');
     for (const it of PRISON_SHOP) h += H.row({ icon: it.icon, title: it.name, sub: it.desc, right: `🚬 ${it.cigs}`, dis: p.cigs < it.cigs || (it.id === 'phone' && !!p.phone) || (it.id === 'poincon' && p.shank), fn: () => Prison.buy(it.id) });
     h += H.row({ icon: '👮', title: 'Smartphone via un surveillant corrompu', sub: 'Fouilles bien moins fréquentes', right: U.money(Prison.phoneCost()), dis: !!p.phone, fn: () => Prison.phoneGuard() });
+    if (p.phone) h += H.row({ icon: '🧅', title: 'Dark Web (smartphone)', sub: 'Marketplace & crypto depuis ta cellule', fn: () => UI.open('darkweb') });
     h += H.sec('Tes affaires dehors');
     h += H.note(Prison.remote() ? '📱 Grâce à ton téléphone, tu diriges ta mafia (équipe, commerces, corruption, arsenal) depuis l\'onglet Mafia.' : '📵 Sans téléphone, impossible de gérer ta mafia : ton équipe se sert davantage (recettes divisées par deux) et le blanchiment est suspendu.');
     return { title: '🚬 Trafic en détention', html: h };
+  },
+  darkweb() {
+    if (!DarkWeb.access()) {
+      let h = H.card('🧅 <b>Dark Web</b><br><small class="m">Réseau chiffré (Tor) : marketplace, crypto insaisissable, envois intraçables.</small>', 'accent');
+      if (S.jail) h += H.note('📵 En cellule, il te faut un smartphone clandestin (onglet 🚬 Trafic en détention).');
+      else h += H.row({ icon: '💻', title: 'Acheter un PC sécurisé', sub: 'Tails/Tor · accès depuis chez toi', right: U.money(4000), fn: () => DarkWeb.buyPC() });
+      return { title: '🧅 Dark Web', html: h };
+    }
+    const T = DarkWeb.tab, tabs = [['wallet', '💰'], ['meds', '💊'], ['drugs', '🌿'], ['arms', '🔫'], ['mol', '🧪'], ['ship', '📦'], ['serv', '🪪']];
+    const labels = { wallet: 'Wallet', meds: 'Médocs', drugs: 'Drogues', arms: 'Armes', mol: 'Molécules', ship: 'Envois', serv: 'Services' };
+    let h = `<div class="dwrap"><div class="dw-head"><span class="dw-dot"></span> onion://darkbazaar · session chiffrée<div class="dw-bal">₿ ${Crypto.fmt('btc')} &nbsp; ɱ ${Crypto.fmt('xmr')} &nbsp;≈ ${U.money(Crypto.worth())}</div></div>`;
+    h += '<div class="dw-tabs">' + tabs.map(([k, ic]) => `<button class="dw-tab${T === k ? ' on' : ''}" data-cb="${cb(() => DarkWeb.setTab(k))}">${ic}<small>${labels[k]}</small></button>`).join('') + '</div></div>';
+    if (T === 'wallet') {
+      h += H.note('Convertis ton argent en crypto (insaisissable par la justice) et inversement. Cours fluctuant chaque mois.');
+      h += H.row({ icon: '₿', title: `Bitcoin — ${U.money(Crypto.rate('btc'))}`, sub: `Tu détiens ${Crypto.fmt('btc')} ₿`, right: 'Acheter', fn: () => Crypto.buy('btc') });
+      h += H.row({ icon: '💶', title: 'Encaisser des BTC', sub: 'Crypto → liquide', fn: () => Crypto.sell('btc') });
+      h += H.row({ icon: 'ɱ', title: `Monero — ${U.money(Crypto.rate('xmr'))}`, sub: `Tu détiens ${Crypto.fmt('xmr')} ɱ`, right: 'Acheter', fn: () => Crypto.buy('xmr') });
+      h += H.row({ icon: '💶', title: 'Encaisser des XMR', sub: 'Crypto → liquide', fn: () => Crypto.sell('xmr') });
+    } else if (T === 'meds') {
+      h += H.note('Médicaments certifiés 100 % purs, réglés en crypto. La marque fait la marge à la revente.');
+      for (const d in PHARMA) for (const b of PHARMA[d]) { const u = Math.round(DRUGS[d].base * 1.2 * brandVal(b).buy); h += H.row({ icon: DRUGS[d].icon, title: b, sub: `${DRUGS[d].name} · pur Q100 · revente ×${U.f2(brandVal(b).sell)}`, right: `${U.unitPrice(u)}`, fn: () => DarkWeb.buyMed(d, b) }); }
+    } else if (T === 'drugs') {
+      h += H.row({ icon: '🌐', title: 'Vendre mon stock en ligne', sub: S.relays ? `${S.relays} relais · ${S.servers} serveur(s)` : 'Nécessite une adresse relais (onglet Envois)', fn: () => DarkWeb.sellMenu() });
+      h += H.sec('Acheter (matières premières)');
+      for (const d of ['coke', 'weed', 'hash', 'mdma', 'keta', 'heroW']) h += H.row({ icon: DRUGS[d].icon, title: DRUGS[d].name, sub: `${U.unitPrice(Math.round(MarketData.buyUnit(S.city, d) * 1.1))}/${DRUGS[d].unit} · crypto`, fn: () => DarkWeb.buyRaw(d) });
+    } else if (T === 'arms') {
+      h += H.note('Armes rares & équipements spéciaux, réglés en crypto. Le switch se monte sur ton pistolet.');
+      for (const a of DARK_ARMS) h += H.row({ icon: a.icon, title: a.name, sub: a.desc, right: U.money(a.price), fn: () => DarkWeb.buyArm(a) });
+    } else if (T === 'mol') {
+      h += H.note('Précurseurs et réactifs pour ton laboratoire de R&D moléculaire.');
+      for (const m in MOLECULES) h += H.row({ icon: '🧪', title: `${MOLECULES[m].sym} ${MOLECULES[m].name}`, sub: `En stock : ${S.molecules[m] || 0}`, right: U.money(MOLECULES[m].price), fn: () => DarkWeb.buyMol(m) });
+    } else if (T === 'ship') {
+      h += H.note('Infrastructure d\'expédition intraçable. Les serveurs automatisent les commandes en ligne.');
+      h += H.row({ icon: '📮', title: 'Adresse relais (boîte fantôme)', sub: `Possédées : ${S.relays} · requis pour vendre en ligne`, right: U.money(RELAY_COST), fn: () => DarkWeb.buyRelay() });
+      h += H.row({ icon: '🖥️', title: 'Hub de serveurs clandestin', sub: `Possédés : ${S.servers} · +débit & marge (crypto)`, right: U.money(SERVER_COST), fn: () => DarkWeb.buyServer() });
+      h += H.row({ icon: '🏗️', title: 'Fret & arrivages programmés', sub: 'Conteneurs, abonnements, flotte', fn: () => UI.open('logistics') });
+    } else if (T === 'serv') {
+      h += H.row({ icon: FAKE_ID.permis.icon, title: FAKE_ID.permis.name, sub: FAKE_ID.permis.desc, right: U.money(FAKE_ID.permis.price), dis: S.record < 1, fn: () => DarkWeb.fakeId('permis') });
+      h += H.row({ icon: FAKE_ID.passeport.icon, title: FAKE_ID.passeport.name, sub: FAKE_ID.passeport.desc, right: U.money(FAKE_ID.passeport.price), fn: () => DarkWeb.fakeId('passeport') });
+      h += H.sec('Carding (cartes bancaires volées)');
+      for (const c of CARDING) h += H.row({ icon: c.icon, title: c.name, sub: `→ ${U.money(c.cash[0])}–${U.money(c.cash[1])} · litige ${c.bust} %`, right: U.money(c.price), fn: () => DarkWeb.card(c) });
+    }
+    return { title: '🧅 Dark Web', html: h };
+  },
+  logistics() {
+    const ws = Logistics.warehouses();
+    let h = H.card(`${H.kv([['🏭 Entrepôts', ws.length], ['📦 Capacité', U.num(PlayerData.capacity())], ['🔁 Abonnements', S.subs.length], ['🚐 Flotte', Object.values(S.fleet).reduce((a, b) => a + b, 0)]])}<small class="m">Les entrepôts (Patrimoine → Immobilier) démultiplient ta capacité. La flotte réduit le risque douanier.</small>`, 'accent');
+    h += H.sec('Arrivages');
+    h += H.row({ icon: '➕', title: 'Nouvel arrivage (fret)', sub: 'Conteneurs, palettes… unique ou abonnement', fn: () => Logistics.newOrder() });
+    if (S.subs.length) {
+      h += H.sec('Abonnements programmés');
+      for (const s of S.subs) h += H.row({ icon: '🔁', title: `${U.num(s.qty)} ${U.u(DRUGS[s.d], U.num(s.qty))} ${U.de(DRUGS[s.d].name)}`, sub: `${CITIES[s.from].name} · tous les ${s.period} mois · prochaine dans ${Math.max(0, s.next - S.ageMonths)} mois`, right: '✖', fn: () => Logistics.cancelSub(s.id) });
+    }
+    h += H.sec('Flotte (réduit le risque douanier)');
+    for (const f in FLEET) h += H.row({ icon: FLEET[f].icon, title: FLEET[f].name, sub: `Possédés : ${S.fleet[f] || 0}`, right: U.money(FLEET[f].price), fn: () => Logistics.buyFleet(f) });
+    return { title: '🏗️ Logistique', html: h };
+  },
+  rnd() {
+    if (!Chemistry.has()) { let h = H.card('🔬 <b>Laboratoire de R&D moléculaire</b><br><small class="m">Synthétise des drogues de synthèse (RC) à partir de molécules du Dark Web.</small>', 'accent'); h += H.row({ icon: '🔬', title: 'Monter le labo de R&D', right: U.money(180000), dis: !PlayerData.can(180000), fn: () => Chemistry.buyLab() }); return { title: '🔬 R&D', html: h }; }
+    let h = H.card('🧪 Molécules : ' + Object.keys(MOLECULES).map((m) => `${MOLECULES[m].sym} ${S.molecules[m] || 0}`).join(' · ') + '<br><small class="m">Achète des molécules sur le Dark Web (onglet 🧪 Molécules).</small>', 'accent');
+    h += H.sec('Synthèse (combine 2 à 3 molécules)');
+    const mk = Object.keys(MOLECULES), combos = [];
+    for (let i = 0; i < mk.length; i++) for (let j = i + 1; j < mk.length; j++) { combos.push([mk[i], mk[j]]); for (let k = j + 1; k < mk.length; k++) combos.push([mk[i], mk[j], mk[k]]); }
+    for (const mix of combos) { const spec = Chemistry.design(mix), ok = mix.every((m) => (S.molecules[m] || 0) >= 1); h += H.row({ icon: '⚗️', title: mix.map((m) => MOLECULES[m].sym).join(' + '), sub: `→ ${spec.name} · puissance ${spec.pw} · addiction ${spec.add} · OD ${spec.od}`, dis: !ok, fn: () => Chemistry.synth(mix) }); }
+    if (S.rcDefs.length) { h += H.sec('Tes drogues de synthèse'); for (const r of S.rcDefs) h += H.row({ icon: '⚗️', title: r.def.name, sub: `En stock : ${U.num(Inventory.qty(r.key))} ${r.def.unit}` }); }
+    const cutable = Inventory.list().filter((d) => ['powder', 'pipe', 'ziplock', 'rxbottle', 'frbox', 'pill'].includes(DRUGS[d].form) && d !== 'fenta');
+    h += H.sec('Coupe au fentanyl');
+    h += H.note(`Fentanyl en stock : ${U.num(Inventory.qty('fenta'))} cp. Couper gonfle la quantité et la dépendance, mais tue des clients et abîme ta réputation.`);
+    for (const d of cutable) h += H.row({ icon: DRUGS[d].icon, title: `Couper ${DRUGS[d].name}`, sub: `Stock ${U.num(Inventory.qty(d))}${Inventory.cut(d) ? ' · déjà coupé' : ''}`, dis: !Inventory.qty('fenta'), fn: () => Chemistry.cut(d) });
+    return { title: '🔬 R&D moléculaire', html: h };
+  },
+  snus() {
+    if (!Snus.has()) { let h = H.card('🟩 <b>Usine de snus</b><br><small class="m">Fabrique des sachets de nicotine entièrement personnalisés.</small>', 'accent'); h += H.row({ icon: '🟩', title: 'Ouvrir l\'usine', right: U.money(60000), dis: !PlayerData.can(60000), fn: () => Snus.buy() }); return { title: '🟩 Snus', html: h }; }
+    const c = S.snus; let h = H.card(`${H.kv([['Marque', U.esc(c.brand)], ['Dosage', c.dose + ' mg'], ['Format', SNUS_FORMAT[c.format]], ['Parfum', SNUS_FLAVOR[c.flavor].name], ['Production', U.num(Snus.out()) + '/mois'], ['Qualité', 'Q' + Snus.qual()]])}`, 'accent');
+    h += H.row({ icon: '⚙️', title: 'Personnaliser la production', sub: 'Dosage, format, parfum, couleur, nom de marque', fn: () => Snus.setup(false) });
+    h += H.row({ icon: '⬆️', title: 'Agrandir l\'usine', sub: `+60 % de production · niveau ${c.level}`, right: U.money(40000 * c.level), dis: !PlayerData.can(40000 * c.level), fn: () => { if (PlayerData.pay(40000 * c.level)) { c.level++; log('🟩', `Usine de snus agrandie (niv. ${c.level}).`, 'good'); } } });
+    h += H.row({ icon: '🗑️', title: 'Fermer l\'usine', cls: 'danger', fn: () => UI.confirm('🟩', 'Fermer l\'usine ?', 'Tu perds l\'atelier.', '🗑️ Fermer', () => { S.snus = null; log('🟩', 'Usine de snus fermée.', ''); UI.back(); }, 'danger') });
+    h += H.note('Le snus arrive dans ton stock : vends-le au détail, en gros, en boîte, ou consomme-le (Activités → Consommer).');
+    return { title: '🟩 Usine de snus', html: h };
+  },
+  sharking() {
+    let h = H.card(`${H.kv([['🦈 Prêts', S.loansOut.length], ['💰 Capital prêté', U.money(S.loansOut.reduce((a, l) => a + l.principal, 0))], ['♠️ Table', S.poker.table ? 'Ouverte' : '—']])}`, 'accent');
+    h += H.sec('Usure (sharking)');
+    h += H.row({ icon: '🦈', title: 'Prêter de l\'argent', sub: '15–25 %/mois · risque de défaut', fn: () => Shark.lend() });
+    for (const l of S.loansOut) h += H.row({ icon: '💸', title: l.who, sub: `${Math.round(l.rate * 100)} %/mois${l.overdue ? ` · ${l.overdue} impayé(s)` : ''}`, right: `<span class="r">${U.money(l.principal)}</span>` });
+    h += H.sec('Poker clandestin');
+    for (const t of POKER_TABLES) h += H.row({ icon: '🃏', title: t.name, sub: `Cave ${U.money(t.buy)} · franc-jeu ou triche`, dis: S.cash < t.buy, fn: () => Poker.play(t) });
+    h += H.row({ icon: '♠️', title: S.poker.table ? 'Table ouverte (rake mensuel)' : 'Tenir une table clandestine', sub: S.poker.table ? 'Commission encaissée chaque mois' : '80 000 € · rake mensuel', dis: S.poker.table, fn: () => Poker.table() });
+    return { title: '🦈 Usure & jeux', html: h };
+  },
+  districts() {
+    let h = H.card(`🗺️ <b>Carte des quartiers</b> · puissance militaire ${PlayerData.warPower()}<br><small class="m">Conquiers un quartier pour un dividende mensuel passif, ou paie un tribut pour y trafiquer sans conflit.</small>`, 'accent');
+    for (const k in DISTRICTS) {
+      const D = DISTRICTS[k], z = S.zones[k];
+      const status = z.mine ? '<span class="g">✅ Sous ton contrôle</span>' : (z.tribute > S.ageMonths ? '<span class="y">💶 Tribut payé</span>' : `Contrôlé par ${U.esc(z.owner)}`);
+      h += H.card(`<b>${D.icon} ${D.name}</b> — ${status}<br><small class="m">${D.note} · dividende ${U.money(D.income[0])}–${U.money(D.income[1])}/mois · défense ${D.str}</small>`);
+      if (!z.mine) {
+        h += H.row({ icon: '⚔️', title: 'Raid de conquête', sub: `Défense ~${D.str} · 2 ⚡`, dis: S.rank < 2, fn: () => Districts.raid(k) });
+        h += H.row({ icon: '💶', title: 'Payer un tribut (6 mois)', sub: z.tribute > S.ageMonths ? 'Déjà payé' : `${U.money(Math.round(D.income[1] * 1.5))}`, dis: z.tribute > S.ageMonths, fn: () => Districts.tribute(k) });
+      }
+    }
+    return { title: '🗺️ Quartiers', html: h };
+  },
+  subchefs() {
+    let h = H.card(`🎖️ <b>Sous-chefs</b> ${S.subchefs.length}/2<br><small class="m">Au grade Parrain, délègue recrutement, répartition des stocks et collecte. Rapport trimestriel automatique.</small>`, 'accent');
+    for (const s of S.subchefs) h += H.row({ icon: '🎖️', title: s.name, sub: `talent ${Math.round(s.skill)} · ${s.focus}`, right: '✖', fn: () => Subchefs.dismiss(s.id) });
+    if (S.subchefs.length < 2) h += H.row({ icon: '➕', title: 'Nommer un sous-chef', sub: Subchefs.can() ? 'Promouvoir un soldat loyal (loyauté ≥ 70)' : '🔒 Grade Parrain requis', dis: !Subchefs.can(), fn: () => Subchefs.promote() });
+    return { title: '🎖️ Sous-chefs', html: h };
+  },
+  relations() {
+    const P = S.partner;
+    if (!P) { let h = H.card('❤️ <b>Vie sentimentale</b><br><small class="m">Une relation réduit le stress… mais peut devenir une cible pour tes rivaux.</small>', 'accent'); h += H.row({ icon: '❤️', title: 'Faire une rencontre', fn: () => Relations.meet() }); return { title: '❤️ Vie privée', html: h }; }
+    let h = H.card(`${H.kv([['Partenaire', U.esc(P.name)], ['Type', P.icon], ['Affection', Math.round(P.aff) + ' %'], ['Statut', P.complicit ? 'Complice' : '—']])}${H.mini(P.aff, 100)}`, 'accent');
+    h += H.row({ icon: '🎁', title: 'Gâter', sub: 'Cadeaux, virées shopping de luxe', fn: () => Relations.gift() });
+    if (!P.complicit) h += H.row({ icon: '🤝', title: 'En faire un·e complice', sub: P.aff < 75 ? 'Affection 75 requise' : 'Bonus de blanchiment / discrétion', dis: P.aff < 75, fn: () => Relations.makeComplicit() });
+    h += H.row({ icon: '💔', title: 'Rompre', cls: 'danger', fn: () => Relations.leave() });
+    return { title: '❤️ Vie privée', html: h };
   },
   stats() {
     const s = S.stats;
@@ -4655,6 +5495,8 @@ const Game = {
     S.gofasts = GoFast.gen();
     S.owned.clothes = ['zara_tee', 'zara_jog', 'zara_shoes'];
     S.equip = { haut: 'zara_tee', bas: 'zara_jog', chaussures: 'zara_shoes' };
+    S.cryptoRate = { btc: U.ri(CRYPTO.btc.lo, CRYPTO.btc.hi), xmr: U.ri(CRYPTO.xmr.lo, CRYPTO.xmr.hi) };
+    S.zones = Districts.init();
     log('👶', CITIES[city].intro, 'info');
     log('🎂', `Tu as <b>18 ans</b>. Poche : ${U.money(S.cash)}. La rue t'appelle.`, 'info');
     log('💡', 'Astuce : achète un peu de marchandise en gros (onglet Trafic), revends-la au détail, et appuie sur <b>+1 mois</b> pour avancer. Touche ton avatar pour voir ton profil et ta garde-robe.', '');
@@ -4692,8 +5534,10 @@ const Game = {
     S.used = {}; S.deposit = 0;
     S.buffs = S.buffs.filter((b) => --b.months > 0);
     const steps = [Monthly.jail, () => Monthly.addiction(consumed), Monthly.health, Monthly.fitness, Monthly.stress, Monthly.income, () => Jobs.monthly(),
-      () => Police.monthly(), () => Monthly.crew(), Monthly.labs, () => Arsenal.monthly(), Monthly.business, () => Strip.monthly(), Monthly.upkeep, Monthly.imports,
-      () => Cars.monthly(), Monthly.debts, Monthly.heat, Monthly.refresh];
+      () => Police.monthly(), () => Monthly.crew(), () => Subchefs.monthly(), () => Districts.monthly(), Monthly.labs, () => Arsenal.monthly(), () => Snus.monthly(),
+      Monthly.business, () => Strip.monthly(), () => Logistics.monthly(), Monthly.upkeep, Monthly.imports, () => Cars.monthly(),
+      () => Shark.monthly(), () => Poker.monthly(), () => Relations.monthly(), () => Relations.monthlyIntel(), () => Crypto.monthly(), () => Monthly.audit(),
+      Monthly.debts, Monthly.heat, Monthly.refresh];
     for (const st of steps) { st.call(Monthly); if (!S.alive) break; }
     S.ap = PlayerData.apMax();
     if (S.alive) Events.monthly();
@@ -4727,6 +5571,8 @@ const Game = {
     if (!S.market) S.market = MarketData.init();
     if (!S.rivals || !S.rivals.length) S.rivals = this.genRivals();
     if (!CITIES[S.city]) S.city = 'marseille';
+    (S.rcDefs || []).forEach((r) => { if (!DRUGS[r.key]) DRUGS[r.key] = r.def; });
+    if (S.market) MarketData.ensure();
     // v1 → v2 : tenues complètes remplacées par des pièces portées par emplacement
     if ((S.v || 1) < 2) {
       const clothes = [];
@@ -4744,6 +5590,21 @@ const Game = {
       S.v = 3;
     }
     for (const t in ARMS) if (S.arsenal[t] == null) S.arsenal[t] = 0;
+    // v3 → v4 : crypto, logistique, R&D, quartiers, relations
+    if (!S.crypto) S.crypto = { btc: 0, xmr: 0 };
+    if (!S.cryptoRate) S.cryptoRate = { btc: U.ri(CRYPTO.btc.lo, CRYPTO.btc.hi), xmr: U.ri(CRYPTO.xmr.lo, CRYPTO.xmr.hi) };
+    if (!S.fleet) S.fleet = { van: 0, boat: 0, container: 0, cargo: 0 };
+    if (!S.special) S.special = { explo: 0, jammer: 0 };
+    ['subs', 'molecules', 'rcDefs', 'subchefs', 'loansOut'].forEach((k) => { if (!S[k]) S[k] = (k === 'molecules') ? {} : []; });
+    if (S.pc == null) S.pc = false;
+    if (S.relays == null) S.relays = 0;
+    if (S.servers == null) S.servers = 0;
+    if (!S.poker) S.poker = { table: false, since: 0 };
+    if (S.partner === undefined) S.partner = null;
+    if (S.exile === undefined) S.exile = null;
+    if (S.fakeId == null) S.fakeId = 0;
+    if (S.snus === undefined) S.snus = null;
+    if (!S.zones) S.zones = Districts.init();
     if (S.prison) { if (S.prison.cigs == null) S.prison.cigs = 0; if (S.prison.loose == null) S.prison.loose = 0; if (S.prison.phone === undefined) S.prison.phone = null; }
     S.businesses.forEach((b) => { if (BUSINESSES[b.type] && BUSINESSES[b.type].strip) Strip.ensure(b); });
     if (S.stock.lean && S.stock.lean.b === 'Maka') S.stock.lean.b = 'Euphon'; // ancienne marque fictive
